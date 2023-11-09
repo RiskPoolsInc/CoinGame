@@ -1,0 +1,303 @@
+kind: pipeline
+type: kubernetes
+name: buildrelease
+
+globals:
+  - &docker_creds
+    registry: dhb.ubikiri.com
+    username:
+      from_secret: docker_login
+    password:
+      from_secret: docker_password
+    tags:
+      - drone-${DRONE_COMMIT_SHA:0:8}
+      - ${DRONE_BRANCH/\//-}
+
+
+
+steps:
+  - name: buildfront
+    image: plugins/docker
+    settings:
+      context: ClientApp
+      dockerfile: ClientApp/Dockerfile
+      repo: dhb.ubikiri.com/ubistake-front
+      <<: *docker_creds
+
+
+  - name: notification
+    image: appleboy/drone-telegram
+    settings:
+      token:
+        from_secret: telegram_token
+      to:
+        from_secret: telegram_chatid #"-1001784399619"
+      message: >
+        📝 {{repo.name}} / {{commit.branch}} - {{commit.message}}
+        {{#success build.status}}
+          ✅ succeeded  for RELEASE 👷‍♂️ build {{build.number}} tags ${DRONE_BRANCH/\//-} & drone-${DRONE_COMMIT_SHA:0:8}
+        {{else}}
+          🛑 failed for 👷‍♂️ RELEASE build {{build.number}} tags ${DRONE_BRANCH/\//-} & drone-${DRONE_COMMIT_SHA:0:8}
+        {{/success}}
+    when:
+      status:
+        - failure
+        - success
+    depends_on:
+      - buildfront
+
+
+trigger:
+  branch:
+    - release/*
+  event:
+    exclude:
+      - pull_request
+---
+kind: pipeline
+type: kubernetes
+name: builddev
+
+globals:
+  - &docker_creds
+    registry: dhb.ubikiri.com
+    username:
+      from_secret: docker_login
+    password:
+      from_secret: docker_password
+    tags:
+      - drone-${DRONE_COMMIT_SHA:0:8}
+      - drone-latest
+
+
+
+steps:
+  - name: buildfront
+    image: plugins/docker
+    settings:
+      context: ClientApp
+      dockerfile: ClientApp/Dockerfile
+      repo: dhb.ubikiri.com/ubistake-front
+      <<: *docker_creds
+
+
+
+  - name: deploy # deploy to kubernetes using a Helm chart - we need to copy helm dir without values.yaml to repo
+    image: pelotech/drone-helm3
+    settings:
+      mode: upgrade
+      chart: ./helm_src # helm dir in repo
+      release: stake
+      namespace: stake
+      atomic_upgrade: true
+      api_server: "https://kube-dev20021.ubikiri.com/k8s/clusters/local"
+      kubernetes_token: #add token to kubernetes_token secret: token-6vs2n:6ck...blabla..p5596
+        from_secret: kubernetes_token
+      #      kube_certificate:
+      #        from_secret: kube_ca_certificate
+      #      initialization values_files: ./helm_src/values.dev.yaml
+      reuse_values: true
+      values:
+        - "webapp.tag=drone-${DRONE_COMMIT_SHA:0:8}"
+      cleanup_failed_upgrade: true
+    depends_on:
+      - buildfront
+
+
+  - name: notification
+    image: appleboy/drone-telegram
+    settings:
+      token:
+        from_secret: telegram_token
+      to:
+        from_secret: telegram_chatid #"-1001784399619"
+      message: >
+        📝 {{repo.name}} / {{commit.branch}} - {{commit.message}}
+        {{#success build.status}}
+          ✅ succeeded  for 👷‍♂️ build {{build.number}} tag drone-${DRONE_COMMIT_SHA:0:8}
+        {{else}}
+          🛑 failed for 👷‍♂️ build {{build.number}} tag drone-${DRONE_COMMIT_SHA:0:8}
+        {{/success}}
+    when:
+      status:
+        - failure
+        - success
+    depends_on:
+      - buildfront
+      - deploy
+
+  - name: dummy
+    image: alpine
+    commands:
+      - sleep 60
+    depends_on:
+      - buildfront
+      - deploy
+
+
+  - name: notification2
+    image: appleboy/drone-telegram
+    settings:
+      token:
+        from_secret: telegram_token
+      to:
+        from_secret: telegram_chatid2
+      message: >
+        Ubix repositories activity has been detected!
+        📝 {{repo.name}} / {{commit.branch}} - {{commit.message}}
+        {{#success build.status}}
+          ✅ succeeded  for 👷‍♂️ build {{build.number}} tag drone-${DRONE_COMMIT_SHA:0:8}
+        {{else}}
+          🛑 failed for 👷‍♂️ build {{build.number}} tag drone-${DRONE_COMMIT_SHA:0:8}
+        {{/success}}
+    when:
+      status:
+        - success
+    depends_on:
+      - buildfront
+      - deploy
+      - dummy
+
+trigger:
+  branch:
+    - dev
+  event:
+    exclude:
+      - pull_request
+
+---
+kind: pipeline
+type: kubernetes
+name: pulltodev
+
+globals:
+  - &docker_creds
+    registry: dhb.ubikiri.com
+    username:
+      from_secret: docker_login
+    password:
+      from_secret: docker_password
+    tags:
+      - drone-${DRONE_COMMIT_SHA:0:8}
+      - drone-latest
+
+steps:
+  - name: buildfront
+    image: plugins/docker
+    settings:
+      dry-run: 'true'
+      context: ClientApp
+      dockerfile: ClientApp/Dockerfile
+      repo: dhb.ubikiri.com/ubistake-front
+      <<: *docker_creds
+
+
+  - name: notification
+    image: appleboy/drone-telegram
+    settings:
+      token:
+        from_secret: telegram_token
+      to:
+        from_secret: telegram_chatid #"-1001784399619"
+      message: >
+        📝 {{repo.name}} / {{commit.branch}} - {{commit.message}}
+        {{#success build.status}}
+          ✅ succeeded  for 👷‍♂️ build {{build.number}} 
+        {{else}}
+          🛑 failed for 👷‍♂️ build {{build.number}} 
+        {{/success}}
+    when:
+      status:
+        - failure
+        - success
+    depends_on:
+      - buildfront
+
+
+trigger:
+  branch:
+    - dev
+  event:
+    - pull_request
+
+# add [CI SKIP] to comment if CICD not needed
+
+---
+kind: pipeline
+type: kubernetes
+name: builddevfeature
+
+globals:
+  - &docker_creds
+    registry: dhb.ubikiri.com
+    username:
+      from_secret: docker_login
+    password:
+      from_secret: docker_password
+    tags:
+      - drone-${DRONE_COMMIT_SHA:0:8}
+      - drone-latest
+
+
+
+steps:
+  - name: buildfront
+    image: plugins/docker
+    settings:
+      context: ClientApp
+      dockerfile: ClientApp/Dockerfile
+      repo: dhb.ubikiri.com/ubistake-front
+      <<: *docker_creds
+
+
+  - name: deploy # deploy to kubernetes using a Helm chart - we need to copy helm dir without values.yaml to repo
+    image: pelotech/drone-helm3
+    settings:
+      mode: upgrade
+      chart: ./helm_src # helm dir in repo
+      release: stake
+      namespace: stake-feature
+      atomic_upgrade: true
+      api_server: "https://kube-dev20021.ubikiri.com/k8s/clusters/local"
+      kubernetes_token: #add token to kubernetes_token secret: token-6vs2n:6ck...blabla..p5596
+        from_secret: kubernetes_token
+      #      kube_certificate:
+      #        from_secret: kube_ca_certificate
+      #      initialization values_files: ./helm_src/values.dev.yaml
+      reuse_values: true
+      values:
+        - "webapp.tag=drone-${DRONE_COMMIT_SHA:0:8}"
+      cleanup_failed_upgrade: true
+    depends_on:
+      - buildfront
+
+  - name: notification
+    image: appleboy/drone-telegram
+    settings:
+      token:
+        from_secret: telegram_token
+      to:
+        from_secret: telegram_chatid #"-1001784399619"
+      message: >
+        📝 {{repo.name}} / {{commit.branch}} - {{commit.message}}
+        {{#success build.status}}
+          ✅ succeeded  for 👷‍♂️ build {{build.number}} tag drone-${DRONE_COMMIT_SHA:0:8}
+        {{else}}
+          🛑 failed for 👷‍♂️ build {{build.number}} tag drone-${DRONE_COMMIT_SHA:0:8}
+        {{/success}}
+    when:
+      status:
+        - failure
+        - success
+    depends_on:
+      - buildfront
+      - deploy
+
+
+trigger:
+  branch:
+    - feature/*
+  event:
+    exclude:
+      - pull_request
+
