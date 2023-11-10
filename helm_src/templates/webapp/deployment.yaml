@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    com.ubix.network: {{ .Values.webapp.name }}
+  name: {{ .Values.webapp.name }}
+spec:
+  replicas: {{ .Values.webapp.replicaCount }}
+  selector:
+    matchLabels:
+      com.ubix.network: {{ .Values.webapp.name }}
+  strategy: 
+    type: {{ .Values.webapp.updateStrategyType }}
+  template:
+    metadata:
+      labels:
+        com.ubix.network: {{ .Values.webapp.name }}
+    spec:
+    {{- with .Values.global.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      containers:
+        - image: "{{ .Values.global.registry }}/{{ .Values.webapp.image }}:{{ .Values.webapp.tag }}"
+          name: {{ .Values.webapp.name }}    
+          {{- if .Values.webapp.ports }}
+          ports: {{- toYaml .Values.webapp.ports | nindent 12 }}
+          {{- end }}
+          {{- if .Values.webapp.resources }}
+          resources: {{- toYaml .Values.webapp.resources | nindent 12 }}
+          {{- end }}
+          imagePullPolicy: {{ .Values.webapp.pullPolicy | quote }} 
+      restartPolicy: Always

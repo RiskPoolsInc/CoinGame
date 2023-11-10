@@ -1,0 +1,2 @@
+# helm upgrade --install coingame . -n coingame -f values.dev.yaml --atomic --dry-run
+
