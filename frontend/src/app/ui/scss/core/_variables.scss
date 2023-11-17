@@ -1,0 +1,52 @@
+/* fonts */
+:root {
+  --font-family: 'Roboto', sans-serif;
+  --basic-font-size: 14px;
+  --font-size-s: 8px;
+  --font-size-m: 12px;
+  --font-size-l: 16px;
+  --font-size-xl: 18px;
+
+  /* color palette */
+  --color-primary: #ffbf3e;
+  --color-primary-hover: #f7ad2c;
+  --color-secondary: #f2f2f2;
+  --color-secondary-hover: #747474;
+  --color-error: #fc1704;
+  --color-white: #fff;
+  --color-black: #000;
+  --color-gray: #666;
+  --color-gray-2: #a6a5a5;
+  --color-light: #f8f8f8;
+
+  /* --color-secondary: #f0af2d; old value */
+
+  /* semantic color variables for this project */
+  --header-background: var(--color-black);
+  --section-background: var(--color-white);
+  --footer-background: var(--color-black);
+  --color-text: #121213;
+
+  /* block sizes */
+  --app-holder-height: 100vh;
+
+  /* indents */
+  --container-indent: 0 20px;
+  --section-indent: 40px 0;
+
+  /* z-indexes */
+  --ui-index-1: 1; // Для наползабщих элементов в общем потоке
+  --ui-index-2: 2; // Для наползабщих элементов в общем потоке
+  --ui-index-3: 3; // Для наползабщих элементов в общем потоке
+  --ui-index-4: 4; // Для масок
+  --ui-index-5: 5; // Для сайдбаров
+  --ui-index-6: 6; // Для модалок
+  --ui-index-7: 7; // Для перекрытия всего
+
+  /* border-radius */
+
+  --border-radius-s: 2px;
+  --border-radius-m: 4px;
+  --border-radius-l: 8px;
+  --border-radius-xl: 16px;
+}
