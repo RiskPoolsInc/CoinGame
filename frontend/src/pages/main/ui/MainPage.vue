@@ -1,9 +1,13 @@
 <script setup lang="ts">
-console.log('Main Page');
+import VFooter from "@/shared/ui/footer/ui/VFooter.vue";
+import VHeader from "@/widgets/header/ui/VHeader.vue";
+
+console.log("Main Page");
 </script>
 
 <template>
   <div>
-    Main Page
+    <VHeader />
+    <VFooter />
   </div>
 </template>
