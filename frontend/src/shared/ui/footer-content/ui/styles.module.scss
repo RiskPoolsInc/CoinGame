@@ -1,0 +1,30 @@
+.footer-content {
+  padding-top: 62px;
+  padding-bottom: 37px;
+  background-color: var(--section-background);
+  color: var(--color-white);
+
+  &__logo {
+    width: 40px;
+    height: 40px;
+  }
+
+  &__main {
+    margin: 50px 0;
+  }
+
+  &__company-label {
+    font-size: 18px;
+    font-weight: 400;
+  }
+
+  &__links {
+    column-gap: 80px;
+  }
+
+  &__link {
+    color: var(--color-white);
+    font-size: 18px;
+    font-weight: 400;
+  }
+}

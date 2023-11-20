@@ -7,7 +7,13 @@ import VButton from "@/shared/ui/base-components/v-button/ui/VButton.vue";
     <div class="header">
       <div class="header__wrapper container">
         <div class="header__logo my-auto">
-          <img src="./images/svg/logo.svg" alt="logo" />
+          <img class="" src="./images/svg/logo.svg" alt="logo" />
+
+          <img
+            class="header__title my-auto"
+            src="./images/svg/text.svg"
+            alt="text"
+          />
         </div>
         <div class="header__menu">
           <div class="header__menu__item my-auto">

@@ -15,8 +15,14 @@
     }
 
     &__logo {
-        width: 40px;
+        display: flex;
+        width: max-content;
+        column-gap: 15px;
         height: 40px;
+    }
+
+    &__title {
+        height: 20px;
     }
 
     &__menu {
