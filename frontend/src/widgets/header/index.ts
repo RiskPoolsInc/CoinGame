@@ -1,3 +1,3 @@
 import VHeader from "./ui/VHeader.vue";
 
-export { VHeader };
+export default VHeader;

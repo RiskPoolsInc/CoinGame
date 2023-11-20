@@ -1,3 +1,3 @@
-import HeroBlock from "@/widgets/hero/ui/HeroBlock.vue";
+import InfoBlocks from "./ui/InfoBlocks.vue";
 
-export default HeroBlock;
+export default InfoBlocks;
