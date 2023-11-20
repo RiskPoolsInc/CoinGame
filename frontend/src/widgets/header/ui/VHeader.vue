@@ -11,21 +11,32 @@ import VButton from "@/shared/ui/base-components/v-button/ui/VButton.vue";
         </div>
         <div class="header__menu">
           <div class="header__menu__item my-auto">
-            <VButton label="HOW" color="white" text-color="primary" size="sm" />
+            <VButton label="1x_How" color="white" text-color="dark" size="sm" />
           </div>
+
           <div class="header__menu__item my-auto">
             <VButton
-              label="TECHNOLOGY"
+              label="2x_Technology"
               color="white"
-              text-color="primary"
+              text-color="dark"
               size="sm"
             />
           </div>
+
           <div class="header__menu__item my-auto">
             <VButton
-              label="DO MORE"
+              label="3x_Do_more"
               color="white"
-              text-color="primary"
+              text-color="dark"
+              size="sm"
+            />
+          </div>
+
+          <div class="header__menu__item my-auto">
+            <VButton
+              label="4x_Get_in_touch"
+              color="white"
+              text-color="dark"
               size="sm"
             />
           </div>

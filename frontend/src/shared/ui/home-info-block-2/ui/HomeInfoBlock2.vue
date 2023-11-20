@@ -25,9 +25,11 @@ defineProps<IInfoBlockProps>();
             it seems…
           </p>
         </div>
-        <div class="home-info-block-2__img">
-          <img src="./images/info-block-img.png" alt="info-block-2" />
-        </div>
+        <img
+          class="home-info-block-2__img"
+          src="./images/home-info-block-2.png"
+          alt="info-block-2"
+        />
       </div>
     </div>
   </div>
