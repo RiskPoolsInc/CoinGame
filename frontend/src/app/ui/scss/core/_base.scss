@@ -9,6 +9,29 @@ html {
   font-size: var(--basic-font-size);
   font-weight: 400;
   line-height: 1.2;
+  /* width */
+  ::-webkit-scrollbar {
+    width: 9px;
+    border-radius: 7px;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 100px;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #18212E;
+    width: 0;
+    border-radius: 100px;
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: mediumpurple;
+  }
 }
 
 h1,
@@ -68,12 +91,19 @@ body {
 }
 
 .container {
-  width: 100%;
-  padding: var(--container-indent);
+  width: 95%;
+  margin: 0 auto;
+  //padding: var(--container-indent);
 }
 
 .link {
   color: var(--color-gray);
   font-size: 1.5rem;
   text-decoration: none;
+}
+
+@media (min-width: 1480px) {
+  .container {
+    width: 1472px;
+  }
 }

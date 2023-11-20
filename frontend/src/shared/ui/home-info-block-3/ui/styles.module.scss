@@ -1,0 +1,35 @@
+.home-info-block-3 {
+  background-color: var(--section-background);
+  color: var(--color-white);
+  padding: 75px 0;
+  //background-image: url("@/shared/ui/home-info-block-3/ui/images/home-info-blog-3.png");
+
+  &__title {
+    font-size: 60px;
+    text-align: center;
+  }
+
+  &__body {
+    display: flex;
+    column-gap: 20px;
+    margin: 57px 0;
+    //background-image: url("@/shared/ui/home-info-block-3/ui/images/home-info-blog-3.png");
+    background-size: 100%;
+    background-position: right;
+  }
+
+  &__img {
+    background-image: url("@/shared/ui/home-info-block-3/ui/images/home-info-blog-3.png");
+    background-position: right;
+    //width: 50%;
+    padding: 15px 0;
+    min-width: 50%;
+  }
+
+  &__content {
+    width: 50%;
+    font-size: 22px;
+    font-weight: 400;
+    line-height: 135%;
+  }
+}

@@ -1,0 +1,32 @@
+.hero-block {
+  background: url('@/widgets/hero/ui/images/hero-bg.png') no-repeat center center;
+  background-size: cover;
+  height: 100vh;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  color: #fff;
+  padding: 0 15px;
+
+  &__main {
+    margin: 74px 0;
+  }
+
+  &__sub {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &__context {
+    font-size: 35px;
+    font-weight: 400;
+    line-height: normal;
+    text-align: left;
+    width: 65%;
+  }
+
+  &__action-btn {}
+}
