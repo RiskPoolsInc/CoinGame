@@ -2,28 +2,31 @@
   background-color: var(--section-background);
   color: var(--color-white);
   padding: 75px 0;
-  //background-image: url("@/shared/ui/home-info-block-3/ui/images/home-info-blog-3.png");
+  position: relative;
+
+  &__head-wrapper {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+  }
 
   &__title {
+    width: 50%;
     font-size: 60px;
-    text-align: center;
+    text-align: left;
   }
 
   &__body {
     display: flex;
-    column-gap: 20px;
+    justify-content: right;
     margin: 57px 0;
-    //background-image: url("@/shared/ui/home-info-block-3/ui/images/home-info-blog-3.png");
-    background-size: 100%;
-    background-position: right;
   }
 
   &__img {
-    background-image: url("@/shared/ui/home-info-block-3/ui/images/home-info-blog-3.png");
-    background-position: right;
-    //width: 50%;
-    padding: 15px 0;
-    min-width: 50%;
+    width: 65%;
+    position: absolute;
+    left: -4%;
+    bottom: 0;
   }
 
   &__content {

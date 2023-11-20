@@ -10,25 +10,41 @@ defineProps<IInfoBlockProps>();
 
 <template>
   <div class="home-info-block-3">
-    <div class="">
-      <div class="home-info-block-3__title">
-        {{ data.title }}
+    <div class="container">
+      <div class="home-info-block-3__head-wrapper">
+        <div class="home-info-block-3__title">
+          {{ data.title }}
+        </div>
       </div>
       <div class="home-info-block-3__body">
-        <div class="container">
-          <div class="home-info-block-3__content">
-            <p>
-              In this classic children’s game, one player tosses a coin and
-              covers it with their hand – while the other has to guess if it’s
-              heads or tails. In our scenario, the user plays against a risk
-              pool. Guess right – and you’ll get the reward from the pool; guess
-              wrong – and the reward will go to the pool holder. But all is not
-              as simple as it seems…
-            </p>
-          </div>
-          <div class="home-info-block-3__img">
-            <!--          <img src="./images/home-info-blog-3.png" alt="info-block-2" />-->
-          </div>
+        <img
+          class="home-info-block-3__img"
+          src="./images/home-info-blog-3.png"
+          alt="info-block-3"
+        />
+
+        <div class="home-info-block-3__content">
+          <p>
+            Protocol revenue is distributed as follows: if a player loses, 20%
+            of their bid is deposited in the risk pool to boost token backing.
+            The remaining 80% is distributed among the pool’s stakers via
+            Ubistake.io.
+            <br /><br />
+            Risk pools will use smart contracts residing in a separate consilium
+            (essentially our own blockchain) built on the Ubix.Network DAG. This
+            is a very flexible technology: our only limitation is the shared
+            address space.
+            <br /><br />
+            Each pool will have its own token (similar to LP tokens on a DEX),
+            issued using Ubix.Network’s native T-10 standard. This is necessary
+            to record each pool holder’s share and the corresponding share of
+            the revenue. Pool profits will be distributed using Ubstake.io.
+            <br /><br />
+            We will balance the pools using probability fields and non-ergodic
+            random processes. The notion of a random value or process will be
+            formulated individually for each pool. All related documents will be
+            posted on GitHub. it seems…
+          </p>
         </div>
       </div>
     </div>
