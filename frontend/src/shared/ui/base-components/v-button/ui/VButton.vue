@@ -8,10 +8,11 @@ interface IVButtonProps {
   iconRight?: string;
   size?: "xs" | "sm" | "md" | "lg" | "xl";
   textColor?: string;
+  flat?: boolean;
 }
 withDefaults(defineProps<IVButtonProps>(), {
   color: "primary",
-  label: "Button",
+  label: undefined,
   icon: undefined,
   iconRight: undefined,
   size: "md",
@@ -23,6 +24,7 @@ withDefaults(defineProps<IVButtonProps>(), {
     <q-btn
       :color="color"
       :icon="icon"
+      :flat="flat"
       :icon-right="iconRight"
       :label="label"
       :size="size"

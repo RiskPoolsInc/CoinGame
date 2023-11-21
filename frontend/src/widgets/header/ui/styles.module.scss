@@ -32,4 +32,22 @@
         &__item {
         }
     }
+
+    &__burger-menu {
+        display: none;
+    }
 }
+@media (max-width: 550px) {
+    .header {
+        &__title {
+            display: none;
+        }
+        &__menu {
+            display: none;
+        }
+        &__burger-menu {
+            display: block;
+        }
+    }
+}
+@media (min-width: 360px) {}

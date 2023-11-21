@@ -47,6 +47,10 @@ import VButton from "@/shared/ui/base-components/v-button/ui/VButton.vue";
             />
           </div>
         </div>
+
+        <div class="header__burger-menu my-auto">
+          <VButton icon="menu" color="white" size="xl" flat />
+        </div>
       </div>
     </div>
   </header>
