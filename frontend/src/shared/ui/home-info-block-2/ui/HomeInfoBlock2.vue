@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { defineProps } from "vue";
 import { IInfoBlock } from "@/shared/ui/home-info-block-1/model/InfoBLock.interface";
+import VButton from "@/shared/ui/base-components/v-button/ui/VButton.vue";
 
 interface IInfoBlockProps {
   data: IInfoBlock;
@@ -29,6 +30,13 @@ defineProps<IInfoBlockProps>();
           class="home-info-block-2__img"
           src="./images/home-info-block-2.png"
           alt="info-block-2"
+        />
+        <VButton
+          class="home-info-block-2__btn"
+          size="md"
+          label="FULL EXAMPLE"
+          color="white"
+          text-color="dark"
         />
       </div>
     </div>

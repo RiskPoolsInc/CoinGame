@@ -1,0 +1,16 @@
+.get-in-touch-card {
+  background: var(--section-background);
+  padding: 80px 0;
+
+    &__title {
+      font-size: 60px;
+      font-weight: 700;
+      color: var(--color-white);
+    }
+
+  &__content {
+    font-size: 22px;
+    font-weight: 400;
+    color: #BFC9E2;
+  }
+}

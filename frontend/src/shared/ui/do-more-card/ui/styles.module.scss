@@ -1,0 +1,12 @@
+.do-more-card {
+    &__logo {
+      width: max-content;
+      margin: auto;
+    }
+
+  &__context {
+    max-width: 70%;
+    margin: 27px auto;
+    text-align: center;
+  }
+}

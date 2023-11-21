@@ -1,0 +1,14 @@
+.do-more {
+  background: var(--section-background);
+  color: var(--color-white);
+
+  &__title {
+    font-size: 60px;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  &__list {
+    padding: 70px 0;
+  }
+}
