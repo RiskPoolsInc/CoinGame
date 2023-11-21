@@ -11,4 +11,9 @@ export const routes: Array<RouteRecordRaw> = [
     name: "components",
     component: () => import("./base-components/ui/BaseComponentsPage.vue"),
   },
+  {
+    path: "/example",
+    name: "example-page",
+    component: () => import("./example"),
+  },
 ];

@@ -1,0 +1,31 @@
+.example-info-block {
+  background: var(--section-background);
+  color: var(--color-white);
+  padding: 74px 0;
+  position: relative;
+
+  &__title {
+    font-size: 50px;
+    font-weight: 700;
+    padding-right: 7%;
+  }
+
+  &__content {
+    margin: 60px 0;
+  }
+
+  &__context {
+    color: var(--color-gray-2);
+    font-size: 22px;
+    font-weight: 400;
+    line-height: 135%;
+    padding-right: 8%;
+  }
+
+  &__img {
+    position: absolute;
+    right: 0;
+    width: auto;
+    top: 15%;
+  }
+}

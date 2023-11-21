@@ -3,7 +3,7 @@ import VButton from "@/shared/ui/base-components/v-button/ui/VButton.vue";
 </script>
 
 <template>
-  <header>
+  <header class="main-header">
     <div class="header">
       <div class="header__wrapper container">
         <div class="header__logo my-auto">

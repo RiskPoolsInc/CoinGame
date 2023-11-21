@@ -37,6 +37,7 @@ defineProps<IInfoBlockProps>();
           label="FULL EXAMPLE"
           color="white"
           text-color="dark"
+          to="/example"
         />
       </div>
     </div>

@@ -9,6 +9,7 @@ interface IVButtonProps {
   size?: "xs" | "sm" | "md" | "lg" | "xl";
   textColor?: string;
   flat?: boolean;
+  to?: string;
 }
 withDefaults(defineProps<IVButtonProps>(), {
   color: "primary",
@@ -23,6 +24,7 @@ withDefaults(defineProps<IVButtonProps>(), {
   <div>
     <q-btn
       :color="color"
+      :to="to"
       :icon="icon"
       :flat="flat"
       :icon-right="iconRight"

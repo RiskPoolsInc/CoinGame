@@ -19,6 +19,7 @@ import VButton from "@/shared/ui/base-components/v-button/ui/VButton.vue";
           icon-right="arrow_forward"
           color="white"
           text-color="dark"
+          to="/example"
         />
       </div>
     </div>
