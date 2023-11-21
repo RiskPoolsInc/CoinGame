@@ -7,11 +7,11 @@
   &__title {
     font-size: 50px;
     font-weight: 700;
-    padding-right: 7%;
+    padding-right: 5%;
   }
 
   &__content {
-    margin: 60px 0;
+    margin-top: 57px;
   }
 
   &__context {
@@ -27,5 +27,22 @@
     right: 0;
     width: auto;
     top: 15%;
+  }
+}
+@media (max-width: 550px) {
+  .example-info-block {
+    padding: 24px 0;
+
+    &__title {
+      font-size: 24px;
+    }
+
+    &__content {
+      margin-top: 28px;
+    }
+
+    &__context {
+      font-size: 14px;
+    }
   }
 }

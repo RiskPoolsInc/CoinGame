@@ -4,7 +4,7 @@
   <div class="example-info-block">
     <div class="container">
       <div class="row">
-        <div class="col-lg-7 example-info-block__title">
+        <div class="col-lg-8 example-info-block__title">
           111x_RiskPools protocol in action: a coin flip game
         </div>
       </div>

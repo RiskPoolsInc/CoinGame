@@ -38,7 +38,7 @@ defineProps<IExampleInfoSubProps>();
             <VButton
               :label="block.btnName"
               :to="block.btnLink"
-              class="example-info-sub__btn"
+              class="example-info-sub__btn--desktop"
               text="Play now"
               type="primary"
               size="large"
@@ -48,7 +48,18 @@ defineProps<IExampleInfoSubProps>();
           </div>
         </div>
 
-        <p class="example-info-sub__context" v-html="block.context"></p>
+        <p class="col-lg-9 example-info-sub__context" v-html="block.context" />
+
+        <VButton
+          :label="block.btnName"
+          :to="block.btnLink"
+          class="example-info-sub__btn--mobile"
+          text="Play now"
+          type="primary"
+          size="large"
+          color="white"
+          text-color="dark"
+        />
       </div>
     </div>
   </div>

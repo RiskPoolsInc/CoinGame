@@ -1,16 +1,15 @@
 .example-info-sub {
     background: var(--section-background);
     color: var(--color-white);
-    padding: 30px 0;
+    padding: 16px 0;
 
     &__title {
         font-size: 50px;
         font-weight: 700;
-        padding-right: 7%;
     }
 
     &__content {
-        margin: 60px 0;
+        margin: 57px 0;
     }
 
     &__sub-title {
@@ -26,9 +25,53 @@
         line-height: 135%;
         padding-right: 8%;
         margin: 57px 0;
+
         :deep(.example-info-sub__context--link) {
             text-decoration-line: underline;
             color: var(--color-gray-2);
+        }
+    }
+
+    &__btn {
+        &--desktop {
+            display: block;
+        }
+
+        &--mobile {
+            display: none;
+        }
+    }
+}
+
+@media (max-width: 550px) {
+    .example-info-sub {
+        &__title {
+            font-size: 24px;
+        }
+
+        &__content {
+            margin: 33px 0;
+        }
+
+        &__sub-title {
+            font-size: 22px;
+        }
+
+        &__context {
+            padding: 0;
+            margin: 28px 0;
+            font-size: 14px;
+        }
+
+        &__btn {
+            &--desktop {
+                display: none;
+            }
+
+            &--mobile {
+                display: block;
+                margin: 22px auto;
+            }
         }
     }
 }
