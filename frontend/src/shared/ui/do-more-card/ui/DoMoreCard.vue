@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { defineProps } from "vue";
-import { IGetInTouchCard } from "@/widgets/do-more/modules/doMore.interface";
+import { IDoMoreCard } from "@/widgets/do-more/modules/doMore.interface";
 
 interface IGetInTouchCardProps {
-  data: IGetInTouchCard;
+  data: IDoMoreCard;
 }
 defineProps<IGetInTouchCardProps>();
 
