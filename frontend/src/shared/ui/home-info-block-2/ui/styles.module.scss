@@ -38,3 +38,42 @@
     top: 50%;
   }
 }
+
+@media (max-width: 550px) {
+  .home-info-block-2 {
+    padding-top: 0;
+
+    &__title {
+      font-size: 26px;
+      width: 100%;
+    }
+
+    &__body {
+      flex-direction: column-reverse;
+      row-gap: 35px;
+    }
+
+    &__content {
+      width: 100%;
+      font-size: 14px;
+      line-height: 135%;
+    }
+
+    &__img {
+      position: inherit;
+      width: 100%;
+    }
+    &__btn {
+      right: 35%;
+      top: 45%;
+    }
+  }
+}
+@media (max-width: 360px) {
+  .home-info-block-2 {
+    &__btn {
+      right: 30%;
+      top: 40%;
+    }
+  }
+}

@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { BLOCKS } from "@/widgets/info-blocks/model/constants";
-import HomeInfoBlock3 from "@/shared/ui/home-info-block-3";
 import HomeInfoBlock1 from "@/shared/ui/home-info-block-1";
-import HomeInfoBlock2 from "@/shared/ui/home-info-block-2";
+import HomeInfoBlock2 from "@/shared/ui/home-info-block-2/ui/HomeInfoBlock2.vue";
+import HomeInfoBlock3 from "@/shared/ui/home-info-block-3/ui/HomeInfoBlock3.vue";
 </script>
 
 <template>

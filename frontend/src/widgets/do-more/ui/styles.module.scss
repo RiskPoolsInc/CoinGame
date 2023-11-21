@@ -12,3 +12,17 @@
     padding: 70px 0;
   }
 }
+
+@media (max-width: 550px) {
+    .do-more {
+      padding: 20px 0;
+
+      &__title {
+        font-size: 30px;
+      }
+
+      &__list {
+        padding: 17px 0;
+      }
+    }
+}

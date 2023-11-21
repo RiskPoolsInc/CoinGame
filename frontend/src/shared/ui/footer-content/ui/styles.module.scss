@@ -28,3 +28,29 @@
     font-weight: 400;
   }
 }
+@media (max-width: 550px) {
+  .footer-content {
+    padding-top: 47px;
+
+    &__logo {
+      display: none;
+    }
+
+    &__company-label {
+      order: 2;
+      text-align: center;
+      font-size: 10px;
+      margin: 21px 0;
+    }
+
+    &__links {
+      order: 1;
+      justify-content: space-around;
+      column-gap: 0;
+    }
+
+    &__link {
+      font-size: 10px;
+    }
+  }
+}

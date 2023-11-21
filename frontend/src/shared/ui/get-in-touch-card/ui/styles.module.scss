@@ -14,3 +14,17 @@
     color: #BFC9E2;
   }
 }
+@media (max-width: 550px) {
+  .get-in-touch-card {
+    padding: 60px 0;
+    &__title {
+      font-size: 30px;
+      text-align: center;
+    }
+
+    &__content {
+      margin: 28px 0;
+      font-size: 14px;
+    }
+  }
+}

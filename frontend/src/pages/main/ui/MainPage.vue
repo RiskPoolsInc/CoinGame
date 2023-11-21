@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import InfoBlock from "@/widgets/info-blocks";
 import HeroBlock from "@/widgets/hero";
 import VHeader from "@/widgets/header";
-import VFooter from "@/widgets/footer";
-import DoMore from "@/widgets/do-more";
+import InfoBlocks from "@/widgets/info-blocks";
+import DoMore from "@/widgets/do-more/ui/DoMore.vue";
 import GetInTouch from "@/widgets/get-in-touch";
+import VFooter from "@/widgets/footer/ui/VFooter.vue";
 
 console.log("Main Page");
 </script>
@@ -18,7 +18,7 @@ console.log("Main Page");
     <HeroBlock />
 
     <!--  Info Block  -->
-    <InfoBlock />
+    <InfoBlocks />
 
     <!--  Do More  -->
     <DoMore />

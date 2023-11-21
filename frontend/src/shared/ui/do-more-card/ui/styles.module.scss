@@ -10,3 +10,10 @@
     text-align: center;
   }
 }
+@media (max-width: 550px) {
+  .do-more-card {
+    &__context {
+      margin: 33px auto;
+    }
+  }
+}

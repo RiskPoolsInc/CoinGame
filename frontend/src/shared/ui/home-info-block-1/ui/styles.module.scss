@@ -26,3 +26,27 @@
     line-height: 135%;
   }
 }
+@media (max-width: 550px) {
+  .home-info-block-1 {
+    padding: 50px 0;
+
+    &__title {
+      font-size: 30px;
+    }
+
+    &__body {
+      margin: 38px 0;
+      flex-direction: column;
+    }
+
+    &__img {
+      width: 100%;
+    }
+
+    &__content {
+      margin: 10px 0;
+      width: 100%;
+      font-size: 14px;
+    }
+  }
+}

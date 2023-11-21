@@ -36,3 +36,29 @@
     line-height: 135%;
   }
 }
+@media (max-width: 550px) {
+    .home-info-block-3 {
+        padding: 0;
+
+        &__title {
+          font-size: 30px;
+          width: 100%;
+          text-align: center;
+        }
+
+        &__body {
+          margin: 0;
+          padding: 25px 0;
+        }
+
+        &__content {
+        width: 100%;
+        font-size: 14px;
+        line-height: 135%;
+        }
+
+        &__img {
+          display: none;
+        }
+    }
+}

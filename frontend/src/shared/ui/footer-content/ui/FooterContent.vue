@@ -7,9 +7,11 @@
         <img src="./images/logo.svg" alt="footer-content logo" />
       </div>
 
-      <div class="footer-content__main flex justify-between">
-        <div class="footer-content__company-label">(с) Riskpools 2023</div>
-        <div class="footer-content__links row">
+      <div class="footer-content__main row justify-between">
+        <div class="footer-content__company-label col-xs-12">
+          (с) Riskpools 2023
+        </div>
+        <div class="footer-content__links row col-xs-12">
           <router-link class="footer-content__link" to="/docuemts">
             Documents
           </router-link>

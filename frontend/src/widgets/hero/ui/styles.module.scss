@@ -30,3 +30,21 @@
 
   &__action-btn {}
 }
+
+@media (max-width: 550px) {
+  .hero-block {
+    &__sub {
+      flex-direction: column;
+      row-gap: 40px;
+    }
+
+    &__context {
+      width: 100%;
+      font-size: 18px;
+    }
+
+    &__action-btn {
+      margin: auto;
+    }
+  }
+}
