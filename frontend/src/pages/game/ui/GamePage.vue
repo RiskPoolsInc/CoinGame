@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import GenerateToken from "@/features/game/generate-token";
+import { GenerateToken } from "@/entities/game";
 </script>
 
 <template>

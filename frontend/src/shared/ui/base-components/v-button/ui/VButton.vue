@@ -10,6 +10,8 @@ interface IVButtonProps {
   textColor?: string;
   flat?: boolean;
   to?: string;
+  style?: unknown;
+  disabled?: boolean;
 }
 
 withDefaults(defineProps<IVButtonProps>(), {
@@ -18,6 +20,7 @@ withDefaults(defineProps<IVButtonProps>(), {
   icon: undefined,
   iconRight: undefined,
   size: "md",
+  style: undefined,
 });
 
 const emit = defineEmits<{
@@ -41,6 +44,8 @@ const handleClick = () => {
       :label="label"
       :size="size"
       :textColor="textColor"
+      :style="style"
+      :disable="disabled"
     />
   </div>
 </template>

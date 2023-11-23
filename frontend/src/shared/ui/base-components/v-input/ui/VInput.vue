@@ -7,6 +7,7 @@ interface IVButtonProps {
   modelValue: InputValueType;
   topLabel?: boolean;
   leftLabel?: boolean;
+  disabled?: boolean;
 }
 const props = withDefaults(defineProps<IVButtonProps>(), {
   label: undefined,
@@ -36,6 +37,7 @@ const inputValue = computed({
     <label class="v-input__label"> {{ label }} </label>
     <q-input
       outlined
+      :disabled="disabled"
       v-model="inputValue"
       autocomplete="off"
       dark
