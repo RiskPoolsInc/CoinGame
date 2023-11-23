@@ -36,6 +36,7 @@ const inputValue = computed({
   >
     <label class="v-input__label"> {{ label }} </label>
     <q-input
+      class="v-input__input"
       outlined
       :disabled="disabled"
       v-model="inputValue"

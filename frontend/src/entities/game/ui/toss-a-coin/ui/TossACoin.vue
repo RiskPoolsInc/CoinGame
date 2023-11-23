@@ -2,7 +2,9 @@
 import BidCard from "@/features/game/bid-card";
 import HashTable from "@/features/game/hash-table/ui/HashTable.vue";
 import VButton from "@/shared/ui/base-components/v-button/ui/VButton.vue";
+import { useGameStore } from "@/entities/game/model/game";
 
+const { gameState } = useGameStore();
 const columns = [
   {
     name: "Round",
@@ -14,14 +16,7 @@ const columns = [
     name: "result",
     align: "center",
     label: "Result",
-    field: "result",
-  },
-];
-
-const rows = [
-  {
-    result: "123123213123123123",
-    round: 159,
+    field: "hashNumber",
   },
 ];
 </script>
@@ -34,8 +29,8 @@ const rows = [
       <div class="toss-a-coin__subtitle">
         Place your bet and select the number of game rounds (coin tosses).
       </div>
-      <div class="row">
-        <div class="col-lg-8">
+      <div class="row justify-between">
+        <div class="col-lg-7">
           <BidCard />
         </div>
 
@@ -44,7 +39,7 @@ const rows = [
             Place your bet and select the number of game rounds (coin tosses).
           </div>
 
-          <HashTable :rows="rows" :columns="columns" />
+          <HashTable :rows="gameState.hashNumberList" :columns="columns" />
 
           <div class="toss-a-coin__copy-btn text-right">
             <VButton

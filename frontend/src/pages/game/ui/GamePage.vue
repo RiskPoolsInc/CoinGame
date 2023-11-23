@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { GenerateToken } from "@/entities/game";
-import TossACoin from "@/entities/game/ui/toss-a-coin/ui/TossACoin.vue";
+import { GenerateToken, ResultGame, TossACoin } from "@/entities/game";
 import RefundBlock from "@/features/game/refund-block";
+import ProcessCards from "@/features/game/process-cards/ui/ProcessCards.vue";
 </script>
 
 <template>
@@ -10,6 +10,10 @@ import RefundBlock from "@/features/game/refund-block";
       <GenerateToken />
 
       <TossACoin />
+
+      <ProcessCards />
+
+      <ResultGame />
 
       <RefundBlock />
     </div>

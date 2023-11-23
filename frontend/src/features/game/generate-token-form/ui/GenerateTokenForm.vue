@@ -43,30 +43,31 @@ const handleCopyWallet = () => {
         label="Wallet balance, UBX"
       />
 
-      <VButton
-        v-if="gameState.wallet"
-        label="COMPLETED"
-        color="white"
-        text-color="dark"
-        class="mt-auto"
-      />
+      <div class="col-lg-3 row justify-between mt-auto">
+        <VButton
+          v-if="gameState.wallet"
+          label="COMPLETED"
+          color="white"
+          text-color="dark"
+        />
 
-      <VButton
-        v-else
-        label="EMPTY"
-        color="red-14"
-        text-color="dark"
-        class="mt-auto"
-      />
+        <VButton
+          v-else
+          label="EMPTY"
+          color="red-14"
+          text-color="dark"
+          class="mt-auto"
+        />
+        <VButton
+          :label="copyingWallet ? 'COPIED' : 'COPY WALLET'"
+          :disabled="!gameState.wallet"
+          color="white"
+          text-color="dark"
+          @click="handleCopyWallet"
+        />
+      </div>
 
-      <VButton
-        :label="copyingWallet ? 'COPIED' : 'COPY WALLET'"
-        :disabled="!gameState.wallet"
-        color="white"
-        text-color="dark"
-        class="mt-auto"
-        @click="handleCopyWallet"
-      />
+      <!--      <div class="col-lg-1 mt-auto"></div>-->
     </div>
   </div>
 </template>

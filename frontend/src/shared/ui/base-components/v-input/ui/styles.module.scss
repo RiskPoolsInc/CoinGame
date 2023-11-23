@@ -1,6 +1,5 @@
 .v-input {
   color: var(--color-white);
-
   &__label {
     font-size: var(--basic-font-size);
     font-weight: 400;
@@ -13,10 +12,13 @@
       margin-bottom: 10px;
     }
   }
+}
 
-  &.left-label {
-    &__label {
-      margin-right: 10px;
-    }
+.left-label {
+  display: flex;
+  column-gap: 30px;
+
+  .v-input__label {
+    margin-right: 10px;
   }
 }
