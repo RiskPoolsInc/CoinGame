@@ -52,12 +52,6 @@ export const useGameStore = defineStore("game", () => {
     );
   };
 
-  const resetGame = () => {
-    gameState.bid = 0;
-    gameState.hashNumberList = [];
-    gameState.parityList = [];
-  };
-
   const startGame = () => {
     for (let i = 0; i < gameState.round; i++) {
       const randomNumber = getRandomNumber();

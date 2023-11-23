@@ -37,7 +37,6 @@ const handleClick = () => {
 <template>
   <div>
     <q-btn
-      @click="handleClick"
       :outline="outline"
       :color="color"
       :to="to"
@@ -50,6 +49,7 @@ const handleClick = () => {
       :style="style"
       :disable="disabled"
       :class="className"
+      @click="handleClick"
     />
   </div>
 </template>

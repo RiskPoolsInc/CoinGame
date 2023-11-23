@@ -1,27 +1,26 @@
 <script setup lang="ts">
-import Chart from "chart.js/auto";
 import { onMounted } from "vue";
+import Chart from "chart.js/auto";
+
+import { Line } from "vue-chartjs";
+
+const chartData = {
+  labels: ["January", "February", "March"],
+  datasets: [{ data: [40, 20, 12] }],
+};
+const chartOptions = {
+  responsive: true,
+};
 
 onMounted(() => {
   new Chart(document.getElementById("acquisitions"), {
-    type: "bar",
-    options: {
-      animation: false,
-      plugins: {
-        legend: {
-          display: false,
-        },
-        tooltip: {
-          enabled: false,
-        },
-      },
-    },
+    type: "line",
     data: {
-      labels: [],
+      labels: ["Jan", "Feb", "Mar", "Apr", "May"],
       datasets: [
         {
-          label: "Acquisitions by year",
-          data: [],
+          label: "2018 Sales",
+          data: [300, 700, 450, 750, 450],
         },
       ],
     },
@@ -30,7 +29,9 @@ onMounted(() => {
 </script>
 
 <template>
-  <div id="acquisitions">asdsad</div>
+  <div id="acquisitions">
+    <Line :data="chartData" :options="chartOptions" />
+  </div>
 </template>
 
 <style scoped lang="scss"></style>
