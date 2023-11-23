@@ -1,21 +1,17 @@
 <script setup lang="ts">
 import GenerateTokenForm from "@/features/game/generate-token-form/ui/GenerateTokenForm.vue";
-import { useGameStore } from "@/entities/game/model/game";
-
-const { gameState } = useGameStore();
 </script>
 
 <template>
   <div class="generate-token">
-    <div class="container">
-      <div class="generate-token__title">112PxA_Top up the wallet</div>
+    <div class="generate-token__title">112PxA_Top up the wallet</div>
 
-      <div class="generate-token__info">
-        To participate in the game you need to top up your game wallet. Generate
-        a wallet and top it up.
-      </div>
-      <GenerateTokenForm />
+    <div class="generate-token__info">
+      To participate in the game you need to top up your game wallet. Generate a
+      wallet and top it up.
     </div>
+
+    <GenerateTokenForm />
   </div>
 </template>
 

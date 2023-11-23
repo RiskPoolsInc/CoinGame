@@ -1,0 +1,17 @@
+.refund-block {
+  padding: 76px 0;
+
+  &__title {
+    font-size: 35px;
+    font-weight: 700;
+    color: var(--color-white);
+    margin-bottom: 57px;
+  }
+
+  &__description {
+    color: var(--color-gray-2);
+    font-size: 22px;
+    font-weight: 400;
+    margin-bottom: 25px;
+  }
+}

@@ -1,3 +1,5 @@
 import GenerateToken from "@/entities/game/ui/generate-token";
 
-export { GenerateToken };
+import TossACoin from "@/entities/game/ui/toss-a-coin";
+
+export { GenerateToken, TossACoin };

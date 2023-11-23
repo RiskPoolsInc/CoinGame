@@ -1,0 +1,20 @@
+.toss-a-coin {
+  background: var(--color-gray);
+  color: var(--color-white);
+  padding: 10px;
+  &__title {
+    font-size: 35px;
+    font-weight: 700;
+  }
+
+  &__subtitle {
+    color: var(--color-gray-2);
+    font-weight: 400;
+    font-size: 22px;
+    margin-bottom: 25px;
+  }
+
+  &__copy-btn {
+    margin: 25px 0;
+  }
+}

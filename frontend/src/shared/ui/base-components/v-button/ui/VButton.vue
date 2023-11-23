@@ -12,6 +12,8 @@ interface IVButtonProps {
   to?: string;
   style?: unknown;
   disabled?: boolean;
+  className?: string;
+  outline?: boolean;
 }
 
 withDefaults(defineProps<IVButtonProps>(), {
@@ -36,6 +38,7 @@ const handleClick = () => {
   <div>
     <q-btn
       @click="handleClick"
+      :outline="outline"
       :color="color"
       :to="to"
       :icon="icon"
@@ -46,6 +49,7 @@ const handleClick = () => {
       :textColor="textColor"
       :style="style"
       :disable="disabled"
+      :class="className"
     />
   </div>
 </template>

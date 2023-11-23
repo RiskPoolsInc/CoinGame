@@ -21,54 +21,52 @@ const handleCopyWallet = () => {
 
 <template>
   <div class="generate-token-form">
-    <div class="container">
-      <div class="generate-token__form row justify-between items-stretch">
-        <VButton
-          label="GENERATE"
-          color="white"
-          text-color="dark"
-          class="mt-auto"
-          @click="generateWallet"
-        />
+    <div class="generate-token__form row justify-between items-stretch">
+      <VButton
+        label="GENERATE"
+        color="white"
+        text-color="dark"
+        class="mt-auto"
+        @click="generateWallet"
+      />
 
-        <VInput
-          v-model="gameState.wallet"
-          class="col-lg-4"
-          label="Your game wallet"
-        />
+      <VInput
+        v-model="gameState.wallet"
+        class="col-lg-4"
+        label="Your game wallet"
+      />
 
-        <VInput
-          v-model="gameState.balance"
-          disabled
-          class="col-lg-3"
-          label="Wallet balance, UBX"
-        />
+      <VInput
+        v-model="gameState.balance"
+        disabled
+        class="col-lg-3"
+        label="Wallet balance, UBX"
+      />
 
-        <VButton
-          v-if="gameState.wallet"
-          label="COMPLETED"
-          color="white"
-          text-color="dark"
-          class="mt-auto"
-        />
+      <VButton
+        v-if="gameState.wallet"
+        label="COMPLETED"
+        color="white"
+        text-color="dark"
+        class="mt-auto"
+      />
 
-        <VButton
-          v-else
-          label="EMPTY"
-          color="red-14"
-          text-color="dark"
-          class="mt-auto"
-        />
+      <VButton
+        v-else
+        label="EMPTY"
+        color="red-14"
+        text-color="dark"
+        class="mt-auto"
+      />
 
-        <VButton
-          :label="copyingWallet ? 'COPIED' : 'COPY WALLET'"
-          :disabled="!gameState.wallet"
-          color="white"
-          text-color="dark"
-          class="mt-auto"
-          @click="handleCopyWallet"
-        />
-      </div>
+      <VButton
+        :label="copyingWallet ? 'COPIED' : 'COPY WALLET'"
+        :disabled="!gameState.wallet"
+        color="white"
+        text-color="dark"
+        class="mt-auto"
+        @click="handleCopyWallet"
+      />
     </div>
   </div>
 </template>
