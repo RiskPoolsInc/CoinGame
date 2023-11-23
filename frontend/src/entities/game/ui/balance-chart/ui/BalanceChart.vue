@@ -1,19 +1,32 @@
 <script setup lang="ts">
-import { onMounted } from "vue";
+import { computed, onMounted } from "vue";
 import Chart from "chart.js/auto";
 
 import { Line } from "vue-chartjs";
+import { useGameStore } from "@/entities/game/model/game";
 
-const chartData = {
-  labels: ["January", "February", "March"],
-  datasets: [{ data: [40, 20, 12] }],
-};
+const { gameState } = useGameStore();
+
+const labels = computed(() => {
+  return gameState.parityList.map((item) => item.round);
+});
+
+const chartData = computed(() => {
+  return {
+    labels: labels.value,
+    datasets: [{ data: [40, 20, 12] }],
+  };
+});
+
 const chartOptions = {
   responsive: true,
 };
 
 onMounted(() => {
-  new Chart(document.getElementById("acquisitions"), {
+  const element = document.getElementById("acquisitions");
+
+  // Need to refactor this
+  new Chart(element, {
     type: "line",
     data: {
       labels: ["Jan", "Feb", "Mar", "Apr", "May"],

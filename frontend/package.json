@@ -10,10 +10,12 @@
   "dependencies": {
     "@quasar/extras": "^1.16.8",
     "aos": "^2.3.4",
+    "chart.js": "^4.4.0",
     "core-js": "^3.8.3",
     "pinia": "^2.1.7",
     "quasar": "^2.14.0",
     "vue": "^3.2.13",
+    "vue-chartjs": "^5.2.0",
     "vue-query": "^1.26.0",
     "vue-router": "^4.2.5",
     "zod": "^3.21.4"
