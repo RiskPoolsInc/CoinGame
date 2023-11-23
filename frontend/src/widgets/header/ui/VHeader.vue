@@ -1,5 +1,19 @@
 <script setup lang="ts">
-import VButton from "@/shared/ui/base-components/v-button/ui/VButton.vue";
+import { defineEmits, defineProps } from "vue/dist/vue";
+
+import VButton from "@/shared/ui/base-components/v-button";
+
+const props = defineProps<{
+  isSidebarOpen: boolean;
+}>();
+
+const emit = defineEmits<{
+  "update:isSidebarOpen": [boolean];
+}>();
+
+const toogleMenu = () => {
+  emit("update:isSidebarOpen", !props.isSidebarOpen);
+};
 </script>
 
 <template>
@@ -49,7 +63,23 @@ import VButton from "@/shared/ui/base-components/v-button/ui/VButton.vue";
         </div>
 
         <div class="header__burger-menu my-auto">
-          <VButton icon="menu" color="white" size="xl" flat />
+          <VButton
+            v-if="!props.isSidebarOpen"
+            @click="toogleMenu"
+            icon="menu"
+            color="white"
+            size="lg"
+            flat
+          />
+
+          <VButton
+            v-else
+            @click="toogleMenu"
+            icon="close"
+            color="white"
+            size="lg"
+            flat
+          />
         </div>
       </div>
     </div>

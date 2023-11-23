@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps, withDefaults } from "vue";
+import { defineEmits, defineProps, withDefaults } from "vue";
 
 interface IVButtonProps {
   color?: string;
@@ -11,6 +11,7 @@ interface IVButtonProps {
   flat?: boolean;
   to?: string;
 }
+
 withDefaults(defineProps<IVButtonProps>(), {
   color: "primary",
   label: undefined,
@@ -18,11 +19,20 @@ withDefaults(defineProps<IVButtonProps>(), {
   iconRight: undefined,
   size: "md",
 });
+
+const emit = defineEmits<{
+  click: [void];
+}>();
+
+const handleClick = () => {
+  emit("click");
+};
 </script>
 
 <template>
   <div>
     <q-btn
+      @click="handleClick"
       :color="color"
       :to="to"
       :icon="icon"

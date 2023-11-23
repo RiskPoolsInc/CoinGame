@@ -2,15 +2,21 @@
 import { Routing } from "@/pages/routing";
 import VHeader from "@/widgets/header";
 import VFooter from "@/widgets/footer/ui/VFooter.vue";
+import { ref } from "vue";
+import SidebarMenu from "@/shared/ui/sidebar-menu/ui/SidebarMenu.vue";
 
-console.log("Main App enter point");
+const isSidebarOpen = ref(false);
 </script>
 
 <template>
   <div>
     <!--  Header  -->
-    <VHeader />
+    <VHeader v-model:isSidebarOpen="isSidebarOpen" />
 
+    <!--  Sidebar menu  -->
+    <SidebarMenu v-if="isSidebarOpen" />
+
+    <!--  Pages  -->
     <Routing />
 
     <!--  Footer  -->

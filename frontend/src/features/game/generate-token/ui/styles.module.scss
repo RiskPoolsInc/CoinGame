@@ -1,0 +1,19 @@
+.generate-token {
+  background: var(--section-background);
+  padding: 44px 0;
+
+  &__title {
+    font-size: 35px;
+    font-weight: 700;
+    color: var(--color-white);
+  }
+
+  &__info {
+    font-size: var(--basic-font-size);
+    color: var(--color-gray-2);
+  }
+
+  &__form {
+    margin-top: 40px;
+  }
+}

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import VButton from "@/shared/ui/base-components/v-button/ui/VButton.vue";
+import VButton from "@/shared/ui/base-components/v-button";
 </script>
 
 <template>

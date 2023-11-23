@@ -13,6 +13,14 @@
 
   &__main {
     margin: 74px 0;
+
+    &--desktop {
+      display: block;
+    }
+
+    &--mobile {
+      display: none;
+    }
   }
 
   &__sub {
@@ -33,6 +41,16 @@
 
 @media (max-width: 550px) {
   .hero-block {
+    align-items: inherit;
+    &__main {
+      &--desktop {
+        display: none;
+      }
+
+      &--mobile {
+        display: block;
+      }
+    }
     &__sub {
       flex-direction: column;
       row-gap: 40px;

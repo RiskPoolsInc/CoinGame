@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { defineProps } from "vue";
 import { IInfoBlock } from "@/shared/ui/home-info-block-1/model/InfoBLock.interface";
-import VButton from "@/shared/ui/base-components/v-button/ui/VButton.vue";
+import VButton from "@/shared/ui/base-components/v-button";
 
 interface IInfoBlockProps {
   data: IInfoBlock;
@@ -15,8 +15,8 @@ defineProps<IInfoBlockProps>();
       <div class="home-info-block-2__title">
         {{ data.title }}
       </div>
-      <div class="home-info-block-2__body">
-        <div class="home-info-block-2__content">
+      <div class="home-info-block-2__body row">
+        <div class="home-info-block-2__content col-lg-7">
           <p>
             In this classic children’s game, one player tosses a coin and covers
             it with their hand – while the other has to guess if it’s heads or
@@ -33,7 +33,7 @@ defineProps<IInfoBlockProps>();
         />
         <VButton
           class="home-info-block-2__btn"
-          size="md"
+          size="lg"
           label="FULL EXAMPLE"
           color="white"
           text-color="dark"

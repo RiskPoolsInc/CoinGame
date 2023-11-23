@@ -1,7 +1,6 @@
 .home-info-block-3 {
-  background-color: var(--section-background);
   color: var(--color-white);
-  padding: 100px 0;
+  margin-top: 110px;
   position: relative;
 
   &__head-wrapper {
@@ -14,12 +13,14 @@
     width: 50%;
     font-size: 60px;
     text-align: left;
+    font-weight: 700;
   }
 
   &__body {
     display: flex;
     justify-content: right;
-    margin: 57px 0;
+    margin-top: 57px;
+    margin-bottom: 110px;
   }
 
   &__img {
@@ -31,19 +32,19 @@
 
   &__content {
     width: 50%;
-    font-size: 22px;
+    font-size: var(--basic-font-size);
     font-weight: 400;
     line-height: 135%;
   }
 }
 @media (max-width: 550px) {
     .home-info-block-3 {
-        padding: 0;
+        margin-top: 56px;
 
         &__title {
           font-size: 30px;
           width: 100%;
-          text-align: center;
+          text-align: left;
         }
 
         &__body {

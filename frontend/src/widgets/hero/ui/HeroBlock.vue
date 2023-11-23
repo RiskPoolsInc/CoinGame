@@ -1,11 +1,20 @@
 <script setup lang="ts">
-import VButton from "@/shared/ui/base-components/v-button/ui/VButton.vue";
+import VButton from "@/shared/ui/base-components/v-button";
 </script>
 
 <template>
   <div class="hero-block">
     <div class="hero-block__main">
-      <img src="./images/riskpools.svg" alt="main text" />
+      <img
+        class="hero-block__main--desktop"
+        src="./images/riskpools.svg"
+        alt="main text"
+      />
+      <img
+        class="hero-block__main--mobile"
+        src="./images/hero-bg-mobile.svg"
+        alt="main text"
+      />
     </div>
     <div class="hero-block__sub container">
       <div class="hero-block__context">
@@ -20,6 +29,7 @@ import VButton from "@/shared/ui/base-components/v-button/ui/VButton.vue";
           color="white"
           text-color="dark"
           to="/example"
+          size="lg"
         />
       </div>
     </div>

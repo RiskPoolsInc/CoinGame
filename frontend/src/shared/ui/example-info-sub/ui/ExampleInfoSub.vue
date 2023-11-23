@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { defineProps } from "vue";
 
-import VButton from "@/shared/ui/base-components/v-button/ui/VButton.vue";
+import VButton from "@/shared/ui/base-components/v-button";
 
 interface ISubInfo {
   title: string;

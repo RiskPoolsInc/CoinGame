@@ -102,8 +102,19 @@ body {
   text-decoration: none;
 }
 
+.q-btn {
+  font-weight: 700;
+}
+
 @media (min-width: 1480px) {
   .container {
     width: 1472px;
+  }
+}
+
+@media (max-width: 550px) {
+  .container {
+    width: 100%;
+    padding: 0 24px;
   }
 }

@@ -1,7 +1,7 @@
 /* fonts */
 :root {
   --font-family: 'Actay';
-  --basic-font-size: 14px;
+  --basic-font-size: 22px;
   --font-size-s: 8px;
   --font-size-m: 12px;
   --font-size-l: 16px;
@@ -18,6 +18,10 @@
   --color-gray: #18212E;
   --color-gray-2: #BFC9E2;
   --color-light: #f8f8f8;
+
+  // reset quasar colors
+
+  --q-dark: var(--color-gray);
 
   /* --color-secondary: #f0af2d; old value */
 

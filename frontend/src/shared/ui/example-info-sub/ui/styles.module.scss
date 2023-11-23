@@ -20,7 +20,7 @@
 
     &__context {
         color: var(--color-gray-2);
-        font-size: 22px;
+        font-size: var(--basic-font-size);
         font-weight: 400;
         line-height: 135%;
         padding-right: 8%;
@@ -54,7 +54,7 @@
         }
 
         &__sub-title {
-            font-size: 22px;
+            font-size: var(--basic-font-size);
         }
 
         &__context {

@@ -1,0 +1,22 @@
+.v-input {
+  color: var(--color-white);
+
+  &__label {
+    font-size: var(--basic-font-size);
+    font-weight: 400;
+    text-align: center;
+    display: block;
+  }
+
+  &.top-label {
+    &__label {
+      margin-bottom: 10px;
+    }
+  }
+
+  &.left-label {
+    &__label {
+      margin-right: 10px;
+    }
+  }
+}

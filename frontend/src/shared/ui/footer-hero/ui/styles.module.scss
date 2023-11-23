@@ -9,12 +9,13 @@
   }
 
   &__item {
-    font-size: 22px;
+    font-size: var(--basic-font-size);
     font-weight: 400;
   }
 }
 @media (max-width: 550px) {
   .footer-hero {
+    padding: 20px 0;
     &__list {
       row-gap: 0;
     }

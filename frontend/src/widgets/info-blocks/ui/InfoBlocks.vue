@@ -6,7 +6,7 @@ import HomeInfoBlock3 from "@/shared/ui/home-info-block-3/ui/HomeInfoBlock3.vue"
 </script>
 
 <template>
-  <div>
+  <div class="home-info-blocks">
     <HomeInfoBlock1 :data="BLOCKS[0]" />
 
     <HomeInfoBlock2 :data="BLOCKS[1]" />

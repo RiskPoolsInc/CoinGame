@@ -16,4 +16,9 @@ export const routes: Array<RouteRecordRaw> = [
     name: "example-page",
     component: () => import("./example"),
   },
+  {
+    path: "/game",
+    name: "game-page",
+    component: () => import("./game"),
+  },
 ];
