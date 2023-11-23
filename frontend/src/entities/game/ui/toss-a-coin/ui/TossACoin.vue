@@ -5,6 +5,7 @@ import VButton from "@/shared/ui/base-components/v-button/ui/VButton.vue";
 import { useGameStore } from "@/entities/game/model/game";
 
 const { gameState } = useGameStore();
+
 const columns = [
   {
     name: "Round",
@@ -39,7 +40,7 @@ const columns = [
             Place your bet and select the number of game rounds (coin tosses).
           </div>
 
-          <HashTable :rows="gameState.hashNumberList" :columns="columns" />
+          <HashTable :rows="gameState.parityList" :columns="columns" />
 
           <div class="toss-a-coin__copy-btn text-right">
             <VButton

@@ -9,7 +9,11 @@ const { gameState, startGame } = useGameStore();
 const confirm = ref(false);
 
 const statusPlayButton = computed(() => {
-  return !(Number(gameState.bid) > 10000 && gameState.round >= 3);
+  return !(
+    Number(gameState.bid) > 10000 &&
+    gameState.round >= 3 &&
+    gameState.wallet
+  );
 });
 </script>
 

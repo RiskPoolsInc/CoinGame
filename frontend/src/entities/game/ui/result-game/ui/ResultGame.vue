@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import VInput from "@/shared/ui/base-components/v-input/ui/VInput.vue";
+import { useGameStore } from "@/entities/game/model/game";
 
 const a = ref("");
+
+const { gameState } = useGameStore();
 </script>
 
 <template>
@@ -13,7 +16,12 @@ const a = ref("");
       </div>
 
       <div class="col-lg-6">
-        <VInput v-model="a" left-label label="Your game wallet balance, UBX" />
+        <VInput
+          v-model="gameState.balance"
+          disabled
+          left-label
+          label="Your game wallet balance, UBX"
+        />
       </div>
     </div>
   </div>

@@ -1,7 +1,7 @@
 import { createApp } from "vue";
 import { pinia, router } from "./providers";
 import { VueQueryPlugin } from "vue-query";
-import { Quasar } from "quasar";
+import { Notify, Quasar } from "quasar";
 
 // Import icon libraries
 import "@quasar/extras/material-icons/material-icons.css";
@@ -18,5 +18,7 @@ export const app = createApp(App)
   .use(VueQueryPlugin)
   .use(router)
   .use(Quasar, {
-    plugins: {},
+    plugins: {
+      Notify,
+    },
   });

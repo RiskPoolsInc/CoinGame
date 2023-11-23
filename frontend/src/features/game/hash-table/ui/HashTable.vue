@@ -22,6 +22,7 @@ defineProps({
       :columns="columns"
       hide-bottom
       dark
+      :virtual-scroll-item-size="10"
       row-key="name"
     />
   </div>

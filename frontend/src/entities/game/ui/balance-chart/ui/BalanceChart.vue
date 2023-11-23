@@ -11,10 +11,14 @@ const labels = computed(() => {
   return gameState.parityList.map((item) => item.round);
 });
 
+const datasets = computed(() => {
+  return gameState.parityList.map((item) => item.currentBalance);
+});
+
 const chartData = computed(() => {
   return {
     labels: labels.value,
-    datasets: [{ data: [40, 20, 12] }],
+    datasets: [{ label: "2018 Sales", data: datasets.value }],
   };
 });
 
@@ -23,21 +27,25 @@ const chartOptions = {
 };
 
 onMounted(() => {
-  const element = document.getElementById("acquisitions");
+  const element = document.getElementById(
+    "acquisitions"
+  ) as HTMLCanvasElement | null;
 
+  if (element) {
+    new Chart(element, {
+      type: "line",
+      data: {
+        labels: [],
+        datasets: [
+          {
+            label: "2018 Sales",
+            data: [300, 700, 450, 750, 450],
+          },
+        ],
+      },
+    });
+  }
   // Need to refactor this
-  new Chart(element, {
-    type: "line",
-    data: {
-      labels: ["Jan", "Feb", "Mar", "Apr", "May"],
-      datasets: [
-        {
-          label: "2018 Sales",
-          data: [300, 700, 450, 750, 450],
-        },
-      ],
-    },
-  });
 });
 </script>
 

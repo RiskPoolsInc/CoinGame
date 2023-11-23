@@ -38,7 +38,7 @@ const inputValue = computed({
     <q-input
       class="v-input__input"
       outlined
-      :disabled="disabled"
+      :disable="disabled"
       v-model="inputValue"
       autocomplete="off"
       dark

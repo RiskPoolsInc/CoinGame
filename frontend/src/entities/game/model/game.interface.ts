@@ -1,12 +1,9 @@
-export interface IHashNumber {
-  round: number;
-  hashNumber: string;
-}
-
 export interface IParityList {
   round: number;
+  hashNumber: string;
   number: number;
   parity: boolean;
+  currentBalance: number;
 }
 
 export interface IGameState {
@@ -14,6 +11,5 @@ export interface IGameState {
   balance: number;
   bid: number;
   round: number;
-  hashNumberList: IHashNumber[];
   parityList: IParityList[];
 }

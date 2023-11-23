@@ -1,21 +1,23 @@
 <script setup lang="ts">
-import { ref } from "vue";
 import VButton from "@/shared/ui/base-components/v-button";
 import VInput from "@/shared/ui/base-components/v-input/ui/VInput.vue";
 
 import { useGameStore } from "@/entities/game/model/game";
+import { useQuasar } from "quasar";
+
+const $q = useQuasar();
 
 const { gameState, generateWallet, copyWallet } = useGameStore();
 
-const copyingWallet = ref(false);
-
 const handleCopyWallet = () => {
-  copyingWallet.value = true;
-
-  setTimeout(() => {
-    copyingWallet.value = false;
-  }, 1000);
   copyWallet();
+
+  $q.notify({
+    message: "Wallet copied",
+    color: "green-14",
+    position: "top-right",
+    icon: "check",
+  });
 };
 </script>
 
@@ -59,15 +61,13 @@ const handleCopyWallet = () => {
           class="mt-auto"
         />
         <VButton
-          :label="copyingWallet ? 'COPIED' : 'COPY WALLET'"
+          label="COPY WALLET"
           :disabled="!gameState.wallet"
           color="white"
           text-color="dark"
           @click="handleCopyWallet"
         />
       </div>
-
-      <!--      <div class="col-lg-1 mt-auto"></div>-->
     </div>
   </div>
 </template>

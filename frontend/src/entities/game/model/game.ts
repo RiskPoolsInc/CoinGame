@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { reactive } from "vue";
+
 import { IGameState } from "@/entities/game/model/game.interface";
 
 export const useGameStore = defineStore("game", () => {
@@ -8,7 +9,6 @@ export const useGameStore = defineStore("game", () => {
     balance: 1000000,
     bid: 0,
     round: 3,
-    hashNumberList: [],
     parityList: [],
   });
 
@@ -43,13 +43,6 @@ export const useGameStore = defineStore("game", () => {
     } else {
       gameState.balance -= Number(gameState.bid);
     }
-
-    console.log(
-      gameState.balance,
-      parity,
-      gameState.bid,
-      Number(gameState.bid)
-    );
   };
 
   const startGame = () => {
@@ -58,15 +51,15 @@ export const useGameStore = defineStore("game", () => {
       const hash = number2Hash(randomNumber);
       const parity = randomNumber % 2 === 0;
 
-      gameState.hashNumberList.push({ round: i, hashNumber: hash });
+      balanceCalculation(parity);
 
       gameState.parityList.push({
         round: i,
         number: randomNumber,
         parity: parity,
+        currentBalance: gameState.balance,
+        hashNumber: hash,
       });
-
-      balanceCalculation(parity);
     }
   };
 
