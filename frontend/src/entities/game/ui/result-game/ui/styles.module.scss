@@ -1,1 +1,12 @@
-.result-game {}
+.result-game {
+  margin: 40px 0;
+  &__input {
+    width: 264px
+  }
+  &__label {
+    font-size: 22px;
+    color: var(--color-white);
+    font-weight: 400;
+    margin: auto 24px auto auto;
+  }
+}

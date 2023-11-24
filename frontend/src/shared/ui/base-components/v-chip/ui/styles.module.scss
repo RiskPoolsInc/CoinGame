@@ -1,0 +1,18 @@
+.v-chip {
+  padding: 15px 25px;
+  border-radius: 7px;
+  &__content {
+    font-size: 16px;
+    font-weight: 700;
+    font-family: Padauk;
+    color: var(--color-gray);
+  }
+
+  &--success {
+    background-color: #8AC090;
+  }
+
+  &--danger {
+    background: #963B43;
+  }
+}

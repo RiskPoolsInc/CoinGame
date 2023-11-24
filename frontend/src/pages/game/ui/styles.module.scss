@@ -1,3 +1,10 @@
 .game-page {
-  background: var(--color-gray);
+  background: var(--section-background);
+  padding: 44px 0;
+
+  &__title {
+    font-size: 50px;
+    font-weight: 700;
+    color: var(--color-white);
+  }
 }

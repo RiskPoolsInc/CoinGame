@@ -1,0 +1,35 @@
+.q-markup-table {
+  color: var(--color-white);
+  box-shadow: inherit;
+  border-radius: 7px;
+  border: 1px solid #BFC9E2;
+
+  thead {
+    background: #50596C;
+  }
+  td:first-child {
+    border-right: 1px solid #BFC9E2;
+    text-align: center;
+  }
+  th:first-child {
+    border-right: 1px solid #BFC9E2;
+    width: 82px;
+    text-align: center;
+  }
+  tbody {
+    td {
+      font-size: 16px;
+      font-weight: 400;
+      border-top: none;
+      border-bottom: none;
+      border-right: 1px solid #BFC9E2;
+    }
+  }
+  tr {
+    th {
+      font-weight: 700;
+      font-size: 16px;
+      text-align: center;
+    }
+  }
+}

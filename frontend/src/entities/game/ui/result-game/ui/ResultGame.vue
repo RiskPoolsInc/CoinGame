@@ -11,20 +11,23 @@ const { gameState } = useGameStore();
 <template>
   <div class="result-game">
     <div class="row justify-end">
-      <div class="col-lg-6">
-        <VInput v-model="a" left-label label="Your game result, UBX" />
+      <div class="col-lg-6 row">
+        <div class="result-game__label">Your game result, UBX</div>
+        <VInput v-model="a" class="result-game__input" />
       </div>
 
-      <div class="col-lg-6">
+      <div class="col-lg-6 row">
+        <div class="result-game__label">Your game wallet balance, UBX</div>
         <VInput
           v-model="gameState.balance"
+          class="result-game__input"
           disabled
-          left-label
-          label="Your game wallet balance, UBX"
         />
       </div>
     </div>
   </div>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+@import "./styles.module";
+</style>

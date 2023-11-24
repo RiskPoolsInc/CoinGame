@@ -1,10 +1,17 @@
 .bid-card {
-  background: url("./images/bg.svg");
   padding: 27px 32px 70px 32px;
   color: var(--color-white);
-  margin: 40px 0;
   border-radius: 7px;
   border: 1px dashed #F3F6FE;
+  height: 520px;
+  background: url("./images/bg.png") no-repeat bottom;
+
+  &__input {
+    //width: 264px;
+    //font-size: 16px;
+    //font-family: Padauk;
+    //font-weight: 400;
+  }
 
   &__slider {
     margin: 80px;
@@ -25,5 +32,15 @@
     font-weight: 700;
     line-height: 155%;
     text-align: center;
+    width: 90%;
+  }
+
+  &__popup-actions {
+    column-gap: 28px;
+    margin: 10px 0;
+  }
+
+  &__dialog {
+    padding: 30px;
   }
 }

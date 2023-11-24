@@ -14,20 +14,25 @@ defineProps({
 </script>
 
 <template>
-  <div class="">
-    <q-table
-      flat
-      bordered
-      :rows="rows"
-      :columns="columns"
-      hide-bottom
-      dark
-      :virtual-scroll-item-size="10"
-      row-key="name"
-    />
-  </div>
+  <q-markup-table dark>
+    <thead>
+      <tr>
+        <th v-for="(column, index) in columns" :key="index" class="text-left">
+          {{ column.label }}
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr v-for="(row, index) in rows" :key="index">
+        <td v-for="(column, index2) in columns" :key="index2" class="text-left">
+          {{ row[column.field] }}
+        </td>
+      </tr>
+    </tbody>
+  </q-markup-table>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss">
 @import "./styles.module";
 </style>

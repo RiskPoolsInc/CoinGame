@@ -1,6 +1,6 @@
 .generate-token {
-  background: var(--section-background);
-  padding: 44px 0;
+  margin-top: 57px;
+  margin-bottom: 50px;
 
   &__title {
     font-size: 35px;
@@ -11,5 +11,7 @@
   &__info {
     font-size: var(--basic-font-size);
     color: var(--color-gray-2);
+    margin: 30px 0;
+    font-weight: 400;
   }
 }

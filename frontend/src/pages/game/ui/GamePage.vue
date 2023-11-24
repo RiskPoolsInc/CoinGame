@@ -7,6 +7,8 @@ import ProcessCards from "@/features/game/process-cards/ui/ProcessCards.vue";
 <template>
   <div class="game-page">
     <div class="container">
+      <div class="game-page__title">112x_Coin Game player</div>
+
       <GenerateToken />
 
       <TossACoin />

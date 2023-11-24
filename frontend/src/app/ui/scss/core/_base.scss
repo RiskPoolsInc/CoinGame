@@ -17,20 +17,20 @@ html {
 
   /* Track */
   ::-webkit-scrollbar-track {
-    background: transparent;
+    background: #18212E;
     border-radius: 100px;
   }
 
   /* Handle */
   ::-webkit-scrollbar-thumb {
-    background: #18212E;
+    background: #fff;
     width: 0;
     border-radius: 100px;
   }
 
   /* Handle on hover */
   ::-webkit-scrollbar-thumb:hover {
-    background: mediumpurple;
+    background: #fff;
   }
 }
 
@@ -104,6 +104,11 @@ body {
 
 .q-btn {
   font-weight: 700;
+  font-family: Padauk;
+}
+
+.q-btn--rectangle {
+  border-radius: 7px;
 }
 
 @media (min-width: 1480px) {

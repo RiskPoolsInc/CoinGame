@@ -1,9 +1,11 @@
 <script setup lang="ts">
+import { useQuasar } from "quasar";
+import { useGameStore } from "@/entities/game/model/game";
+
 import VButton from "@/shared/ui/base-components/v-button";
 import VInput from "@/shared/ui/base-components/v-input/ui/VInput.vue";
 
-import { useGameStore } from "@/entities/game/model/game";
-import { useQuasar } from "quasar";
+import VChip from "@/shared/ui/base-components/v-chip";
 
 const $q = useQuasar();
 
@@ -23,48 +25,42 @@ const handleCopyWallet = () => {
 
 <template>
   <div class="generate-token-form">
-    <div class="generate-token__form row justify-between items-stretch">
+    <div class="generate-token-form__wrapper row items-stretch">
       <VButton
         label="GENERATE"
         color="white"
         text-color="dark"
         class="mt-auto"
+        size="lg"
         @click="generateWallet"
       />
 
-      <VInput
-        v-model="gameState.wallet"
-        class="col-lg-4"
-        label="Your game wallet"
-      />
+      <div class="generate-token-form__wallet">
+        <VInput v-model="gameState.wallet" disabled label="Your game wallet" />
+      </div>
 
-      <VInput
-        v-model="gameState.balance"
-        disabled
-        class="col-lg-3"
-        label="Wallet balance, UBX"
-      />
-
-      <div class="col-lg-3 row justify-between mt-auto">
-        <VButton
-          v-if="gameState.wallet"
-          label="COMPLETED"
-          color="white"
-          text-color="dark"
+      <div class="generate-token-form__balance">
+        <VInput
+          v-model="gameState.balance"
+          disabled
+          label="Wallet balance, UBX"
         />
+      </div>
 
-        <VButton
-          v-else
-          label="EMPTY"
-          color="red-14"
-          text-color="dark"
-          class="mt-auto"
-        />
+      <div class="mt-auto">
+        <VChip v-if="gameState.wallet" color="success"> COMPLETED </VChip>
+        <VChip v-else color="danger"> EMPTY </VChip>
+      </div>
+
+      <div
+        class="generate-token-form__action-btn col row justify-end mt-auto ml-auto"
+      >
         <VButton
           label="COPY WALLET"
           :disabled="!gameState.wallet"
           color="white"
           text-color="dark"
+          size="lg"
           @click="handleCopyWallet"
         />
       </div>

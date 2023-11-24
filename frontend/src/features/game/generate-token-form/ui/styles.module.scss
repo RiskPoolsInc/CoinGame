@@ -1,8 +1,20 @@
 .generate-token-form {
   background: var(--section-background);
-  margin-top: 44px;
+  margin-top: 16px;
 
-  &__form {
-    margin-top: 40px;
+  &__wrapper {
+    column-gap: 37px;
+  }
+
+  &__wallet {
+    width: 513px;
+  }
+
+  &__balance {
+    width: 264px;
+  }
+
+  &__action-btn {
+    column-gap: 59px;
   }
 }

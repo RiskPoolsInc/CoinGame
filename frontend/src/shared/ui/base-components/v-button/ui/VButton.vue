@@ -10,10 +10,11 @@ interface IVButtonProps {
   textColor?: string;
   flat?: boolean;
   to?: string;
-  style?: unknown;
+  customStyle?: unknown;
   disabled?: boolean;
   className?: string;
   outline?: boolean;
+  padding?: string;
 }
 
 withDefaults(defineProps<IVButtonProps>(), {
@@ -22,7 +23,8 @@ withDefaults(defineProps<IVButtonProps>(), {
   icon: undefined,
   iconRight: undefined,
   size: "md",
-  style: undefined,
+  customStyle: undefined,
+  padding: undefined,
 });
 
 const emit = defineEmits<{
@@ -39,6 +41,7 @@ const handleClick = () => {
     <q-btn
       :outline="outline"
       :color="color"
+      :padding="padding"
       :to="to"
       :icon="icon"
       :flat="flat"
@@ -46,7 +49,7 @@ const handleClick = () => {
       :label="label"
       :size="size"
       :textColor="textColor"
-      :style="style"
+      :style="customStyle"
       :disable="disabled"
       :class="className"
       @click="handleClick"

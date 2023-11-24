@@ -17,7 +17,7 @@ import VButton from "@/shared/ui/base-components/v-button/ui/VButton.vue";
       </div>
 
       <div class="col-lg-1 my-auto">
-        <VButton label="REFUND" color="white" text-color="dark" />
+        <VButton label="REFUND" color="white" text-color="dark" size="lg" />
       </div>
     </div>
   </div>

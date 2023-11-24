@@ -42,7 +42,6 @@ const inputValue = computed({
       v-model="inputValue"
       autocomplete="off"
       dark
-      dense
       lazy-rules
     />
   </div>
@@ -50,4 +49,9 @@ const inputValue = computed({
 
 <style scoped lang="scss">
 @import "./styles.module";
+</style>
+<style lang="scss">
+.q-field--outlined .q-field__control {
+  border-radius: 7px;
+}
 </style>

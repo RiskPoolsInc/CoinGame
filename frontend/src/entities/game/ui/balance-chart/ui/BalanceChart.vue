@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted } from "vue";
 import Chart from "chart.js/auto";
-
 import { Line } from "vue-chartjs";
 import { useGameStore } from "@/entities/game/model/game";
 
@@ -18,19 +17,23 @@ const datasets = computed(() => {
 const chartData = computed(() => {
   return {
     labels: labels.value,
-    datasets: [{ label: "2018 Sales", data: datasets.value }],
+    datasets: [{ label: "2018", data: [...datasets.value] }],
   };
 });
 
 const chartOptions = {
   responsive: true,
+  labels: {
+    color: "red",
+  },
 };
 
 onMounted(() => {
   const element = document.getElementById(
-    "acquisitions"
+    "acquisitions1"
   ) as HTMLCanvasElement | null;
 
+  console.log(element);
   if (element) {
     new Chart(element, {
       type: "line",

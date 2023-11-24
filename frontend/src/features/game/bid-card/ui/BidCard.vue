@@ -20,8 +20,12 @@ const statusPlayButton = computed(() => {
 <template>
   <div class="bid-card">
     <div class="row justify-center">
-      <div class="col-lg-3">
-        <VInput v-model="gameState.bid" label="Your bid, UBX" />
+      <div class="col-lg-4">
+        <VInput
+          class="bid-card__input"
+          v-model="gameState.bid"
+          label="Your bid, UBX"
+        />
       </div>
     </div>
 
@@ -39,51 +43,71 @@ const statusPlayButton = computed(() => {
     </div>
 
     <div class="bid-card__action row justify-center">
-      <div class="col-lg-2">
+      <div class="col-lg-3">
         <VButton
           className="full-width"
           label="BID"
           color="white"
+          size="lg"
           text-color="dark"
         />
       </div>
 
-      <div class="col-lg-2">
+      <div class="col-lg-3">
         <VButton
           @click="confirm = true"
           :disabled="!!statusPlayButton"
           className="full-width"
           label="TOSS A COIN"
           color="white"
+          size="lg"
           text-color="dark"
         />
       </div>
     </div>
 
     <q-dialog v-model="confirm" persistent>
-      <q-card dark>
-        <q-card-section class="row items-center">
-          <span class="bid-card__popup-text q-ml-sm"
-            >The bet is placed. Start the game?</span
-          >
+      <q-card
+        dark
+        style="
+          width: 491px;
+          background: #50596c;
+          border-radius: 7px;
+          border: 1px solid #bfc9e2;
+          box-shadow: none;
+        "
+        class="bid-card__dialog"
+      >
+        <q-card-section class="row items-center justify-center">
+          <span class="bid-card__popup-text q-ml-sm">
+            The bet is placed. Start the game?
+          </span>
         </q-card-section>
 
-        <q-card-actions align="around">
-          <VButton
-            label="Play"
-            color="white"
-            text-color="dark"
-            @click="startGame"
-            v-close-popup
-          />
+        <q-card-actions align="center" class="bid-card__popup-actions">
+          <div class="col-3">
+            <VButton
+              class-name="full-width"
+              label="Play"
+              color="white"
+              text-color="dark"
+              size="lg"
+              @click="startGame"
+              v-close-popup
+            />
+          </div>
 
-          <VButton
-            @click="confirm = false"
-            label="Cancel"
-            color="white"
-            text-color="dark"
-            v-close-popup
-          />
+          <div class="col-3">
+            <VButton
+              class-name="full-width"
+              label="Cancel"
+              color="white"
+              text-color="dark"
+              size="lg"
+              @click="confirm = false"
+              v-close-popup
+            />
+          </div>
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -92,4 +116,11 @@ const statusPlayButton = computed(() => {
 
 <style scoped lang="scss">
 @import "./styles.module";
+</style>
+<style lang="scss">
+.bid-card__input {
+  .q-field--dark .q-field__control:before {
+    border: 3px solid #bfc9e2;
+  }
+}
 </style>

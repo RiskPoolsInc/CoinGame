@@ -2,7 +2,7 @@
   font-display: swap;
   font-family: Actay;
   font-weight: 400;
-  src: url('@/app/ui/scss/fonts/ActayCondensed-Thin.otf') format('opentype');
+  src: url('@/app/ui/scss/fonts/Actay-Regular.otf') format('opentype');
 }
 
 @font-face {
@@ -17,4 +17,18 @@
   font-family: Actay;
   font-weight: 700;
   src: url('@/app/ui/scss/fonts/ActayWide-Bold.otf') format('opentype');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: Padauk;
+  font-weight: 400;
+  src: url('@/app/ui/scss/fonts/Padauk-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: Padauk;
+  font-weight: 700;
+  src: url('@/app/ui/scss/fonts/Padauk-Bold.ttf') format('truetype');
 }
