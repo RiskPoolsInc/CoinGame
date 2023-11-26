@@ -1,7 +1,6 @@
 .example-info-block {
-  background: var(--section-background);
   color: var(--color-white);
-  padding: 74px 0;
+  margin: 37px 0;
   position: relative;
 
   &__title {
@@ -11,7 +10,7 @@
   }
 
   &__content {
-    margin-top: 57px;
+    margin: 57px 0;
   }
 
   &__context {
@@ -31,18 +30,25 @@
 }
 @media (max-width: 550px) {
   .example-info-block {
-    padding: 24px 0;
+    //padding: 24px 0;
+    margin: 24px 0;
 
     &__title {
       font-size: 24px;
     }
 
     &__content {
-      margin-top: 28px;
+      padding-top: 28px;
+      margin: 0;
     }
 
     &__context {
       font-size: 14px;
+    }
+
+    &__img {
+      width: 266px;
+      height: auto;
     }
   }
 }

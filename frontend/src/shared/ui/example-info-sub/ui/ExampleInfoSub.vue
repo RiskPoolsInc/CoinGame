@@ -19,7 +19,7 @@ defineProps<IExampleInfoSubProps>();
   <div class="example-info-sub">
     <div class="container">
       <div class="row">
-        <div class="col-lg-7 example-info-sub__title">
+        <div class="col-lg-7 col-xs-12 example-info-sub__title">
           112x_How to participate in RiskPools
         </div>
       </div>
@@ -41,7 +41,7 @@ defineProps<IExampleInfoSubProps>();
               class="example-info-sub__btn--desktop"
               text="Play now"
               type="primary"
-              size="large"
+              size="lg"
               color="white"
               text-color="dark"
             />

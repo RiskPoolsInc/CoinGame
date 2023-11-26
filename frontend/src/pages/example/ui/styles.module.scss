@@ -1,0 +1,10 @@
+.example-page {
+  padding-top: 115px;
+  background: var(--section-background);
+}
+
+@media (max-width: 550px) {
+  .example-page {
+    padding-top: 88px;
+  }
+}

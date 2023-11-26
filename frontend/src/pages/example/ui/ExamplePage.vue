@@ -5,9 +5,12 @@ import { EXAMPLE_INFO_SUB_LIST } from "@/shared/ui/example-info-sub/model/consta
 </script>
 
 <template>
-  <div>
+  <div class="example-page">
     <ExampleInfoBlock />
 
     <ExampleInfoSub :list="EXAMPLE_INFO_SUB_LIST" />
   </div>
 </template>
+<style scoped lang="scss">
+@import "styles.module";
+</style>

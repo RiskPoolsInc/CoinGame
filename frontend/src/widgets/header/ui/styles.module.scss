@@ -41,6 +41,9 @@
     }
 }
 @media (max-width: 550px) {
+    .main-header {
+        height: 88px;
+    }
     .header {
         &__title {
             display: none;

@@ -14,7 +14,7 @@ const isSidebarOpen = ref(false);
     <VHeader v-model:isSidebarOpen="isSidebarOpen" />
 
     <!--  Sidebar menu  -->
-    <SidebarMenu v-if="isSidebarOpen" />
+    <SidebarMenu v-if="isSidebarOpen" v-model:isSidebarOpen="isSidebarOpen" />
 
     <!--  Pages  -->
     <Routing />

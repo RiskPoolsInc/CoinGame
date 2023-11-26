@@ -5,8 +5,23 @@
   height: 100%;
   background: var(--color-gray);
 
+  &__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px;
+    height: 88px;
+    border-bottom: 2px solid #BFC9E2;
+  }
+
+  &__logo {
+    width: 40px;
+    height: 40px;
+  }
+
   &__list {
-    padding: 35px 24px;
+    padding: 35px 24px 45px 24px;
+    background: rgba(80, 89, 108, 0.20);
   }
 
   &__item {

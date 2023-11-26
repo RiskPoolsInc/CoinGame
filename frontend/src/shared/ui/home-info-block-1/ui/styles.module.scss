@@ -67,5 +67,9 @@
       width: 100%;
       font-size: 14px;
     }
+
+    &::before {
+      height: 40px;
+    }
   }
 }
