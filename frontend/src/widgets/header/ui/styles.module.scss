@@ -1,17 +1,17 @@
 // Need to refactor
 .main-header {
-    height: 78px;
-    background: var(--header-background);
-}
-.header {
-    backdrop-filter: blur(10px);
-    background: rgba(24, 33, 46, .9);
-    height: 78px;
-    display: flex;
-    justify-content: space-between;
+    height: 115px;
     position: fixed;
     z-index: var(--ui-index-3);
     width: 100%;
+    backdrop-filter: blur(10px);
+    background: rgba(24, 33, 46, .9);
+}
+.header {
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+
 
     &__wrapper {
         display: flex;

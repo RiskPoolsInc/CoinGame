@@ -6,6 +6,28 @@ import { useGameStore } from "@/entities/game/model/game";
 import { HASH_TABLE_COLUMNS } from "@/entities/game/model/constants";
 
 const { gameState } = useGameStore();
+
+const downloadTxtFile = () => {
+  let text = "";
+
+  text = HASH_TABLE_COLUMNS.map((item) => item.label).join("  ") + "\n" + text;
+
+  text =
+    text +
+    gameState.parityList
+      .map((item) => {
+        return item.round + " " + item.hashNumber;
+      })
+      .join("    \n") +
+    "\n";
+
+  const element = document.createElement("a");
+  const file = new Blob([text], { type: "text/plain" });
+  element.href = URL.createObjectURL(file);
+  element.download = "hash.txt";
+  document.body.appendChild(element); // Required for this to work in FireFox
+  element.click();
+};
 </script>
 
 <template>
@@ -30,6 +52,7 @@ const { gameState } = useGameStore();
         </div>
         <div class="col-lg-4">
           <HashTable
+            id="hash-table"
             :rows="gameState.parityList"
             :columns="HASH_TABLE_COLUMNS"
           />
@@ -40,6 +63,7 @@ const { gameState } = useGameStore();
               outline
               color="dark"
               text-color="white"
+              @click="downloadTxtFile"
             />
           </div>
         </div>

@@ -8,7 +8,7 @@ console.log("Main Page");
 </script>
 
 <template>
-  <div>
+  <div class="main-page">
     <!--  Hero  -->
     <HeroBlock />
 
@@ -22,3 +22,7 @@ console.log("Main Page");
     <GetInTouch />
   </div>
 </template>
+
+<style scoped lang="scss">
+@import "styles.module";
+</style>

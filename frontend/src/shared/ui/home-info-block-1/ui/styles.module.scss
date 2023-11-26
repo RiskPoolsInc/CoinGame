@@ -1,7 +1,7 @@
 .home-info-block-1 {
   color: var(--color-white);
-  padding-bottom: 10px;
-  padding-top: 141px;
+  padding-top: 131px;
+  position: relative;
 
   &__title {
     font-size: 60px;
@@ -12,7 +12,8 @@
   &__body {
     display: flex;
     column-gap: 44px;
-    margin: 57px 0;
+    margin-top: 57px;
+    margin-bottom: 35px;
   }
 
   &__img {
@@ -25,6 +26,21 @@
     font-size: var(--basic-font-size);
     font-weight: 400;
     line-height: 135%;
+    color: var(--color-gray-2);
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: 0;
+    width: 100%;
+    //height: calc(var(--app-holder-height) - 115px);
+    height: 115px;
+    background-color: var(--color-gray);
+    opacity: 1;
+    z-index: 1;
+    filter: blur(5px);
   }
 }
 @media (max-width: 550px) {

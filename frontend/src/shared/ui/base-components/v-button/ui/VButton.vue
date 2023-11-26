@@ -53,7 +53,9 @@ const handleClick = () => {
       :disable="disabled"
       :class="className"
       @click="handleClick"
-    />
+    >
+      <slot></slot>
+    </q-btn>
   </div>
 </template>
 

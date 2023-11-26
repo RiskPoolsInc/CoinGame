@@ -20,7 +20,7 @@
     display: flex;
     justify-content: right;
     margin-top: 57px;
-    padding-bottom: 110px;
+    margin-bottom: 110px;
   }
 
   &__img {
@@ -28,6 +28,7 @@
     position: absolute;
     left: -4%;
     bottom: 0;
+    height: 664px;
   }
 
   &__content {

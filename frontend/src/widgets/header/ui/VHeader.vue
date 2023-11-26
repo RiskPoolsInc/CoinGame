@@ -31,7 +31,7 @@ const toogleMenu = () => {
         </div>
         <div class="header__menu">
           <div class="header__menu__item my-auto">
-            <VButton label="1x_How" color="white" text-color="dark" size="md" />
+            <VButton label="1x_How" color="white" text-color="dark" size="lg" />
           </div>
 
           <div class="header__menu__item my-auto">
@@ -39,7 +39,7 @@ const toogleMenu = () => {
               label="2x_Technology"
               color="white"
               text-color="dark"
-              size="md"
+              size="lg"
             />
           </div>
 
@@ -48,7 +48,7 @@ const toogleMenu = () => {
               label="3x_Do_more"
               color="white"
               text-color="dark"
-              size="md"
+              size="lg"
             />
           </div>
 
@@ -57,7 +57,7 @@ const toogleMenu = () => {
               label="4x_Get_in_touch"
               color="white"
               text-color="dark"
-              size="md"
+              size="lg"
             />
           </div>
         </div>

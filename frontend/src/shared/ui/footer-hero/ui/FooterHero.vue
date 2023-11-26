@@ -16,7 +16,13 @@
           </div>
 
           <div class="col-lg-11 col-xs-10 footer-hero__item">
-            Tech support: support_coin@riskpools.io
+            Tech support:
+            <a
+              class="footer-hero__link"
+              href="mailto:support_coin@riskpools.io"
+            >
+              support_coin@riskpools.io
+            </a>
           </div>
         </div>
       </div>
@@ -26,7 +32,10 @@
             <q-icon name="people" size="sm" />
           </div>
           <div class="col-lg-11 col-xs-10 footer-hero__item">
-            Tech support: support_coin@riskpools.io
+            Partnerships:
+            <a class="footer-hero__link" href="mailto:offer@riskpools.io"
+              >offer@riskpools.io</a
+            >
           </div>
         </div>
       </div>

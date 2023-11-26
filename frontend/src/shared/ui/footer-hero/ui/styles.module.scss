@@ -11,6 +11,12 @@
   &__item {
     font-size: var(--basic-font-size);
     font-weight: 400;
+    color: var(--color-gray-2);
+  }
+
+  &__link {
+    color: var(--color-gray-2);
+    text-decoration: underline;
   }
 }
 @media (max-width: 550px) {
