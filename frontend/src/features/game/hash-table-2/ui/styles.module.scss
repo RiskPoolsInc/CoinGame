@@ -1,0 +1,56 @@
+.hash-table-2 {
+  .q-markup-table {
+    color: var(--color-white);
+    box-shadow: inherit;
+    border-radius: 7px;
+    border: 1px solid rgb(191, 201, 226, .5);
+
+    thead {
+      background: #50596C;
+    }
+    td:first-child {
+      border-right: 1px solid rgb(191, 201, 226, .5);
+      text-align: center;
+    }
+    th {
+      border-right: 1px solid rgb(191, 201, 226, .5);
+      width: 82px;
+      text-align: center;
+    }
+    tbody {
+      td {
+        font-size: 16px;
+        font-weight: 400;
+        border-top: none;
+        border-bottom: none;
+        border-right: 1px solid rgb(191, 201, 226, .5);
+        text-align: center;
+      }
+    }
+    tr {
+      th {
+        font-weight: 700;
+        font-size: 16px;
+        text-align: center;
+      }
+    }
+
+    th:last-child {
+      border-right: none;
+    }
+
+    td:last-child {
+      border-right: none;
+    }
+  }
+  .q-markup-table:first-child {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-right: 0;
+  }
+
+  .q-markup-table:last-child {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+}

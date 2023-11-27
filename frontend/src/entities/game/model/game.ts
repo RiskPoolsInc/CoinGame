@@ -49,7 +49,7 @@ export const useGameStore = defineStore("game", () => {
     for (let i = 0; i < gameState.round; i++) {
       const randomNumber = getRandomNumber();
       const hash = number2Hash(randomNumber);
-      const parity = randomNumber % 2 === 0;
+      const parity = randomNumber % 2 !== 0;
 
       balanceCalculation(parity);
 

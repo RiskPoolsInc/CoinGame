@@ -1,18 +1,19 @@
+.hash-table {
 .q-markup-table {
   color: var(--color-white);
   box-shadow: inherit;
   border-radius: 7px;
-  border: 1px solid #BFC9E2;
+  border: 1px solid rgb(191, 201, 226, .5);
 
   thead {
     background: #50596C;
   }
   td:first-child {
-    border-right: 1px solid #BFC9E2;
+    border-right: 1px solid rgb(191, 201, 226, .5);
     text-align: center;
   }
   th:first-child {
-    border-right: 1px solid #BFC9E2;
+    border-right: 1px solid rgb(191, 201, 226, .5);
     width: 82px;
     text-align: center;
   }
@@ -22,7 +23,8 @@
       font-weight: 400;
       border-top: none;
       border-bottom: none;
-      border-right: 1px solid #BFC9E2;
+      border-right: 1px solid rgb(191, 201, 226, .5);
+      text-align: center;
     }
   }
   tr {
@@ -32,4 +34,6 @@
       text-align: center;
     }
   }
+}
+
 }

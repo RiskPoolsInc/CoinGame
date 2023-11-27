@@ -14,23 +14,28 @@ defineProps({
 </script>
 
 <template>
-  <q-markup-table dark>
-    <thead>
-      <tr>
-        <th v-for="(column, index) in columns" :key="index" class="text-left">
-          {{ column.label }}
-        </th>
-      </tr>
-    </thead>
+  <div class="hash-table">
+    <q-markup-table dark>
+      <thead>
+        <tr>
+          <th v-for="(column, index) in columns" :key="index" class="text-left">
+            {{ column.label }}
+          </th>
+        </tr>
+      </thead>
 
-    <tbody>
-      <tr v-for="(row, index) in rows" :key="index">
-        <td v-for="(column, index2) in columns" :key="index2" class="text-left">
-          {{ row[column.field] }}
-        </td>
-      </tr>
-    </tbody>
-  </q-markup-table>
+      <tbody>
+        <tr v-for="index in 10" :key="index">
+          <td>
+            {{ index }}
+          </td>
+          <td>
+            {{ rows[index - 1]?.hashNumber }}
+          </td>
+        </tr>
+      </tbody>
+    </q-markup-table>
+  </div>
 </template>
 
 <style lang="scss">
