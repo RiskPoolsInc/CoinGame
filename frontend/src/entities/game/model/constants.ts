@@ -1,14 +1,14 @@
 export const HASH_TABLE_COLUMNS = [
   {
     name: "Round",
-    label: "Round",
+    label: "ROUND",
     align: "left",
     field: "round",
   },
   {
     name: "result",
     align: "center",
-    label: "Result",
+    label: "RESULT",
     field: "hashNumber",
   },
 ];
