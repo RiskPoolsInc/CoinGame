@@ -60,7 +60,7 @@ defineProps({
             {{ rows[index - 1]?.number }}
           </td>
 
-          <td v-if="index > 5">
+          <td v-if="index > 5 && rows[index - 1]">
             {{ rows[index - 1]?.parity ? "OK-WIN" : "NONE-LOSE" }}
           </td>
         </tr>

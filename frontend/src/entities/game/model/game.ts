@@ -7,6 +7,7 @@ export const useGameStore = defineStore("game", () => {
   const gameState = reactive<IGameState>({
     wallet: "",
     balance: 1000000,
+    previousBalance: 0,
     bid: 0,
     round: 3,
     parityList: [],
@@ -45,7 +46,18 @@ export const useGameStore = defineStore("game", () => {
     }
   };
 
+  const resetGame = () => {
+    gameState.previousBalance = gameState.balance;
+    gameState.parityList = [];
+  };
+
   const startGame = () => {
+    if (gameState.parityList.length > 0) {
+      resetGame();
+    }
+
+    gameState.previousBalance = gameState.balance;
+
     for (let i = 0; i < gameState.round; i++) {
       const randomNumber = getRandomNumber();
       const hash = number2Hash(randomNumber);

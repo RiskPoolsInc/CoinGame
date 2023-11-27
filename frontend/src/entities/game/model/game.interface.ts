@@ -9,6 +9,7 @@ export interface IParityList {
 export interface IGameState {
   wallet: string;
   balance: number;
+  previousBalance: number;
   bid: number;
   round: number;
   parityList: IParityList[];
