@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import VButton from "@/shared/ui/base-components/v-button/ui/VButton.vue";
 import { defineEmits, defineProps } from "vue";
+import { router } from "@/app/providers";
 
 const props = defineProps<{
   isSidebarOpen: boolean;
@@ -15,10 +16,17 @@ const toogleMenu = () => {
 };
 
 const scrollTo = (id: string) => {
-  const el = document.getElementById(id);
-  if (el) {
-    el.scrollIntoView({ behavior: "smooth" });
+  if (router.currentRoute.value.path !== "/") {
+    router.replace({ name: "home", hash: "#" + id });
+    // return;
   }
+
+  setTimeout(() => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth" });
+    }
+  }, 100);
 
   toogleMenu();
 };

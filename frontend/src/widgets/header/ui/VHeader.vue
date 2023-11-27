@@ -2,6 +2,7 @@
 import { defineEmits, defineProps } from "vue/dist/vue";
 
 import VButton from "@/shared/ui/base-components/v-button";
+import { router } from "@/app/providers";
 
 const props = defineProps<{
   isSidebarOpen: boolean;
@@ -16,9 +17,22 @@ const toogleMenu = () => {
 };
 
 const scrollTo = (id: string) => {
-  const el = document.getElementById(id);
-  if (el) {
-    el.scrollIntoView({ behavior: "smooth" });
+  if (router.currentRoute.value.path !== "/") {
+    router.replace({ name: "home", hash: "#" + id });
+    // return;
+  }
+
+  setTimeout(() => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth" });
+    }
+  }, 100);
+};
+
+const redirectWithHash = () => {
+  if (router.currentRoute.value.path !== "/") {
+    router.push({ name: "home", hash: "how" });
   }
 };
 </script>
