@@ -1,5 +1,4 @@
 .get-in-touch-card {
-  background: var(--section-background);
   padding: 65px 0;
 
     &__title {
@@ -12,6 +11,7 @@
     font-size: var(--basic-font-size);
     font-weight: 400;
     color: var(--color-gray-2);
+    margin-top: 55px;
   }
 }
 @media (max-width: 550px) {

@@ -3,15 +3,14 @@
 <template>
   <div class="footer-content">
     <div class="container">
-      <div class="footer-content__logo">
-        <img src="./images/logo.svg" alt="footer-content logo" />
-      </div>
-
       <div class="footer-content__main row justify-between">
-        <div class="footer-content__company-label col-lg-2 col-xs-12">
-          (с) Riskpools 2023
+        <div class="col-lg-2 footer-content__logo">
+          <img src="./images/logo.svg" alt="footer-content logo" />
         </div>
-        <div class="footer-content__links row col-lg-4 col-xs-12">
+
+        <div
+          class="footer-content__links row col-lg-8 col-xs-12 justify-center"
+        >
           <router-link class="footer-content__link" to="/docuemts">
             Documents
           </router-link>
@@ -24,7 +23,10 @@
             Privacy
           </router-link>
         </div>
-        <div></div>
+
+        <div class="footer-content__company-label col-lg-2 col-xs-12">
+          (с) Riskpools 2023
+        </div>
       </div>
     </div>
   </div>

@@ -1,6 +1,6 @@
 .game-page {
   background: var(--section-background);
-  padding: 44px 0;
+  padding-top: 115px;
 
   &__title {
     font-size: 50px;
@@ -8,3 +8,9 @@
     color: var(--color-white);
   }
 }
+@media (max-width: 550px) {
+  .game-page {
+    padding-top: 88px;
+  }
+}
+

@@ -4,7 +4,7 @@
   <div class="get-in-touch-card">
     <div class="container">
       <div class="row">
-        <div class="col-lg-5 col-xs-12">
+        <div class="col-lg-12 col-xs-12">
           <div class="get-in-touch-card__title">4x_Get in touch</div>
         </div>
         <div class="col-lg-7 col-xs-12">
