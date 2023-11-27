@@ -37,7 +37,7 @@ export const EXAMPLE_INFO_SUB_LIST = [
       "          used to make the deposit, and the only fee you’ll pay is the standard\n" +
       "          Ubix Network transaction fee. If you forget to make a withdrawal, the\n" +
       "          funds will be sent back to you automatically 24 hours later.",
-    btnName: "PLEASE A BID",
+    btnName: "PLACE A BET",
     btnLink: "/game",
   },
   {
