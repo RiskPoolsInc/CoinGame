@@ -51,7 +51,7 @@ const downloadTxtFile = () => {
         <BidCard />
       </div>
 
-      <div class="col-lg-4 xl-hide">
+      <div class="col-lg-4 xl-hide lg-hide">
         <div class="toss-a-coin__subtitle">
           Coin toss results as hashes of randomly generated numbers.
         </div>

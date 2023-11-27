@@ -22,7 +22,7 @@ const { gameState } = useGameStore();
       <BalanceChart />
     </div>
 
-    <div class="col-lg-5 xl-hide">
+    <div class="col-lg-5 xl-hide lg-hide">
       <div class="process-card__table-title">
         The results of your game, randomly generated numbers. Odd numbers -win,
         even numbers - loss.

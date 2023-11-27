@@ -45,7 +45,6 @@ onMounted(() => {
     "acquisitions1"
   ) as HTMLCanvasElement | null;
 
-  console.log(element);
   if (element) {
     new Chart(element, {
       type: "bar",
