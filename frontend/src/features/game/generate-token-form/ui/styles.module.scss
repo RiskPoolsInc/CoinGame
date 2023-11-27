@@ -17,3 +17,30 @@
     column-gap: 59px;
   }
 }
+
+@media (max-width: 550px) {
+  .generate-token-form {
+    margin: 0;
+
+    &__wrapper {
+      row-gap: 29px;
+    }
+
+    &__wallet {
+      width: 100%;
+    }
+
+    &__balance {
+      width: 100%;
+    }
+
+    &__chip {
+      display: none;
+    }
+
+    &__action-btn {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+}

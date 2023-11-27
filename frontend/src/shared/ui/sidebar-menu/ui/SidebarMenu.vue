@@ -13,6 +13,15 @@ const emit = defineEmits<{
 const toogleMenu = () => {
   emit("update:isSidebarOpen", !props.isSidebarOpen);
 };
+
+const scrollTo = (id: string) => {
+  const el = document.getElementById(id);
+  if (el) {
+    el.scrollIntoView({ behavior: "smooth" });
+  }
+
+  toogleMenu();
+};
 </script>
 
 <template>
@@ -24,22 +33,22 @@ const toogleMenu = () => {
     </div>
     <ul class="sidebar-menu__list">
       <li class="sidebar-menu__item">
-        <router-link class="sidebar-menu__link" to="/game">1x_How</router-link>
+        <div class="sidebar-menu__link" @click="scrollTo('how')">1x_How</div>
       </li>
       <li class="sidebar-menu__item">
-        <router-link class="sidebar-menu__link" to="/game"
-          >2x_Technology</router-link
-        >
+        <div class="sidebar-menu__link" @click="scrollTo('technology')">
+          2x_Technology
+        </div>
       </li>
       <li class="sidebar-menu__item">
-        <router-link class="sidebar-menu__link" to="/game"
-          >3x_Do_more</router-link
-        >
+        <div class="sidebar-menu__link" @click="scrollTo('do-more')">
+          3x_Do_more
+        </div>
       </li>
       <li class="sidebar-menu__item">
-        <router-link class="sidebar-menu__link" to="/game"
-          >4x_Get_in_touch</router-link
-        >
+        <div class="sidebar-menu__link" @click="scrollTo('get-in-touch')">
+          4x_Get_in_touch
+        </div>
       </li>
     </ul>
   </div>

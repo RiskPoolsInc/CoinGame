@@ -1,9 +1,17 @@
 .hash-table-2 {
+  .mobile {
+    display: none;
+  }
+  .desktop {
+    display: block;
+  }
   .q-markup-table {
     color: var(--color-white);
     box-shadow: inherit;
     border-radius: 7px;
     border: 1px solid rgb(191, 201, 226, .5);
+    width: 50%;
+    font-family: Padauk;
 
     thead {
       background: #50596C;
@@ -49,8 +57,28 @@
     border-right: 0;
   }
 
-  .q-markup-table:last-child {
+  .q-markup-table:nth-child(2) {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
+  }
+}
+
+@media (max-width: 550px) {
+  .hash-table-2 {
+    .mobile {
+      display: block;
+    }
+    .desktop {
+      display: none;
+    }
+    .q-markup-table {
+      width: 100%;
+    }
+
+    .q-markup-table:last-child {
+      //thead {
+      //  display: block;
+      //}
+    }
   }
 }

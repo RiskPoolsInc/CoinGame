@@ -65,6 +65,10 @@ export const useGameStore = defineStore("game", () => {
 
       balanceCalculation(parity);
 
+      if (gameState.balance < 0) {
+        return;
+      }
+
       gameState.parityList.push({
         round: i,
         number: randomNumber,

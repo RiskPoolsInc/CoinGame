@@ -11,7 +11,7 @@ import HomeInfoBlock3 from "@/shared/ui/home-info-block-3/ui/HomeInfoBlock3.vue"
 
     <HomeInfoBlock2 :data="BLOCKS[1]" />
 
-    <home-info-block3 :data="BLOCKS[2]" />
+    <home-info-block3 id="technology" :data="BLOCKS[2]" />
   </div>
 </template>
 

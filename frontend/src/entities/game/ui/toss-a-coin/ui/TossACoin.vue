@@ -32,40 +32,47 @@ const downloadTxtFile = () => {
 
 <template>
   <div class="toss-a-coin">
-    <div class="container">
-      <div class="toss-a-coin__title">112PxB_Start_game</div>
+    <div class="toss-a-coin__title">112PxB_Start_game</div>
 
-      <div class="row justify-between">
-        <div class="col-lg-7">
-          <div class="toss-a-coin__subtitle">
-            Place your bet and select the number of game rounds (coin tosses).
-          </div>
+    <div class="row justify-between">
+      <div class="col-lg-7">
+        <div class="toss-a-coin__subtitle">
+          Place your bet and select the number of game rounds (coin tosses).
         </div>
+      </div>
 
-        <div class="col-lg-4">
-          <div class="toss-a-coin__subtitle">
-            Coin toss results as hashes of randomly generated numbers.
-          </div>
+      <div class="col-lg-4 xs-hide">
+        <div class="toss-a-coin__subtitle">
+          Coin toss results as hashes of randomly generated numbers.
         </div>
-        <div class="col-lg-7">
-          <BidCard />
+      </div>
+
+      <div class="col-lg-7 col-xs-12">
+        <BidCard />
+      </div>
+
+      <div class="col-lg-4 xl-hide">
+        <div class="toss-a-coin__subtitle">
+          Coin toss results as hashes of randomly generated numbers.
         </div>
-        <div class="col-lg-4">
-          <HashTable
-            id="hash-table"
-            :rows="gameState.parityList"
-            :columns="HASH_TABLE_COLUMNS"
+      </div>
+
+      <div class="col-lg-4 col-xs-12">
+        <HashTable
+          id="hash-table"
+          :rows="gameState.parityList"
+          :columns="HASH_TABLE_COLUMNS"
+        />
+
+        <div class="toss-a-coin__copy-btn text-right">
+          <VButton
+            label="COPY RESULT"
+            outline
+            color="dark"
+            text-color="white"
+            size="lg"
+            @click="downloadTxtFile"
           />
-
-          <div class="toss-a-coin__copy-btn text-right">
-            <VButton
-              label="COPY RESULT"
-              outline
-              color="dark"
-              text-color="white"
-              @click="downloadTxtFile"
-            />
-          </div>
         </div>
       </div>
     </div>

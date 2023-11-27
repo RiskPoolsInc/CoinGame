@@ -1,0 +1,26 @@
+.calculate-hash {
+  margin: 120px 0;
+  column-gap: 35px;
+
+  &__number {
+    width: auto;
+  }
+
+  &__hash {
+    width: 567px;
+  }
+}
+@media (max-width: 550px) {
+  .calculate-hash {
+    margin: 46px 0;
+    row-gap: 30px;
+
+    &__number {
+        width: 100%;
+    }
+
+    &__hash {
+        width: 100%;
+    }
+  }
+}

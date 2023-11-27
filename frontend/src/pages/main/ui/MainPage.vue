@@ -3,23 +3,29 @@ import HeroBlock from "@/widgets/hero";
 import InfoBlocks from "@/widgets/info-blocks";
 import DoMore from "@/widgets/do-more/ui/DoMore.vue";
 import GetInTouch from "@/widgets/get-in-touch";
-
-console.log("Main Page");
 </script>
 
 <template>
   <div class="main-page">
     <!--  Hero  -->
-    <HeroBlock />
+    <section>
+      <HeroBlock />
+    </section>
 
-    <!--  Info Block  -->
-    <InfoBlocks />
+    <section id="how">
+      <!--  Info Block  -->
+      <InfoBlocks />
+    </section>
 
-    <!--  Do More  -->
-    <DoMore />
+    <section id="do-more">
+      <!--  Do More  -->
+      <DoMore />
+    </section>
 
-    <!--  Get In Touch  -->
-    <GetInTouch />
+    <section id="get-in-touch">
+      <!--  Get In Touch  -->
+      <GetInTouch />
+    </section>
   </div>
 </template>
 

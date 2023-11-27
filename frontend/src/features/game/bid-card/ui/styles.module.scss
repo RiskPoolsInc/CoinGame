@@ -33,6 +33,11 @@
     line-height: 155%;
     text-align: center;
     width: 90%;
+
+    &--error {
+      font-size: 22px;
+      text-align: center;
+    }
   }
 
   &__popup-actions {
@@ -42,5 +47,43 @@
 
   &__dialog {
     padding: 30px;
+  }
+}
+
+@media (max-width: 550px) {
+  .bid-card {
+    border-radius: inherit;
+    border: none;
+    padding: 0;
+    height: auto;
+    margin-bottom: 30px;
+
+    background: var(--section-background);
+
+    &__label {
+      font-size: 14px;
+    }
+
+    &__slider {
+      margin: 47px 0;
+    }
+
+    &__action {
+      flex-direction: column;
+      margin: auto;
+      row-gap: 41px;
+    }
+
+    &__btn {
+      margin: auto;
+    }
+
+    &__popup-text {
+      font-size: 25px;
+
+      &--error {
+        font-size: 16px;
+      }
+    }
   }
 }

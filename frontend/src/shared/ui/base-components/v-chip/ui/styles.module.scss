@@ -16,3 +16,9 @@
     background: #963B43;
   }
 }
+
+@media (max-width: 550px) {
+    .v-chip {
+      display: none;
+    }
+}

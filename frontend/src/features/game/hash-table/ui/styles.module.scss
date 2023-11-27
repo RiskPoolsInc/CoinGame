@@ -4,6 +4,7 @@
   box-shadow: inherit;
   border-radius: 7px;
   border: 1px solid rgb(191, 201, 226, .5);
+  font-family: Padauk;
 
   thead {
     background: #50596C;
@@ -36,4 +37,11 @@
   }
 }
 
+}
+
+@media (max-width: 550px) {
+  .hash-table {
+    .q-markup-table {
+    }
+  }
 }

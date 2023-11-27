@@ -47,7 +47,7 @@ const handleCopyWallet = () => {
         />
       </div>
 
-      <div class="mt-auto">
+      <div class="mt-auto generate-token-form__chip">
         <VChip v-if="gameState.wallet" color="success"> COMPLETED </VChip>
         <VChip v-else color="danger"> EMPTY </VChip>
       </div>

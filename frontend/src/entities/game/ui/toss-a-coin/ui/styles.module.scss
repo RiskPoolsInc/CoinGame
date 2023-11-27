@@ -19,3 +19,17 @@
     margin: 15px 0;
   }
 }
+
+@media (max-width: 550px) {
+  .toss-a-coin {
+
+    &__title {
+      font-size: 22px;
+    }
+
+    &__subtitle {
+      font-size: 14px;
+      margin: 24px 0;
+    }
+  }
+}

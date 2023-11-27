@@ -14,6 +14,13 @@ const emit = defineEmits<{
 const toogleMenu = () => {
   emit("update:isSidebarOpen", !props.isSidebarOpen);
 };
+
+const scrollTo = (id: string) => {
+  const el = document.getElementById(id);
+  if (el) {
+    el.scrollIntoView({ behavior: "smooth" });
+  }
+};
 </script>
 
 <template>
@@ -31,7 +38,13 @@ const toogleMenu = () => {
         </div>
         <div class="header__menu">
           <div class="header__menu__item my-auto">
-            <VButton label="1x_How" color="white" text-color="dark" size="lg" />
+            <VButton
+              label="1x_How"
+              color="white"
+              text-color="dark"
+              size="lg"
+              @click="scrollTo('how')"
+            />
           </div>
 
           <div class="header__menu__item my-auto">
@@ -40,6 +53,7 @@ const toogleMenu = () => {
               color="white"
               text-color="dark"
               size="lg"
+              @click="scrollTo('technology')"
             />
           </div>
 
@@ -49,6 +63,7 @@ const toogleMenu = () => {
               color="white"
               text-color="dark"
               size="lg"
+              @click="scrollTo('do-more')"
             />
           </div>
 
@@ -58,6 +73,7 @@ const toogleMenu = () => {
               color="white"
               text-color="dark"
               size="lg"
+              @click="scrollTo('get-in-touch')"
             />
           </div>
         </div>

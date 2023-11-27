@@ -18,24 +18,6 @@ const chartData = computed(() => {
         data: [gameState.previousBalance, ...datasets.value],
       },
     ],
-    // options: {
-    //   plugins: {
-    //     legend: {
-    //       display: false,
-    //     },
-    //   },
-    //   legend: {
-    //     display: false,
-    //   },
-    // },
-    options: {
-      legend: {
-        display: false,
-      },
-      tooltips: {
-        enabled: false,
-      },
-    },
   };
 });
 
@@ -44,6 +26,18 @@ const chartOptions = {
   labels: {
     color: "red",
   },
+  plugins: {
+    legend: {
+      display: false,
+    },
+  },
+  // scales: {
+  //   y: {
+  //     ticks: {
+  //       stepSize: 100000,
+  //     },
+  //   },
+  // },
 };
 
 onMounted(() => {
@@ -54,7 +48,7 @@ onMounted(() => {
   console.log(element);
   if (element) {
     new Chart(element, {
-      type: "line",
+      type: "bar",
       data: {
         labels: [],
         datasets: [
@@ -73,7 +67,22 @@ onMounted(() => {
 <template>
   <div id="acquisitions">
     <Line :data="chartData" :options="chartOptions" />
+    <div class="title">ROUNDS</div>
   </div>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.title {
+  margin: 10px auto;
+  color: var(--color-white);
+  font-size: 22px;
+  font-weight: 700;
+  text-align: center;
+  font-family: Padauk;
+}
+@media (max-width: 550px) {
+  .title {
+    font-size: 14px;
+  }
+}
+</style>

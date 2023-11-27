@@ -22,3 +22,14 @@
     margin-right: 10px;
   }
 }
+
+@media (max-width: 550px) {
+  .v-input {
+    &__label {
+      font-size: 14px;
+      color: var(--color-gray-2);
+      text-align: start;
+      margin-bottom: 22px;
+    }
+  }
+}

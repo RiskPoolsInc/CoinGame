@@ -7,18 +7,23 @@ export const routes: Array<RouteRecordRaw> = [
     component: () => import("./main/ui/MainPage.vue"),
   },
   {
-    path: "/base-components",
-    name: "components",
-    component: () => import("./base-components/ui/BaseComponentsPage.vue"),
-  },
-  {
     path: "/example",
     name: "example-page",
-    component: () => import("./example"),
+    component: () => import("./example/ui/ExamplePage.vue"),
   },
   {
     path: "/game",
     name: "game-page",
     component: () => import("./game"),
+  },
+  {
+    path: "/join-game",
+    name: "join-game-page",
+    component: () => import("./join-game-page"),
+  },
+  {
+    path: "/check-game",
+    name: "check-game-page",
+    component: () => import("./check-game"),
   },
 ];

@@ -1,0 +1,59 @@
+.check-game-page {
+  padding-top: 115px;
+  background: var(--section-background);
+  //position: relative;
+
+  &__wrapper {
+    padding: 37px 0;
+    //background: url("./images/bg.png") no-repeat center center;
+  }
+
+  &__title {
+    font-size: 50px;
+    font-weight: 700;
+    color: var(--color-white);
+  }
+
+  &__content {
+    color: var(--color-gray-2);
+    font-size: 22px;
+    font-weight: 400;
+    line-height: 135%;
+    width: 70%;
+    margin: 57px 0;
+  }
+
+  &__bg {
+    position: absolute;
+    bottom: 15%;
+    width: auto;
+    right: 5%;
+    height: auto;
+    z-index: 1;
+  }
+}
+
+@media (max-width: 550px) {
+  .check-game-page {
+    padding-top: 88px;
+
+    &__wrapper {
+      padding: 24px;
+    }
+
+    &__title {
+      font-size: 24px;
+    }
+    &__content {
+      margin: 24px 0;
+      width: 100%;
+      font-size: 14px;
+    }
+
+    &__bg {
+      height: 470px;
+      right: 0;
+      bottom: 0;
+    }
+  }
+}

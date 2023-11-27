@@ -7,6 +7,7 @@ import { computed, ref } from "vue";
 const { gameState, startGame } = useGameStore();
 
 const confirm = ref(false);
+const error = ref(false);
 
 const statusPlayButton = computed(() => {
   return !(
@@ -15,12 +16,21 @@ const statusPlayButton = computed(() => {
     gameState.wallet
   );
 });
+
+const onStart = () => {
+  if (Number(gameState.bid) > gameState.balance) {
+    error.value = true;
+    return;
+  }
+
+  confirm.value = true;
+};
 </script>
 
 <template>
   <div class="bid-card">
     <div class="row justify-center">
-      <div class="col-lg-4">
+      <div class="col-lg-4 col-xs-10">
         <VInput
           class="bid-card__input"
           v-model="gameState.bid"
@@ -43,7 +53,7 @@ const statusPlayButton = computed(() => {
     </div>
 
     <div class="bid-card__action row justify-center">
-      <div class="col-lg-3">
+      <div class="col-lg-3 col-xs-8 bid-card__btn">
         <VButton
           className="full-width"
           label="BID"
@@ -53,9 +63,9 @@ const statusPlayButton = computed(() => {
         />
       </div>
 
-      <div class="col-lg-3">
+      <div class="col-lg-3 col-xs-8 bid-card__btn">
         <VButton
-          @click="confirm = true"
+          @click="onStart"
           :disabled="!!statusPlayButton"
           className="full-width"
           label="TOSS A COIN"
@@ -85,7 +95,7 @@ const statusPlayButton = computed(() => {
         </q-card-section>
 
         <q-card-actions align="center" class="bid-card__popup-actions">
-          <div class="col-3">
+          <div class="col-lg-3 col-xs-4">
             <VButton
               class-name="full-width"
               label="Play"
@@ -97,7 +107,7 @@ const statusPlayButton = computed(() => {
             />
           </div>
 
-          <div class="col-3">
+          <div class="col-lg-3 col-xs-4">
             <VButton
               class-name="full-width"
               label="Cancel"
@@ -105,6 +115,40 @@ const statusPlayButton = computed(() => {
               text-color="dark"
               size="lg"
               @click="confirm = false"
+              v-close-popup
+            />
+          </div>
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
+    <q-dialog v-model="error" persistent>
+      <q-card
+        dark
+        style="
+          width: 491px;
+          background: #50596c;
+          border-radius: 7px;
+          border: 1px solid #bfc9e2;
+          box-shadow: none;
+        "
+        class="bid-card__dialog"
+      >
+        <q-card-section class="row items-center justify-center">
+          <span class="bid-card__popup-text--error q-ml-sm">
+            Your bet should not exceed the balance of your game wallet. Required
+            range 10 000 - 1 000 000, UBX
+          </span>
+        </q-card-section>
+
+        <q-card-actions align="center" class="bid-card__popup-actions">
+          <div class="col-lg-3 col-xs-4">
+            <VButton
+              class-name="full-width"
+              label="OK"
+              color="white"
+              text-color="dark"
+              size="lg"
               v-close-popup
             />
           </div>

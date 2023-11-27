@@ -16,8 +16,23 @@ import VButton from "@/shared/ui/base-components/v-button/ui/VButton.vue";
         </div>
       </div>
 
-      <div class="col-lg-1 my-auto">
-        <VButton label="REFUND" color="white" text-color="dark" size="lg" />
+      <div class="col-lg-2 col-xs-12 my-auto refund-block__actions">
+        <VButton
+          class="refund-block__btn"
+          label="REFUND"
+          color="white"
+          text-color="dark"
+          size="lg"
+        />
+
+        <VButton
+          to="/check-game"
+          class="refund-block__btn"
+          label="CHECK GAME"
+          color="white"
+          text-color="dark"
+          size="lg"
+        />
       </div>
     </div>
   </div>

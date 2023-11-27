@@ -10,3 +10,22 @@
     margin: auto 24px auto auto;
   }
 }
+
+@media (max-width: 550px) {
+  .result-game {
+    &__label {
+      font-size: 14px;
+      margin: 0;
+      margin-right: auto;
+    }
+
+    &__input {
+      width: 80%;
+      margin: auto;
+    }
+
+    &__item {
+      margin: 12px 0;
+    }
+  }
+}

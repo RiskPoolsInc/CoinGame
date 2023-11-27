@@ -6,6 +6,9 @@ import { useGameStore } from "@/entities/game/model/game";
 const { gameState } = useGameStore();
 
 const resultGame = computed(() => {
+  if (!gameState.previousBalance) {
+    return 0;
+  }
   return gameState.balance - gameState.previousBalance;
 });
 </script>
@@ -13,12 +16,12 @@ const resultGame = computed(() => {
 <template>
   <div class="result-game">
     <div class="row justify-end">
-      <div class="col-lg-6 row">
+      <div class="col-lg-6 col-xs-12 row result-game__item">
         <div class="result-game__label">Your game result, UBX</div>
         <VInput v-model="resultGame" disabled class="result-game__input" />
       </div>
 
-      <div class="col-lg-6 row">
+      <div class="col-lg-6 col-xs-12 row result-game__item">
         <div class="result-game__label">Your game wallet balance, UBX</div>
         <VInput
           v-model="gameState.balance"

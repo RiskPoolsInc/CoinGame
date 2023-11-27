@@ -45,6 +45,6 @@ export const EXAMPLE_INFO_SUB_LIST = [
     context:
       "RiskPools isn’t just about playing games and hedging one’s risks -  it’s also a set of liquidity pools within which the risk is distributed among the pool holders. By joining a risk pool, you’ll be able to earn a passive income from games and other processes that have an element of randomness and risk. <br><br>We’ve prepared an article about liquidity pools and the risks associated with being a pool holder. Note: when you join a pool, you assume all responsibility for the consequences, including potential losses.",
     btnName: "JOIN A RISK POOL",
-    btnLink: "/pools",
+    btnLink: "/join-game",
   },
 ];
