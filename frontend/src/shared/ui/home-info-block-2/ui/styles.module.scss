@@ -38,7 +38,15 @@
   &__btn {
     position: absolute;
     right: 20%;
-    top: 50%;
+    top: 55%;
+  }
+}
+
+@media (max-width: 1440px) {
+  .home-info-block-2 {
+    &__btn {
+      top: 58%;
+    }
   }
 }
 
