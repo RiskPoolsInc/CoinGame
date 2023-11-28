@@ -20,7 +20,7 @@
 
   &__content {
     //width: 50%;
-    padding-right: 6%;
+    padding-right: 2%;
     font-size: var(--basic-font-size);
     font-weight: 400;
     line-height: 135%;
@@ -28,7 +28,7 @@
   }
 
   &__img {
-    width: 50%;
+    width: 42%;
     position: absolute;
     bottom: 10%;
     right: 0;
@@ -36,9 +36,9 @@
   }
 
   &__btn {
-    position: absolute;
-    right: 20%;
-    top: 55%;
+    //position: absolute;
+    //right: 20%;
+    //top: 55%;
   }
 }
 
@@ -78,7 +78,11 @@
       height: 148px;
     }
     &__btn {
-      right: 25%;
+      position: absolute;
+      text-align: center;
+      left: 0;
+      right: 0;
+      margin: auto;
       top: 30%;
     }
   }
@@ -86,8 +90,11 @@
 @media (max-width: 360px) {
   .home-info-block-2 {
     &__btn {
-      right: 25%;
-      top: 25%;
+      text-align: center;
+      left: 0;
+      right: 0;
+      margin: auto;
+      top: 30%;
     }
   }
 }
