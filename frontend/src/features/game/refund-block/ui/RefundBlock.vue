@@ -23,6 +23,7 @@ import VButton from "@/shared/ui/base-components/v-button/ui/VButton.vue";
           color="white"
           text-color="dark"
           size="lg"
+          className="full-width"
         />
 
         <VButton
@@ -30,6 +31,7 @@ import VButton from "@/shared/ui/base-components/v-button/ui/VButton.vue";
           class="refund-block__btn"
           label="CHECK GAME"
           color="white"
+          target="_blank"
           text-color="dark"
           size="lg"
         />

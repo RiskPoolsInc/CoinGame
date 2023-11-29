@@ -15,6 +15,7 @@ interface IVButtonProps {
   className?: string;
   outline?: boolean;
   padding?: string;
+  target?: string;
 }
 
 withDefaults(defineProps<IVButtonProps>(), {
@@ -25,6 +26,7 @@ withDefaults(defineProps<IVButtonProps>(), {
   size: "md",
   customStyle: undefined,
   padding: undefined,
+  target: undefined,
 });
 
 const emit = defineEmits<{
@@ -44,6 +46,7 @@ const handleClick = () => {
       :padding="padding"
       :to="to"
       :icon="icon"
+      :target="target"
       :flat="flat"
       :icon-right="iconRight"
       :label="label"

@@ -22,6 +22,10 @@
     flex-direction: column;
     row-gap: 20px;
   }
+
+  &__btn {
+    width: 156px;
+  }
 }
 
 @media (max-width: 550px) {
