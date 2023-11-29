@@ -12,6 +12,7 @@
     font-weight: 400;
     color: var(--color-gray-2);
     margin-top: 55px;
+    line-height: 135%;
   }
 }
 @media (max-width: 550px) {
@@ -19,7 +20,7 @@
     padding: 0 0 10px 0;
     &__title {
       font-size: 30px;
-      text-align: center;
+      text-align: left;
     }
 
     &__content {

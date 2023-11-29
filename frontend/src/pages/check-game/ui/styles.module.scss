@@ -1,5 +1,5 @@
 .check-game-page {
-  padding-top: 115px;
+  padding-top: 5px;
   background: var(--section-background);
   //position: relative;
 
@@ -30,12 +30,13 @@
     right: 5%;
     height: auto;
     z-index: 1;
+    opacity: .3;
   }
 }
 
 @media (max-width: 550px) {
   .check-game-page {
-    padding-top: 88px;
+    padding-top: 5px;
 
     &__wrapper {
       padding: 24px;

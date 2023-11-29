@@ -23,16 +23,36 @@ const scrollTo = (id: string) => {
   }
 
   setTimeout(() => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth" });
-    }
+    scrollToElementWithOffset(id, 115);
   }, 100);
 };
 
-const redirectWithHash = () => {
-  if (router.currentRoute.value.path !== "/") {
-    router.push({ name: "home", hash: "how" });
+const scrollToElementWithOffset = (elementId: string, offset: number) => {
+  let element = document.getElementById(elementId);
+
+  if (element) {
+    let elementPosition = element.getBoundingClientRect().top;
+    let start = window.pageYOffset;
+    let startTime: any = null;
+
+    const scrollAnimation = (currentTime: any) => {
+      if (startTime === null) startTime = currentTime;
+
+      let progress: any = currentTime - startTime;
+      let easeInOutCubic = (progress: any) =>
+        progress < 0.5
+          ? 4 * progress ** 3
+          : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+
+      let scrollTo = elementPosition - offset;
+      window.scrollTo(0, start + scrollTo * easeInOutCubic(progress / 500));
+
+      if (progress < 500) {
+        requestAnimationFrame(scrollAnimation);
+      }
+    };
+
+    requestAnimationFrame(scrollAnimation);
   }
 };
 </script>

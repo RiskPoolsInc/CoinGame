@@ -9,9 +9,11 @@ interface ISubInfo {
   btnName: string;
   btnLink: string;
 }
+
 interface IExampleInfoSubProps {
   list: ISubInfo[];
 }
+
 defineProps<IExampleInfoSubProps>();
 </script>
 
@@ -34,7 +36,7 @@ defineProps<IExampleInfoSubProps>();
             {{ block.title }}
           </div>
 
-          <div class="col-lg-3 text-right">
+          <div class="col-lg-2 text-right">
             <VButton
               :label="block.btnName"
               :to="block.btnLink"
@@ -43,6 +45,7 @@ defineProps<IExampleInfoSubProps>();
               type="primary"
               size="lg"
               color="white"
+              class-name="full-width"
               text-color="dark"
             />
           </div>

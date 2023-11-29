@@ -30,7 +30,7 @@ const onStart = () => {
 <template>
   <div class="bid-card">
     <div class="row justify-center">
-      <div class="col-lg-4 col-xs-10">
+      <div class="col-lg-4 col-md-4 col-xs-10">
         <VInput
           class="bid-card__input"
           v-model="gameState.bid"
@@ -53,7 +53,7 @@ const onStart = () => {
     </div>
 
     <div class="bid-card__action row justify-center">
-      <div class="col-lg-3 col-xs-8 bid-card__btn">
+      <div class="col-lg-3 col-md-3 col-xs-8 bid-card__btn">
         <VButton
           className="full-width"
           label="BID"
@@ -63,7 +63,7 @@ const onStart = () => {
         />
       </div>
 
-      <div class="col-lg-3 col-xs-8 bid-card__btn">
+      <div class="col-lg-3 col-md-3 col-xs-8 bid-card__btn">
         <VButton
           @click="onStart"
           :disabled="!!statusPlayButton"
@@ -126,7 +126,8 @@ const onStart = () => {
       <q-card
         dark
         style="
-          width: 491px;
+          width: 100%;
+          max-width: 491px;
           background: #50596c;
           border-radius: 7px;
           border: 1px solid #bfc9e2;
@@ -136,8 +137,8 @@ const onStart = () => {
       >
         <q-card-section class="row items-center justify-center">
           <span class="bid-card__popup-text--error q-ml-sm">
-            Your bet should not exceed the balance of your game wallet. Required
-            range 10 000 - 1 000 000, UBX
+            A bid cannot exceed the game wallet balance. Available range:
+            10,000-1,000,000 UBX
           </span>
         </q-card-section>
 

@@ -18,7 +18,6 @@ html {
   /* Track */
   ::-webkit-scrollbar-track {
     background: #18212E;
-    border-radius: 100px;
   }
 
   /* Handle */
@@ -111,10 +110,21 @@ body {
   border-radius: 7px;
 }
 
+.q-field__input, .q-field__native {
+  text-align: center;
+}
+
 @media (min-width: 1480px) {
   .container {
     width: 1472px;
   }
+}
+
+@media (max-width: 1480px) and (min-width: 1280px) {
+    .container {
+      width: 100%;
+      padding: 0 128px;
+    }
 }
 
 @media (max-width: 550px) {

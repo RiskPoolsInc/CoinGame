@@ -1,16 +1,18 @@
 // Need to refactor
 .main-header {
     height: 115px;
-    position: fixed;
-    z-index: var(--ui-index-3);
     width: 100%;
-    backdrop-filter: blur(10px);
-    background: rgba(24, 33, 46, .9);
+    background: var(--header-background);
 }
 .header {
-    height: 100%;
+    height: 115px;
+    width: 100%;
     display: flex;
     justify-content: space-between;
+    backdrop-filter: blur(10px);
+    background: rgba(24, 33, 46, .9);
+    position: fixed;
+    z-index: var(--ui-index-3);
 
 
     &__wrapper {
@@ -42,6 +44,9 @@
 }
 @media (max-width: 550px) {
     .main-header {
+        height: 88px;
+    }
+    .header {
         height: 88px;
     }
     .header {

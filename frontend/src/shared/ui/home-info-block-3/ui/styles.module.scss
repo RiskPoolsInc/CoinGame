@@ -24,11 +24,11 @@
   }
 
   &__img {
-    width: 65%;
+    width: auto;
+    height: auto;
     position: absolute;
-    left: -4%;
+    left: 0;
     bottom: 0;
-    height: 664px;
   }
 
   &__content {
@@ -37,6 +37,26 @@
     font-weight: 400;
     line-height: 135%;
     color: var(--color-gray-2);
+  }
+}
+@media (max-width: 1440px) {
+  .home-info-block-3 {
+    &__img {
+      left: -12%;
+    }
+  }
+}
+@media (max-width: 1024px) {
+  .home-info-block-3 {
+    &__title {
+      width: 100%;
+    }
+    &__content {
+      width: 100%;
+    }
+    &__img {
+      display: none;
+    }
   }
 }
 @media (max-width: 550px) {

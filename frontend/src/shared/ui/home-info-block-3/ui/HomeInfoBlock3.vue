@@ -27,6 +27,7 @@ defineProps<IInfoBlockProps>();
           <p>
             Protocol revenue is distributed as follows: if a player loses, 20%
             of their bid is deposited in the risk pool to boost token backing.
+            <br class="md-hide sm-hide xs-hide" />
             The remaining 80% is distributed among the pool’s stakers via
             Ubistake.io.
             <br /><br />

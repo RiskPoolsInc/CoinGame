@@ -20,11 +20,11 @@ defineProps<IInfoBlockProps>();
         </div>
         <div class="home-info-block-1__content">
           <p>
-            RiskPools is a risk management protocol build on Ubix Network. It
-            allows you to make money taking up risks, hedge risks, or minimize
-            them. The key use cases for RiskPools are gaming, trading,
-            insurance, forecasting, and betting.
-            <br /><br />
+            RiskPools is a risk management protocol build on Ubix Network.
+            <br class="md-hide xs-hide sm-hide" />
+            It allows you to make money taking up risks, hedge risks, or
+            minimize them. The key use cases for RiskPools are gaming, trading,
+            insurance, forecasting, and betting. <br /><br />
             At the heart of the protocol are risk pools – a type of liquidity
             pools. Any random economic process associated with risk can serve as
             a base for a risk pool with its own token. You can supply liquidity

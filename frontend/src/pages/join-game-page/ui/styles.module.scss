@@ -1,6 +1,6 @@
 .join-game-page {
   background: var(--section-background);
-  padding-top: 115px;
+  padding-top: 5px;
   position: relative;
 
   &__wrapper {
@@ -94,7 +94,7 @@
 }
 @media (max-width: 550px) {
   .join-game-page {
-    padding-top: 88px;
+    padding-top: 5px;
 
     &__wrapper {
       padding-bottom: 10px;

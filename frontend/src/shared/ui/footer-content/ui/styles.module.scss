@@ -1,7 +1,7 @@
 .footer-content {
   padding: 40px 0 50px 0;
   background-color: var(--section-background);
-  color: var(--color-white);
+  color: var(--color-gray-2);
   border-top: 1px solid #50596C;
 
   &__logo {
@@ -22,7 +22,7 @@
   }
 
   &__link {
-    color: var(--color-white);
+    color: var(--color-gray-2);
     font-size: 18px;
     font-weight: 400;
   }

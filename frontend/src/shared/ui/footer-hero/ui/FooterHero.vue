@@ -2,20 +2,22 @@
 
 <template>
   <div class="footer-hero">
-    <div class="row container justify-between">
+    <div class="row container justify-between footer-hero__wrapper">
       <div class="col-lg-5 col-xs-12">
         <div class="row footer-hero__list">
-          <div class="col-lg-1 col-xs-2 my-auto">
+          <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 my-auto">
             <q-icon name="telegram" size="sm" />
           </div>
 
-          <div class="col-lg-11 col-xs-10 footer-hero__item">Telegram chat</div>
+          <div class="col-lg-11 col-md-4 col-sm-11 col-xs-11 footer-hero__item">
+            Telegram chat
+          </div>
 
-          <div class="col-lg-1 col-xs-2 my-auto">
+          <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 my-auto">
             <q-icon name="mail" size="sm" />
           </div>
 
-          <div class="col-lg-11 col-xs-10 footer-hero__item">
+          <div class="col-lg-11 col-md-4 col-sm-11 col-xs-10 footer-hero__item">
             Tech support:
             <a
               class="footer-hero__link"
@@ -28,10 +30,10 @@
       </div>
       <div class="col-lg-5 col-xs-12">
         <div class="row footer-hero__list">
-          <div class="col-lg-1 col-xs-2 my-auto">
+          <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 my-auto">
             <q-icon name="people" size="sm" />
           </div>
-          <div class="col-lg-11 col-xs-10 footer-hero__item">
+          <div class="col-lg-11 col-md-4 col-sm-11 col-xs-10 footer-hero__item">
             Partnerships:
             <a class="footer-hero__link" href="mailto:offer@riskpools.io"
               >offer@riskpools.io</a

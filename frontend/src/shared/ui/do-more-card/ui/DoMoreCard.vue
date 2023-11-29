@@ -17,9 +17,7 @@ const getImageUrl = (url: string) => {
     <div class="do-more-card__logo">
       <img :src="getImageUrl(data.logo)" alt="" />
     </div>
-    <div class="do-more-card__context">
-      {{ data.context }}
-    </div>
+    <div class="do-more-card__context" v-html="data.context" />
   </div>
 </template>
 

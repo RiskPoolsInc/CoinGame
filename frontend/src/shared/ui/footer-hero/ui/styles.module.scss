@@ -3,12 +3,16 @@
   color: var(--color-white);
   background: var(--section-background);
 
+  &__wrapper {
+    row-gap: 30px;
+  }
+
   &__list {
     row-gap: 30px;
   }
 
   &__item {
-    font-size: var(--basic-font-size);
+    font-size: 16px;
     font-weight: 400;
     color: var(--color-gray-2);
   }
@@ -21,6 +25,11 @@
 @media (max-width: 550px) {
   .footer-hero {
     padding: 20px 0;
+
+    &__wrapper {
+      row-gap: 0;
+    }
+
     &__list {
       row-gap: 0;
     }

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import VButton from "@/shared/ui/base-components/v-button/ui/VButton.vue";
 import { defineEmits, defineProps } from "vue";
 import { router } from "@/app/providers";
 
@@ -22,23 +21,44 @@ const scrollTo = (id: string) => {
   }
 
   setTimeout(() => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth" });
-    }
+    scrollToElementWithOffset(id, 115);
   }, 100);
 
   toogleMenu();
+};
+
+const scrollToElementWithOffset = (elementId: string, offset: number) => {
+  let element = document.getElementById(elementId);
+
+  if (element) {
+    let elementPosition = element.getBoundingClientRect().top;
+    let start = window.pageYOffset;
+    let startTime: any = null;
+
+    const scrollAnimation = (currentTime: any) => {
+      if (startTime === null) startTime = currentTime;
+
+      let progress: any = currentTime - startTime;
+      let easeInOutCubic = (progress: any) =>
+        progress < 0.5
+          ? 4 * progress ** 3
+          : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+
+      let scrollTo = elementPosition - offset;
+      window.scrollTo(0, start + scrollTo * easeInOutCubic(progress / 500));
+
+      if (progress < 500) {
+        requestAnimationFrame(scrollAnimation);
+      }
+    };
+
+    requestAnimationFrame(scrollAnimation);
+  }
 };
 </script>
 
 <template>
   <div class="sidebar-menu">
-    <div class="sidebar-menu__head">
-      <img class="sidebar-menu__logo" src="./images/svg/logo.svg" alt="logo" />
-
-      <VButton icon="close" color="white" size="lg" flat @click="toogleMenu" />
-    </div>
     <ul class="sidebar-menu__list">
       <li class="sidebar-menu__item">
         <div class="sidebar-menu__link" @click="scrollTo('how')">1x_How</div>

@@ -41,7 +41,7 @@ const downloadTxtFile = () => {
         </div>
       </div>
 
-      <div class="col-lg-4 xs-hide">
+      <div class="col-lg-4 xs-hide md-hide">
         <div class="toss-a-coin__subtitle">
           Coin toss results as hashes of randomly generated numbers.
         </div>
