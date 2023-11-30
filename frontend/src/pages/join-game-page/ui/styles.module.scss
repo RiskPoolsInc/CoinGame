@@ -86,10 +86,27 @@
 
   &__block-bg {
     position: absolute;
-    top: 18%;
-    right: 0;
+    top: 10%;
+    right: 10%;
     width: auto;
+    display: flex;
+    flex-direction: column;
     height: auto;
+    //width: 25%;
+  }
+
+  &__bg-4 {}
+
+  &__bg-3 {
+    margin-top: 30%;
+  }
+
+  &__bg-2 {
+    margin-top: 45%;
+  }
+
+  &__bg-1 {
+    margin-top: 40%;
   }
 }
 @media (max-width: 550px) {

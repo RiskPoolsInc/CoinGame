@@ -16,7 +16,7 @@ defineProps<IInfoBlockProps>();
         {{ data.title }}
       </div>
       <div class="home-info-block-2__body row justify-between">
-        <div class="home-info-block-2__content col-lg-7 col-md-7">
+        <div class="home-info-block-2__content col-lg-7 col-md-7 col-sm-12">
           <p>
             In this classic children’s game, one player tosses a coin and covers
             it with their hand – while the other has to guess if it’s heads or

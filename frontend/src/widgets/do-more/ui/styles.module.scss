@@ -8,7 +8,25 @@
   }
 
   &__list {
-    padding: 70px 0;
+    padding: 70px 287px;
+    row-gap: 30px;
+  }
+}
+
+@media (max-width: 1440px) {
+  .do-more {
+    &__list {
+        padding: 70px 187px;
+    }
+  }
+}
+
+@media (max-width: 1024px) {
+  .do-more {
+    &__list {
+        padding: 70px 87px;
+      justify-content: center;
+    }
   }
 }
 
@@ -24,6 +42,7 @@
 
       &__list {
         padding: 17px 0;
+        justify-content: center;
       }
     }
 }

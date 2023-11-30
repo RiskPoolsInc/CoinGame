@@ -1,7 +1,7 @@
 .hero-block {
   background: url('@/widgets/hero/ui/images/hero-bg.png') no-repeat center center;
   background-size: cover;
-  height: 100vh;
+  height: calc(100vh - 115px);
   position: relative;
   z-index: 1;
   display: flex;
@@ -38,6 +38,15 @@
   }
 
   &__action-btn {}
+}
+
+@media (max-width: 1440px) {
+  .hero-block {
+    justify-content: inherit;
+    &__main {
+      margin: 20px 0 0 -15px;
+    }
+  }
 }
 
 @media (max-width: 550px) {

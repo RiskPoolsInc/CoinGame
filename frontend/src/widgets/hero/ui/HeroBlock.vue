@@ -10,12 +10,14 @@ import VButton from "@/shared/ui/base-components/v-button";
         src="./images/riskpools.svg"
         alt="main text"
       />
+
       <img
         class="hero-block__main--mobile"
         src="./images/hero-bg-mobile.svg"
         alt="main text"
       />
     </div>
+
     <div class="hero-block__sub container">
       <div class="hero-block__context">
         Make money taking up the risks of others – or hedge your own. RiskPools

@@ -3,8 +3,32 @@
 <template>
   <div class="join-game-page">
     <div class="join-game-page__block-bg">
-      <img src="./images/main-bg.png" alt="" srcset="" />
+      <img
+        class="join-game-page__bg-4"
+        src="./images/sloy-4.png"
+        alt=""
+        srcset=""
+      />
+      <img
+        class="join-game-page__bg-3"
+        src="./images/sloy-3.png"
+        alt=""
+        srcset=""
+      />
+      <img
+        class="join-game-page__bg-2"
+        src="./images/sloy-2.png"
+        alt=""
+        srcset=""
+      />
+      <img
+        class="join-game-page__bg-1"
+        src="./images/sloy-1.png"
+        alt=""
+        srcset=""
+      />
     </div>
+
     <div class="container">
       <div class="join-game-page__wrapper">
         <div class="join-game-page__title">112x_Coin_Game_pool_holder</div>
