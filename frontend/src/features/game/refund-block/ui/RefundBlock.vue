@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import VButton from "@/shared/ui/base-components/v-button/ui/VButton.vue";
+import { useGameStore } from "@/entities/game/model/game";
+
+const { generalReset } = useGameStore();
 </script>
 
 <template>
@@ -24,6 +27,7 @@ import VButton from "@/shared/ui/base-components/v-button/ui/VButton.vue";
           text-color="dark"
           size="lg"
           className="full-width"
+          @click="generalReset"
         />
 
         <VButton

@@ -51,12 +51,22 @@ export const useGameStore = defineStore("game", () => {
     gameState.parityList = [];
   };
 
+  const generalReset = () => {
+    gameState.balance = 1000000;
+    gameState.previousBalance = 0;
+    gameState.bid = 0;
+    gameState.round = 3;
+    gameState.parityList = [];
+  };
+
   const startGame = () => {
     if (gameState.parityList.length > 0) {
       resetGame();
     }
 
     gameState.previousBalance = gameState.balance;
+
+    let currentBalance = gameState.bid;
 
     for (let i = 0; i < gameState.round; i++) {
       const randomNumber = getRandomNumber();
@@ -69,11 +79,17 @@ export const useGameStore = defineStore("game", () => {
         return;
       }
 
+      if (parity) {
+        currentBalance = Number(currentBalance) + Number(gameState.bid);
+      } else {
+        currentBalance = Number(currentBalance) - Number(gameState.bid);
+      }
+
       gameState.parityList.push({
         round: i,
         number: randomNumber,
         parity: parity,
-        currentBalance: gameState.balance,
+        currentBalance: currentBalance,
         hashNumber: hash,
       });
     }
@@ -82,6 +98,7 @@ export const useGameStore = defineStore("game", () => {
   return {
     gameState,
     setBid,
+    generalReset,
     number2Hash,
     hash2Number,
     startGame,

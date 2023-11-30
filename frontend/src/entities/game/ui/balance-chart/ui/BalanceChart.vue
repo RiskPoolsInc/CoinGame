@@ -1,21 +1,41 @@
 <script setup lang="ts">
-import { computed, onMounted } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import Chart from "chart.js/auto";
 import { Line } from "vue-chartjs";
 import { useGameStore } from "@/entities/game/model/game";
 
 const { gameState } = useGameStore();
 
+let list = ref<Array<number>>([]);
+
 const datasets = computed(() => {
-  return gameState.parityList.map((item) => item.currentBalance);
+  const list = gameState.parityList.map((item) => item.currentBalance);
+  return list.length > 0 ? [gameState.bid, ...list] : [];
 });
+
+watch(datasets, async (newSet) => {
+  let i = 0;
+  const interval = setInterval(() => {
+    if (i === newSet.length || !newSet.length) {
+      clearInterval(interval);
+      return;
+    }
+
+    add2List(newSet[i]);
+    i++;
+  }, 1000);
+});
+
+const add2List = (value: number) => {
+  list.value = [...list.value, value];
+};
 
 const chartData = computed(() => {
   return {
     labels: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
     datasets: [
       {
-        data: [gameState.previousBalance, ...datasets.value],
+        data: list.value,
       },
     ],
   };
@@ -31,13 +51,19 @@ const chartOptions = {
       display: false,
     },
   },
-  // scales: {
-  //   y: {
-  //     ticks: {
-  //       stepSize: 100000,
-  //     },
-  //   },
-  // },
+
+  pointRadius: 10,
+  pointHoverRadius: 15,
+  borderColor: "#9196DB",
+  backgroundColor: "rgba(145, 150, 219, 0.50)",
+
+  scales: {
+    y: {
+      ticks: {
+        stepSize: 20000,
+      },
+    },
+  },
 };
 
 onMounted(() => {

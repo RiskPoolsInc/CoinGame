@@ -15,8 +15,8 @@ const downloadTxtFile = () => {
   text =
     text +
     gameState.parityList
-      .map((item) => {
-        return item.round + " " + item.hashNumber;
+      .map((item, index) => {
+        return index + 1 + " " + item.hashNumber;
       })
       .join("    \n") +
     "\n";
