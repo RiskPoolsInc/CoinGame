@@ -42,20 +42,34 @@
         display: none;
     }
 }
+@media (max-width: 1024px) {
+    .header {
+        &__menu {
+            display: none;
+        }
+
+        &__burger-menu {
+            display: block;
+        }
+    }
+}
+
 @media (max-width: 550px) {
     .main-header {
         height: 88px;
     }
+
     .header {
         height: 88px;
-    }
-    .header {
+
         &__title {
             display: none;
         }
+
         &__menu {
             display: none;
         }
+
         &__burger-menu {
             display: block;
         }

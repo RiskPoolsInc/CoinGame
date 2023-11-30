@@ -43,6 +43,14 @@
     }
 }
 
+@media (max-width: 1440px) {
+    .example-info-sub {
+        &__context {
+            padding-right: 0;
+        }
+    }
+}
+
 @media (max-width: 550px) {
     .example-info-sub {
         margin-top: 45px;

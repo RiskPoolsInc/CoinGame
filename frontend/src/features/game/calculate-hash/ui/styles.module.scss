@@ -10,6 +10,15 @@
     width: 567px;
   }
 }
+
+@media (max-width: 1024px) {
+  .calculate-hash {
+    &__hash {
+      margin-top: 35px;
+    }
+  }
+}
+
 @media (max-width: 550px) {
   .calculate-hash {
     margin: 46px 0;
@@ -20,6 +29,7 @@
     }
 
     &__hash {
+      margin-top: 0;
         width: 100%;
     }
   }

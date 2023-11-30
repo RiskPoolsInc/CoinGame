@@ -31,12 +31,12 @@ defineProps<IExampleInfoSubProps>();
         :key="index"
         class="example-info-sub__content row"
       >
-        <div class="col-lg-12 row justify-between">
-          <div class="col-lg-3 example-info-sub__sub-title">
+        <div class="col-lg-12 col-md-12 col-sm-12 row justify-between">
+          <div class="col-lg-3 col-md-6 example-info-sub__sub-title">
             {{ block.title }}
           </div>
 
-          <div class="col-lg-2 text-right">
+          <div class="col-lg-2 col-md-3 col-sm-4 text-right">
             <VButton
               :label="block.btnName"
               :to="block.btnLink"
