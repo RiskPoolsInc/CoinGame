@@ -113,23 +113,17 @@ const scrollToElementWithOffset = (elementId: string, offset: number) => {
         </div>
 
         <div class="header__burger-menu my-auto">
-          <VButton
+          <div
             v-if="!props.isSidebarOpen"
+            class="header__menu-icon"
             @click="toogleMenu"
-            icon="menu"
-            color="white"
-            size="md"
-            flat
-          />
+          >
+            <img src="./images/svg/reorder-two-sharp.svg" alt="" srcset="" />
+          </div>
 
-          <VButton
-            v-else
-            @click="toogleMenu"
-            icon="close"
-            color="white"
-            size="md"
-            flat
-          />
+          <div v-else class="header__close-icon" @click="toogleMenu">
+            <img src="" alt="" srcset="./images/svg/close-sharp.svg" />
+          </div>
         </div>
       </div>
     </div>
