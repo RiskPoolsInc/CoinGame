@@ -15,6 +15,8 @@ const datasets = computed(() => {
 
 watch(datasets, async (newSet) => {
   let i = 0;
+  list.value = [];
+
   const interval = setInterval(() => {
     if (i === newSet.length || !newSet.length) {
       clearInterval(interval);

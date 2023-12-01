@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { reactive } from "vue";
+import { sha256, sha224 } from 'js-sha256';
 
 import { IGameState } from "@/entities/game/model/game.interface";
 
@@ -27,11 +28,11 @@ export const useGameStore = defineStore("game", () => {
   };
 
   const number2Hash = (number: number) => {
-    return number.toString(16);
+    return sha256(String(number));
   };
 
   const hash2Number = (hash: string) => {
-    return parseInt(hash, 16);
+    return sha224(hash);
   };
 
   const getRandomNumber = (): number => {
@@ -75,7 +76,7 @@ export const useGameStore = defineStore("game", () => {
 
       balanceCalculation(parity);
 
-      if (gameState.balance < 0) {
+      if (currentBalance <= 0) {
         return;
       }
 

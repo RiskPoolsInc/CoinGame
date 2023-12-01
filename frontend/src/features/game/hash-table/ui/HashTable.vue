@@ -29,8 +29,10 @@ defineProps({
           <td>
             {{ index }}
           </td>
-          <td>
-            {{ rows[index - 1]?.hashNumber }}
+          <td class="ellipsis">
+            <span>
+              {{ rows[index - 1]?.hashNumber }}
+            </span>
           </td>
         </tr>
       </tbody>

@@ -9,7 +9,7 @@ const resultGame = computed(() => {
   if (!gameState.previousBalance) {
     return 0;
   }
-  return gameState.balance - gameState.previousBalance;
+  return gameState.parityList[gameState.parityList.length - 1].currentBalance || 0;
 });
 </script>
 

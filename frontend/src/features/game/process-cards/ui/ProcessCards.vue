@@ -14,8 +14,9 @@ const datasets = computed(() => gameState.parityList);
 watch(
   datasets,
   async (newSet) => {
-    console.log("newSet", newSet);
     let i = 0;
+    list.value = [];
+
     const interval = setInterval(() => {
       if (i === newSet.length || !newSet.length) {
         clearInterval(interval);
