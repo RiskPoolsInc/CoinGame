@@ -115,12 +115,15 @@ onMounted(() => {
       fontFamily: 'Padauk',
       offsetY: -20,
     },
+    tooltip: {
+      enabled: false,
+    },
     colors: ['#9196DB', '#9196DB'],
     dataLabels: {
       enabled: false,
     },
     stroke: {
-      curve: 'smooth',
+      curve: 'straight',
     },
     grid: {
       show: true,
@@ -177,7 +180,6 @@ onMounted(() => {
 
   chart = new ApexCharts(document.querySelector("#chart"), options);
   chart.render();
-
 });
 </script>
 
