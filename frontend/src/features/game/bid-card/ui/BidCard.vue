@@ -1,13 +1,22 @@
 <script setup lang="ts">
 import VInput from "@/shared/ui/base-components/v-input/ui/VInput.vue";
 import VButton from "@/shared/ui/base-components/v-button/ui/VButton.vue";
-import { useGameStore } from "@/entities/game/model/game";
-import { computed, ref } from "vue";
+import {useGameStore} from "@/entities/game/model/game";
+import {computed, ref, watch} from "vue";
 
 const { gameState, startGame } = useGameStore();
 
 const confirm = ref(false);
 const error = ref(false);
+let slider = ref(3);
+
+watch(slider, (newVal) => {
+  if (newVal < 3) {
+    slider.value = 3;
+    return;
+  }
+  gameState.round = newVal;
+});
 
 const statusPlayButton = computed(() => {
   return !(
@@ -43,8 +52,7 @@ const onStart = () => {
       <div class="bid-card__label">Number of rounds (3-10)</div>
 
       <q-slider
-        v-model="gameState.round"
-        :inner-min="3"
+        v-model="slider"
         color="white"
         marker-labels
         :min="0"

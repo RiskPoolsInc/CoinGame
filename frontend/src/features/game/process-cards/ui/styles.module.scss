@@ -25,6 +25,17 @@
   }
 }
 
+@media (max-width: 1440px) {
+  .process-card {
+    &__table-title {
+      width: 100%;
+    }
+    &__table {
+      width: 100%;
+    }
+  }
+}
+
 @media (max-width: 550px) {
   .process-card {
     margin: 18px 0;

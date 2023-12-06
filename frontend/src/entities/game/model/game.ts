@@ -1,8 +1,8 @@
-import { defineStore } from "pinia";
-import { reactive } from "vue";
-import { sha256, sha224 } from 'js-sha256';
+import {defineStore} from "pinia";
+import {reactive} from "vue";
+import {sha224, sha256} from 'js-sha256';
 
-import { IGameState } from "@/entities/game/model/game.interface";
+import {IGameState} from "@/entities/game/model/game.interface";
 
 export const useGameStore = defineStore("game", () => {
   const gameState = reactive<IGameState>({
@@ -74,8 +74,6 @@ export const useGameStore = defineStore("game", () => {
       const hash = number2Hash(randomNumber);
       const parity = randomNumber % 2 !== 0;
 
-      balanceCalculation(parity);
-
       if (currentBalance <= 0) {
         return;
       }
@@ -83,8 +81,13 @@ export const useGameStore = defineStore("game", () => {
       if (parity) {
         currentBalance = Number(currentBalance) + Number(gameState.bid);
       } else {
-        currentBalance = Number(currentBalance) - Number(gameState.bid);
+        if (Number(currentBalance) - Number(gameState.bid) < 0) { return; }
+        else {
+          currentBalance = Number(currentBalance) - Number(gameState.bid);
+        }
       }
+
+      balanceCalculation(parity);
 
       gameState.parityList.push({
         round: i,
