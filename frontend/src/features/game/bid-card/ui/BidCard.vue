@@ -63,16 +63,6 @@ const onStart = () => {
     <div class="bid-card__action row justify-center">
       <div class="col-lg-3 col-md-3 col-xs-8 bid-card__btn">
         <VButton
-          className="full-width"
-          label="BID"
-          color="white"
-          size="lg"
-          text-color="dark"
-        />
-      </div>
-
-      <div class="col-lg-3 col-md-3 col-xs-8 bid-card__btn">
-        <VButton
           @click="onStart"
           :disabled="!!statusPlayButton"
           className="full-width"
