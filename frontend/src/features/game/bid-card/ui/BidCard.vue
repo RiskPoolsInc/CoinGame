@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import VInput from "@/shared/ui/base-components/v-input/ui/VInput.vue";
 import VButton from "@/shared/ui/base-components/v-button/ui/VButton.vue";
-import {useGameStore} from "@/entities/game/model/game";
-import {computed, ref, watch} from "vue";
+import { useGameStore } from "@/entities/game/model/game";
+import { computed, ref, watch } from "vue";
 
 const { gameState, startGame } = useGameStore();
 
@@ -134,7 +134,9 @@ const onStart = () => {
         class="bid-card__dialog"
       >
         <q-card-section class="row items-center justify-center">
-          <span class="bid-card__popup-text bid-card__popup-text--error q-ml-sm">
+          <span
+            class="bid-card__popup-text bid-card__popup-text--error q-ml-sm"
+          >
             A bid cannot exceed the game wallet balance. Available range:
             10,000-1,000,000 UBX
           </span>
@@ -165,5 +167,10 @@ const onStart = () => {
   .q-field--dark .q-field__control:before {
     border: 3px solid #bfc9e2;
   }
+}
+.q-slider__marker-labels {
+  font-family: Padauk;
+  font-size: 16px;
+  color: #fff;
 }
 </style>

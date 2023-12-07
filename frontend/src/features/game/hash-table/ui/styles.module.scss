@@ -37,22 +37,24 @@
   }
 }
 
-.ellipsis { 
-  position: relative; 
-} 
-.ellipsis:before { 
-  content: ' '; 
-  visibility: hidden; 
-} 
-.ellipsis span { 
-  position: absolute; 
-  left: 0; 
-  right: 0; 
-  white-space: nowrap; 
-  overflow: hidden; 
+.ellipsis {
+  position: relative;
+}
+.ellipsis:before {
+  content: ' ';
+  visibility: hidden;
+}
+.ellipsis span {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 0;
+  right: 0;
+  white-space: nowrap;
+  overflow: hidden;
   text-overflow: ellipsis;
   padding: 0 22px;
-} 
+}
 
 }
 

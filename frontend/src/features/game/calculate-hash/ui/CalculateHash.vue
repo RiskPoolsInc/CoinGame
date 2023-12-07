@@ -41,6 +41,14 @@ const calculateHash = () => {
   </div>
 </template>
 
+<style lang="scss">
+.calculate-hash__hash {
+  .q-field__native {
+    font-size: 16px;
+  }
+}
+</style>
+
 <style scoped lang="scss">
 @import "styles.module";
 </style>

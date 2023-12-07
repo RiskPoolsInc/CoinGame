@@ -59,6 +59,7 @@ defineProps<IExampleInfoSubProps>();
           class="example-info-sub__btn--mobile"
           text="Play now"
           type="primary"
+          class-name="full-width"
           size="lg"
           color="white"
           text-color="dark"
