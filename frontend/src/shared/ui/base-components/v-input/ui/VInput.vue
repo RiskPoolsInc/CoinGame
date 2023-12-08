@@ -34,7 +34,7 @@ const inputValue = computed({
       },
     ]"
   >
-    <label class="v-input__label"> {{ label }} </label>
+    <label v-if="label" class="v-input__label"> {{ label }} </label>
     <q-input
       class="v-input__input"
       outlined
