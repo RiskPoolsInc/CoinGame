@@ -4,6 +4,7 @@
   margin-bottom: 30px;
   padding: 50px 0;
   position: relative;
+  overflow: hidden;
 
   &__title {
     font-size: 52px;
@@ -39,6 +40,15 @@
     //position: absolute;
     //right: 20%;
     //top: 55%;
+  }
+}
+
+@media (max-width: 1600px) {
+  .home-info-block-2 {
+    &__img {
+      width: auto;
+      margin-right: -11%;
+    }
   }
 }
 

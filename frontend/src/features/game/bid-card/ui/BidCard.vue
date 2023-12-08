@@ -173,4 +173,8 @@ const onStart = () => {
   font-size: 16px;
   color: #fff;
 }
+.v-input__label {
+  //position: absolute;
+  margin-left: -10%;
+}
 </style>

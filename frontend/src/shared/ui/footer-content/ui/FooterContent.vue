@@ -14,7 +14,7 @@
           class="footer-content__links row col-lg-8 col-md-8 col-xs-12 justify-center"
         >
           <router-link class="footer-content__link" to="/docuemts">
-            Our documents:
+            Our documents
           </router-link>
 
           <router-link class="footer-content__link" to="/doc">
@@ -27,7 +27,8 @@
         </div>
 
         <div
-          class="footer-content__company-label col-lg-2 col-md-2 col-xs-12 text-right">
+          class="footer-content__company-label col-lg-2 col-md-2 col-xs-12 text-right"
+        >
           (с) Riskpools 2023
         </div>
       </div>

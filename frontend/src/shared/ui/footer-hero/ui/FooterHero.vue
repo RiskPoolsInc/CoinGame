@@ -10,7 +10,13 @@
           </div>
 
           <div class="col-lg-11 col-md-4 col-sm-11 col-xs-11 footer-hero__item">
-            Telegram chat
+            <a
+              class="footer-hero__link"
+              href="https://t.me/riskpools"
+              target="_blank"
+            >
+              Telegram chat
+            </a>
           </div>
 
           <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 my-auto">

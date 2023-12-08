@@ -12,6 +12,12 @@ import VButton from "@/shared/ui/base-components/v-button";
       />
 
       <img
+        class="hero-block__main--md"
+        src="./images/riskpools_md.svg"
+        alt="main text"
+      />
+
+      <img
         class="hero-block__main--mobile"
         src="./images/hero-bg-mobile.svg"
         alt="main text"

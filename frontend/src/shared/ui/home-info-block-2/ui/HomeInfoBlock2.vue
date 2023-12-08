@@ -12,9 +12,7 @@ defineProps<IInfoBlockProps>();
 <template>
   <div class="home-info-block-2">
     <div class="container">
-      <div class="home-info-block-2__title">
-        {{ data.title }}
-      </div>
+      <div class="home-info-block-2__title" v-html="data.title" />
       <div class="home-info-block-2__body row justify-between">
         <div class="home-info-block-2__content col-lg-7 col-md-7 col-sm-12">
           <p>

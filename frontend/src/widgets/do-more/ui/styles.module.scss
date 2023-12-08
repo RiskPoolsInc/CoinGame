@@ -13,6 +13,14 @@
   }
 }
 
+@media (max-width: 1700px) {
+  .do-more {
+    &__list {
+      padding: 70px 187px;
+    }
+  }
+}
+
 @media (max-width: 1440px) {
   .do-more {
     &__list {
