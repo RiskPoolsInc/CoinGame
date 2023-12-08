@@ -9,7 +9,7 @@ export const DO_MORE_LIST: Array<IDoMoreCard> = [
   {
     logo: "x.svg",
     context:
-      "312x_<br class='xl-hide lg-hide md-hide'>Follow us on X Updates, giveaways, and news from RiskPool.",
+      "312x_<br class='xl-hide lg-hide md-hide'>Follow us on X Updates, giveaways, and news from RiskPools.",
   },
   {
     logo: "ubix_ex.svg",
@@ -19,6 +19,6 @@ export const DO_MORE_LIST: Array<IDoMoreCard> = [
   {
     logo: "ubix_stake.svg",
     context:
-      "314x_<br class='xl-hide lg-hide md-hide'>Stake Deposit risk pool tokens to earn a safe passive income.",
+      "314x_<br class='xl-hide lg-hide md-hide'>Stake Deposit Riskpools  tokens to earn a safe passive income.",
   },
 ];
