@@ -173,8 +173,10 @@ const onStart = () => {
   font-size: 16px;
   color: #fff;
 }
-.v-input__label {
-  //position: absolute;
-  margin-left: -10%;
+.bid-card {
+  .v-input__label {
+    //position: absolute;
+    margin-left: -10%;
+  }
 }
 </style>

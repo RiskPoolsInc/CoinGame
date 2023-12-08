@@ -67,6 +67,7 @@
     &__main {
       margin-top: 36px;
       margin-left: -15px;
+      margin-right: 128px;
 
       &--desktop {
         display: none;
@@ -95,6 +96,7 @@
 @media (max-width: 550px) {
   .hero-block {
     align-items: inherit;
+    padding-right: 24px;
 
     &__main {
       &--desktop {
@@ -121,6 +123,7 @@
     &__context {
       width: 70%;
       font-size: 18px;
+      margin-left: 5%;
     }
 
     &__action-btn {

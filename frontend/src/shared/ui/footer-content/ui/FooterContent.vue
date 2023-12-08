@@ -1,4 +1,11 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const scrollToTop = () => {
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth",
+  });
+};
+</script>
 
 <template>
   <div class="footer-content">
@@ -6,7 +13,11 @@
       <div class="footer-content__main row justify-between">
         <div class="col-lg-2 col-md-2">
           <div class="footer-content__logo">
-            <img src="./images/logo.svg" alt="footer-content logo" />
+            <img
+              @click="scrollToTop"
+              src="./images/logo.svg"
+              alt="footer-content logo"
+            />
           </div>
         </div>
 

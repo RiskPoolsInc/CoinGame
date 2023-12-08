@@ -47,6 +47,13 @@ const calculateHash = () => {
     font-size: 16px;
   }
 }
+@media (max-width: 550px) {
+  .calculate-hash__hash {
+    .q-field__native {
+      font-size: 10px;
+    }
+  }
+}
 </style>
 
 <style scoped lang="scss">

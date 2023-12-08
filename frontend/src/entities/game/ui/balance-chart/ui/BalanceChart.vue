@@ -153,7 +153,7 @@ onMounted(() => {
       max: 10,
       labels: {
         style: {
-          colors: "#fff",
+          colors: "#BFC9E2",
           fontSize: "16px",
           fontFamily: "Padauk",
           fontWeight: 700,
@@ -168,7 +168,7 @@ onMounted(() => {
       showForNullSeries: false,
       labels: {
         style: {
-          colors: "#fff",
+          colors: "#BFC9E2",
           fontSize: "16px",
           fontFamily: "Padauk",
           fontWeight: 700,

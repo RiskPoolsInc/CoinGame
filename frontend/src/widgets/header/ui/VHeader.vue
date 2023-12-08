@@ -27,6 +27,22 @@ const scrollTo = (id: string) => {
   }, 100);
 };
 
+const openMainPageOrScrollToTop = () => {
+  if (router.currentRoute.value.path !== "/") {
+    router.replace({ name: "home" });
+    return;
+  }
+
+  console.log("openMainPageOrScrollToTop");
+
+  setTimeout(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }, 100);
+};
+
 const scrollToElementWithOffset = (elementId: string, offset: number) => {
   let element = document.getElementById(elementId);
 
@@ -61,7 +77,7 @@ const scrollToElementWithOffset = (elementId: string, offset: number) => {
   <header class="main-header">
     <div class="header">
       <div class="header__wrapper container">
-        <div class="header__logo my-auto">
+        <div class="header__logo my-auto" @click="openMainPageOrScrollToTop">
           <img class="" src="./images/svg/logo.svg" alt="logo" />
 
           <img

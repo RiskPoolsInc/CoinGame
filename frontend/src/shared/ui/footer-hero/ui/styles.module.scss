@@ -1,14 +1,14 @@
 .footer-hero {
-  padding: 50px 0;
+  padding: 0 0 50px 0;
   color: var(--color-white);
   background: var(--section-background);
 
   &__wrapper {
-    row-gap: 30px;
+    row-gap: 46px;
   }
 
   &__list {
-    row-gap: 30px;
+    row-gap: 59px;
   }
 
   &__item {
@@ -24,7 +24,7 @@
 }
 @media (max-width: 550px) {
   .footer-hero {
-    padding: 20px 0;
+    padding: 20px 0 30px 0;
 
     &__wrapper {
       row-gap: 0;
