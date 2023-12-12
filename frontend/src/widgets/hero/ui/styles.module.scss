@@ -134,6 +134,8 @@
     padding-right: 24px;
 
     &__main {
+      margin-top: 33px;
+
       &--desktop {
         display: none;
       }
@@ -152,6 +154,7 @@
       row-gap: 40px;
       width: auto;
       padding: 0 24px;
+      margin: 30px 0;
       left: 0;
     }
 

@@ -159,14 +159,17 @@
 @media (max-width: 550px) {
   .join-game-page {
     padding-top: 5px;
+    overflow: hidden;
 
     &__wrapper {
       padding-bottom: 10px;
     }
 
     &__block-bg {
-      top: 15%;
+      overflow: hidden;
       opacity: .5;
+      right: -9%;
+      top: 10%;
     }
 
     &__title {
