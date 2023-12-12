@@ -22,12 +22,15 @@
   .generate-token-form {
     &__wrapper {
       row-gap: 40px;
-      justify-content: center;
+      justify-content: start;
+      column-gap: 60px;
     }
     &__generate {
       text-align: center;
       width: 170px;
+      margin: auto;
     }
+
     &__action-btn {
       width: 100%;
       flex: 0 0 auto;

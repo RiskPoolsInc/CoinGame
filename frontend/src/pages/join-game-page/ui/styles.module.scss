@@ -115,6 +115,7 @@
 }
 @media (max-width: 1024px) {
   .join-game-page {
+    overflow: hidden;
     &__title {
       margin-top: 15px;
       margin-bottom: 23px;
@@ -153,6 +154,13 @@
 
     &__info-block-3 {
       width: 100%;
+    }
+
+    &__block-bg {
+      right: -10%;
+      width: 75%;
+      height: auto;
+      top: 5%;
     }
   }
 }
