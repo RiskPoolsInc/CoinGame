@@ -67,7 +67,7 @@
     &__main {
       margin-top: 36px;
       margin-left: -15px;
-      margin-right: 128px;
+      margin-right: 3%;
 
       &--desktop {
         display: none;
@@ -80,6 +80,14 @@
 
     &__context {
       font-size: 30px;
+    }
+  }
+}
+
+@media (max-width: 1480px) {
+  .hero-block {
+    &__main {
+      margin-right: 128px;
     }
   }
 }
