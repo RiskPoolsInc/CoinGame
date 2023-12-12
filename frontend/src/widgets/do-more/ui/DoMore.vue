@@ -11,7 +11,7 @@ import { DO_MORE_LIST } from "@/widgets/do-more/modules/constants";
         v-for="(data, index) in DO_MORE_LIST"
         :key="index"
         :data="data"
-        class="col-lg-3 col-md-4 col-sm-12 col-xs-8"
+        class="col-lg-3 col-md-4 col-sm-6 col-xs-8"
       />
     </div>
   </div>

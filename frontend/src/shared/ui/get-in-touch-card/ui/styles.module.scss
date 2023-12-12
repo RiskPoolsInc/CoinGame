@@ -15,6 +15,17 @@
     line-height: 135%;
   }
 }
+@media (max-width: 1024px) {
+  .get-in-touch-card {
+    padding-top: 0;
+
+    &__title {
+      font-size: 30px;
+      text-align: center;
+    }
+  }
+}
+
 @media (max-width: 550px) {
   .get-in-touch-card {
     padding: 0 0 10px 0;

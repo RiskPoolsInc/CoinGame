@@ -57,6 +57,9 @@
 
 @media (max-width: 1024px) {
   .home-info-block-1 {
+    &__title {
+      font-size: 30px;
+    }
     &__img {
       width: 100%;
     }

@@ -57,6 +57,8 @@ const handleCopyWallet = () => {
       >
         <VButton
           label="COPY WALLET"
+          class="col-xs-8"
+          class-name="full-width"
           :disabled="!gameState.wallet"
           color="white"
           text-color="dark"

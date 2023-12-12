@@ -11,7 +11,7 @@ const scrollToTop = () => {
   <div class="footer-content">
     <div class="container">
       <div class="footer-content__main row justify-between">
-        <div class="col-lg-2 col-md-2">
+        <div class="col-lg-2 col-md-2 sm-2">
           <div class="footer-content__logo">
             <img
               @click="scrollToTop"
@@ -22,7 +22,7 @@ const scrollToTop = () => {
         </div>
 
         <div
-          class="footer-content__links row col-lg-8 col-md-8 col-xs-12 justify-center"
+          class="footer-content__links row col-lg-8 col-md-8 col-sm-10 col-xs-12 justify-center"
         >
           <router-link class="footer-content__link" to="/docuemts">
             Our documents

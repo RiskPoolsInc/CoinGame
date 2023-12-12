@@ -133,13 +133,14 @@ const onStart = () => {
         "
         class="bid-card__dialog"
       >
-        <q-card-section class="row items-center justify-center">
-          <span
-            class="bid-card__popup-text bid-card__popup-text--error q-ml-sm"
-          >
-            A bid cannot exceed the game wallet balance. Available range: <br />
-            10,000 - 1,000,000 UBX
-          </span>
+        <q-card-section class="row items-center justify-center p-0">
+          <div class="col-12 bid-card__popup-text bid-card__popup-text--error">
+            <span class="bid-card__popup-text bid-card__popup-text--error">
+              A bid cannot exceed the game wallet balance. Available range:
+              <br />
+              10,000 - 1,000,000 UBX
+            </span>
+          </div>
         </q-card-section>
 
         <q-card-actions align="center" class="bid-card__popup-actions">

@@ -31,6 +31,9 @@
 
 @media (max-width: 1024px) {
   .do-more {
+    &__title {
+      font-size: 30px;
+    }
     &__list {
         padding: 70px 87px;
       justify-content: center;

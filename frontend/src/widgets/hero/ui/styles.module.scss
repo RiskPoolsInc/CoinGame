@@ -39,9 +39,9 @@
   &__context {
     font-size: 35px;
     font-weight: 400;
-    line-height: normal;
     text-align: left;
     width: 65%;
+    line-height: 135%;
   }
 }
 
@@ -89,6 +89,33 @@
     justify-content: inherit;
     &__main {
       margin: 20px 0 0 -15px;
+    }
+  }
+}
+
+@media (max-width: 1024px) {
+  .hero-block {
+    height: 100%;
+    padding-right: 24px;
+
+    &__main {
+      margin-top: 122px;
+    }
+
+    &__sub {
+      position: inherit;
+      flex-direction: column;
+      row-gap: 57px;
+      margin: 80px 0;
+      justify-content: center;
+    }
+
+    &__context {
+      margin: auto;
+    }
+
+    &__action-btn {
+      margin: auto;
     }
   }
 }
