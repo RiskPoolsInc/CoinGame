@@ -20,6 +20,28 @@
   }
 }
 
+@media (max-width: 1024px) {
+  .toss-a-coin {
+    padding: 30px 0;
+    &__title {
+      font-size: 26px;
+    }
+
+    &__subtitle {
+      font-size: 22px;
+    }
+
+    &__hash-table {
+      margin: auto;
+    }
+
+    &__copy-btn {
+      margin: 26px 0;
+      text-align: center;
+    }
+  }
+}
+
 @media (max-width: 550px) {
   .toss-a-coin {
 

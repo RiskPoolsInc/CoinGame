@@ -40,7 +40,7 @@ const add2List = (value: any) => {
     <div class="col-lg-6">
       <div class="process-card__title">Your game progress chart, balance.</div>
     </div>
-    <div class="col-lg-5 xs-hide md-hide">
+    <div class="col-lg-5 sm-hide xs-hide md-hide">
       <div class="process-card__table-title">
         The results of your game, randomly generated numbers. Odd numbers -win,
         even numbers - loss.
@@ -57,7 +57,9 @@ const add2List = (value: any) => {
       </div>
     </div>
 
-    <div class="col-lg-6 col-md-12 col-xs-12">
+    <div
+      class="col-lg-6 col-md-12 col-sm-10 col-xs-12 process-card__table-wrapper"
+    >
       <div class="process-card__table">
         <HashTable2 :columns="PROCESS_CARDS_TABLE_COLUMNS" :rows="list" />
       </div>

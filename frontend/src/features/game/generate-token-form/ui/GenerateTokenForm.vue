@@ -26,14 +26,16 @@ const handleCopyWallet = () => {
 <template>
   <div class="generate-token-form">
     <div class="generate-token-form__wrapper row items-stretch">
-      <VButton
-        label="GENERATE"
-        color="white"
-        text-color="dark"
-        class="mt-auto"
-        size="lg"
-        @click="generateWallet"
-      />
+      <div class="mt-auto generate-token-form__generate">
+        <VButton
+          label="GENERATE"
+          color="white"
+          class-name="full-width"
+          text-color="dark"
+          size="lg"
+          @click="generateWallet"
+        />
+      </div>
 
       <div class="generate-token-form__wallet">
         <VInput v-model="gameState.wallet" disabled label="Your game wallet" />
@@ -57,7 +59,7 @@ const handleCopyWallet = () => {
       >
         <VButton
           label="COPY WALLET"
-          class="col-xs-8"
+          class="col-md-8 col-xs-8 col-sm-3"
           class-name="full-width"
           :disabled="!gameState.wallet"
           color="white"

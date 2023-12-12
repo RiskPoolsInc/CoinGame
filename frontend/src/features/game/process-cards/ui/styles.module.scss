@@ -36,6 +36,17 @@
   }
 }
 
+@media (max-width: 1024px) {
+  .process-card {
+    &__table-title {
+      margin: 36px 0;
+    }
+    &__table-wrapper {
+      margin: auto;
+    }
+  }
+}
+
 @media (max-width: 550px) {
   .process-card {
     margin: 18px 0;

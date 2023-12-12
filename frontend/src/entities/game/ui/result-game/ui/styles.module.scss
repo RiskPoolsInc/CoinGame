@@ -11,6 +11,24 @@
   }
 }
 
+@media (max-width: 1024px) {
+  .result-game {
+    &__label {
+      text-align: center;
+      font-size: 22px;
+      margin: auto;
+    }
+    &__item {
+      margin: 15px auto;
+      text-align: center;
+    }
+    &__input {
+      margin: auto;
+      margin-top: 40px;
+    }
+  }
+}
+
 @media (max-width: 550px) {
   .result-game {
     &__label {

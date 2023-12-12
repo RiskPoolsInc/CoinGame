@@ -28,6 +28,26 @@
   }
 }
 
+@media (max-width: 1024px) {
+  .refund-block {
+    padding-top: 25px;
+    padding-bottom: 160px;
+
+    &__title {
+      font-size: 26px;
+      margin-bottom: 30px;
+    }
+
+    &__description {
+      margin-bottom: 85px;
+    }
+
+    &__btn {
+      margin: auto;
+    }
+  }
+}
+
 @media (max-width: 550px) {
   .refund-block {
     padding: 0;

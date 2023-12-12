@@ -18,6 +18,24 @@
   }
 }
 
+@media (max-width: 1024px) {
+  .generate-token-form {
+    &__wrapper {
+      row-gap: 40px;
+      justify-content: center;
+    }
+    &__generate {
+      text-align: center;
+      width: 170px;
+    }
+    &__action-btn {
+      width: 100%;
+      flex: 0 0 auto;
+      justify-content: center;
+    }
+  }
+}
+
 @media (max-width: 550px) {
   .generate-token-form {
     margin: 0;

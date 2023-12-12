@@ -50,6 +50,23 @@
   }
 }
 
+@media (max-width: 1024px) {
+  .bid-card {
+    border-radius: inherit;
+    border: none;
+    padding: 0;
+    height: auto;
+    background: var(--section-background);
+    margin-top: 40px;
+    margin-bottom: 10px;
+
+    &__slider {
+      margin-bottom: 30px;
+      margin-top: 50px;
+    }
+  }
+}
+
 @media (max-width: 550px) {
   .bid-card {
     border-radius: inherit;

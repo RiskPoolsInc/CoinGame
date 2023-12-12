@@ -41,7 +41,7 @@ const downloadTxtFile = () => {
         </div>
       </div>
 
-      <div class="col-lg-4 xs-hide md-hide">
+      <div class="col-lg-4 sm-hide xs-hide md-hide">
         <div class="toss-a-coin__subtitle">
           Coin toss results as hashes of randomly generated numbers.
         </div>
@@ -51,13 +51,13 @@ const downloadTxtFile = () => {
         <BidCard />
       </div>
 
-      <div class="col-lg-4 xl-hide lg-hide">
+      <div class="col-lg-4 col-sm-8 xl-hide lg-hide">
         <div class="toss-a-coin__subtitle">
           Coin toss results as hashes of randomly generated numbers.
         </div>
       </div>
 
-      <div class="col-lg-4 col-xs-12">
+      <div class="col-lg-4 col-sm-8 col-xs-12 toss-a-coin__hash-table">
         <HashTable
           id="hash-table"
           :rows="gameState.parityList"
