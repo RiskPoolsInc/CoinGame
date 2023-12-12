@@ -26,8 +26,10 @@ import VButton from "@/shared/ui/base-components/v-button";
 
     <div class="hero-block__sub container">
       <div class="hero-block__context">
-        Make money taking up the risks of others – or hedge your own. RiskPools
-        is the ultimate risk management and monetization protocol.
+        Make money taking up the risks of others –
+        <br class="xl-hide lg-hide md-hide sm-hide" />
+        or hedge your own. RiskPools is the ultimate risk management and
+        monetization protocol.
       </div>
 
       <div class="hero-block__action-btn my-auto">

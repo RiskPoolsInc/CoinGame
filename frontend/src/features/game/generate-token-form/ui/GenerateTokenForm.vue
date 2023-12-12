@@ -27,7 +27,7 @@ const handleCopyWallet = () => {
   <div class="generate-token-form">
     <div class="row justify-sm-center" style="justify-content: center">
       <div
-        class="generate-token-form__wrapper row items-stretch col-lg-12 col-md-12 col-sm-10 col-xs-12"
+        class="generate-token-form__wrapper row items-stretch col-lg-12 col-md-12 col-sm-9 col-xs-12"
       >
         <div class="mt-auto generate-token-form__generate">
           <VButton

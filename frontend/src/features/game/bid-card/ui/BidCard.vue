@@ -39,7 +39,7 @@ const onStart = () => {
 <template>
   <div class="bid-card">
     <div class="row justify-center">
-      <div class="col-lg-4 col-md-4 col-sm-8 col-xs-10">
+      <div class="col-lg-4 col-md-4 col-sm-5 col-xs-10">
         <VInput
           class="bid-card__input"
           v-model="gameState.bid"

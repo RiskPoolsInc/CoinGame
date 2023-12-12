@@ -24,6 +24,7 @@
       row-gap: 40px;
       justify-content: start;
       column-gap: 60px;
+      padding: 0 14px;
     }
     &__generate {
       text-align: center;
@@ -35,6 +36,7 @@
       width: 100%;
       flex: 0 0 auto;
       justify-content: center;
+      margin-top: 27px;
     }
   }
 }
