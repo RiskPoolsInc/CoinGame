@@ -136,7 +136,10 @@ const onStart = () => {
         <q-card-section class="row items-center justify-center p-0">
           <div class="col-12 bid-card__popup-text bid-card__popup-text--error">
             <span class="bid-card__popup-text bid-card__popup-text--error">
-              A bid cannot exceed the game wallet balance. Available range:
+              A bid cannot exceed the game
+              <br class="xl-hide lg-hide md-hide" />
+              wallet balance. <br class="xl-hide lg-hide md-hide" />
+              Available range:
               <br />
               10,000 - 1,000,000 UBX
             </span>
