@@ -194,6 +194,10 @@ onMounted(() => {
 </template>
 
 <style scoped lang="scss">
+#acquisitions {
+  margin-left: -10px;
+  margin-top: 20px;
+}
 .title {
   margin: -20px auto 10px auto;
   color: var(--color-white);
