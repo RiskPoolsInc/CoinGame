@@ -39,7 +39,7 @@ const onStart = () => {
 <template>
   <div class="bid-card">
     <div class="row justify-center">
-      <div class="col-lg-4 col-md-4 col-xs-10">
+      <div class="col-lg-4 col-md-4 col-sm-8 col-xs-10">
         <VInput
           class="bid-card__input"
           v-model="gameState.bid"
@@ -180,7 +180,15 @@ const onStart = () => {
 .bid-card {
   .v-input__label {
     //position: absolute;
-    margin-left: -10%;
+    //margin-left: -10%;
+  }
+}
+
+@media (max-width: 550px) {
+  .bid-card {
+    .v-input__label {
+      margin-left: -10%;
+    }
   }
 }
 </style>

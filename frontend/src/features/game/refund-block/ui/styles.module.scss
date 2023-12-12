@@ -39,7 +39,11 @@
     }
 
     &__description {
-      margin-bottom: 85px;
+      margin-bottom: 76px;
+    }
+
+    &__actions {
+      row-gap: 40px;
     }
 
     &__btn {

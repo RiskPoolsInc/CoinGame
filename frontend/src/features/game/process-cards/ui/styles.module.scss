@@ -38,6 +38,9 @@
 
 @media (max-width: 1024px) {
   .process-card {
+    &__title {
+      margin-bottom: 30px;
+    }
     &__table-title {
       margin: 36px 0;
     }

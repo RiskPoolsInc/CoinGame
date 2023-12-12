@@ -52,8 +52,9 @@ const add2List = (value: any) => {
 
     <div class="col-lg-5 col-md-12 xl-hide lg-hide">
       <div class="process-card__table-title">
-        The results of your game, randomly generated numbers. Odd numbers -win,
-        even numbers - loss.
+        The results of your game, randomly generated
+        <br class="xl-hide lg-hide" />
+        numbers. Odd numbers -win, even numbers - loss.
       </div>
     </div>
 

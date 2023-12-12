@@ -37,7 +37,9 @@ const downloadTxtFile = () => {
     <div class="row justify-between">
       <div class="col-lg-7">
         <div class="toss-a-coin__subtitle">
-          Place your bet and select the number of game rounds (coin tosses).
+          Place your bet and select the number of game rounds
+          <br class="xl-hide lg-hide md-hide" />
+          (coin tosses).
         </div>
       </div>
 
