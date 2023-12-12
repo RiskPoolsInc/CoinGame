@@ -27,6 +27,7 @@
         alt=""
         srcset=""
       />
+      <img class="join-game-page__bg-main" src="./images/main-bg.png" />
     </div>
 
     <div class="container">

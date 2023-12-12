@@ -16,6 +16,21 @@
   }
 }
 
+@media (max-width: 1024px) {
+  .generate-token {
+    margin-top: 24px;
+
+    &__title {
+      font-size: 26px;
+    }
+
+    &__wrapper {
+      justify-content: center;
+      row-gap: 60px;
+    }
+  }
+}
+
 @media (max-width: 550px) {
   .generate-token {
     margin-top: 25px;

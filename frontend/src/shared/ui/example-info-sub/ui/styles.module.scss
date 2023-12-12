@@ -51,6 +51,40 @@
     }
 }
 
+@media (max-width: 1024px) {
+    .example-info-sub {
+        &__title {
+            font-size: 26px;
+        }
+
+        &__sub-title {
+            font-size: 22px;
+        }
+
+        &__btn {
+            &--desktop {
+                display: none;
+            }
+
+            &--mobile {
+                display: block;
+                margin: 22px auto;
+                width: 210px;
+            }
+        }
+
+        &__context {
+            font-size: 22px;
+            margin-top: 30px;
+        }
+
+        &__content {
+            margin-top: 51px;
+            //margin: 51px 0;
+        }
+    }
+}
+
 @media (max-width: 550px) {
     .example-info-sub {
         margin-top: 45px;
