@@ -40,6 +40,14 @@
     color: var(--color-gray-2);
   }
 }
+@media (max-width: 1600px) {
+  .home-info-block-3 {
+    &__img {
+      left: -7%;
+      bottom: 10%;
+    }
+  }
+}
 @media (max-width: 1440px) {
   .home-info-block-3 {
     &__img {

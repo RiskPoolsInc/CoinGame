@@ -44,7 +44,7 @@ defineProps<IInfoBlockProps>();
             We will balance the pools using probability fields and non-ergodic
             random processes. The notion of a random value or process will be
             formulated individually for each pool. All related documents will be
-            posted on GitHub. it seems…
+            posted on GitHub.
           </p>
         </div>
       </div>
