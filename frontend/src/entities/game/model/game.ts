@@ -1,3 +1,6 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const crypto = require('crypto-web');
+
 import {defineStore} from "pinia";
 import {reactive} from "vue";
 import {sha224, sha256} from 'js-sha256';
@@ -20,7 +23,9 @@ export const useGameStore = defineStore("game", () => {
   };
 
   const generateWallet = () => {
-    gameState.wallet = new Date().getTime().toString();
+    const kp = crypto.createKeyPair();
+    gameState.wallet = kp.privateKey;
+    // gameState.wallet = new Date().getTime().toString();
   };
 
   const copyWallet = () => {
