@@ -13,4 +13,5 @@ export interface IGameState {
   bid: number;
   round: number;
   parityList: IParityList[];
+  kp: any;
 }

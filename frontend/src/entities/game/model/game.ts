@@ -1,5 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const crypto = require('crypto-web');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const CilUtils = require('cil-utils');
 
 import {defineStore} from "pinia";
 import {reactive} from "vue";
@@ -15,6 +17,7 @@ export const useGameStore = defineStore("game", () => {
     bid: 0,
     round: 3,
     parityList: [],
+    kp: null,
   });
 
   // Mutations
@@ -22,10 +25,22 @@ export const useGameStore = defineStore("game", () => {
     gameState.bid = bid;
   };
 
-  const generateWallet = () => {
-    const kp = crypto.createKeyPair();
-    gameState.wallet = kp.privateKey;
-    // gameState.wallet = new Date().getTime().toString();
+  const generateWallet = async () => {
+    gameState.kp = crypto.createKeyPair();
+    gameState.wallet = 'Ux' + gameState.kp.address;
+
+    const utils = new CilUtils({
+      privateKey: gameState.kp.privateKey,
+      apiUrl: 'https://test-explorer.ubikiri.com/api/',
+      rpcPort: 443,
+      rpcAddress: 'https://rpc-dv-1.ubikiri.com/',
+      rpcUser: 'cilTest',
+      rpcPass: 'd49c1d2735536baa4de1cc6'
+    });
+    await utils.asyncLoaded();
+    const nBalance = await utils.getBalance();
+
+    gameState.balance = nBalance;   
   };
 
   const copyWallet = () => {
@@ -57,8 +72,8 @@ export const useGameStore = defineStore("game", () => {
     gameState.parityList = [];
   };
 
-  const generalReset = () => {
-    gameState.balance = 1000000;
+  const generalReset = async () => {
+    gameState.balance = 1000000;   
     gameState.previousBalance = 0;
     gameState.bid = 0;
     gameState.round = 3;
