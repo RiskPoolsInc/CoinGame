@@ -11,6 +11,7 @@
     "@quasar/extras": "^1.16.8",
     "aos": "^2.3.4",
     "apexcharts": "^3.44.1",
+    "cil-utils": "github:SilentNotaryEcosystem/Cil-Utils#front",
     "core-js": "^3.8.3",
     "js-sha256": "^0.10.1",
     "pinia": "^2.1.7",
