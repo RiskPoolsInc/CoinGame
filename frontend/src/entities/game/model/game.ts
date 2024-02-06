@@ -12,12 +12,13 @@ import {IGameState} from "@/entities/game/model/game.interface";
 export const useGameStore = defineStore("game", () => {
   const gameState = reactive<IGameState>({
     wallet: "",
-    balance: 1000000,
+    balance: 0,
     previousBalance: 0,
     bid: 0,
     round: 3,
     parityList: [],
     kp: null,
+    cilUtils: null,
   });
 
   // Mutations
@@ -29,7 +30,7 @@ export const useGameStore = defineStore("game", () => {
     gameState.kp = crypto.createKeyPair();
     gameState.wallet = 'Ux' + gameState.kp.address;
 
-    const utils = new CilUtils({
+    gameState.cilUtils = new CilUtils({
       privateKey: gameState.kp.privateKey,
       apiUrl: 'https://test-explorer.ubikiri.com/api/',
       rpcPort: 443,
@@ -37,8 +38,8 @@ export const useGameStore = defineStore("game", () => {
       rpcUser: 'cilTest',
       rpcPass: 'd49c1d2735536baa4de1cc6'
     });
-    await utils.asyncLoaded();
-    const nBalance = await utils.getBalance();
+    await gameState.cilUtils.asyncLoaded();
+    const nBalance = await gameState.cilUtils.getBalance();
 
     gameState.balance = nBalance;   
   };
