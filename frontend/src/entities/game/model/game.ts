@@ -17,9 +17,33 @@ export const useGameStore = defineStore("game", () => {
     bid: 0,
     round: 3,
     parityList: [],
-    kp: null,
-    cilUtils: null,
+    gameWalletKeyPair: null,
+    transitWalletKeyPair: null,
+    gameWalletCilUtils: null,
+    transitWalletCilUtils: null,
   });
+
+  const initCilUtils = async () => {
+    gameState.gameWalletCilUtils = new CilUtils({
+      privateKey: gameState.gameWalletKeyPair.privateKey,
+      apiUrl: 'https://test-explorer.ubikiri.com/api/',
+      rpcPort: 443,
+      rpcAddress: 'https://rpc-dv-1.ubikiri.com/',
+      rpcUser: 'cilTest',
+      rpcPass: 'd49c1d2735536baa4de1cc6'
+    });
+    await gameState.gameWalletCilUtils.asyncLoaded();
+
+    gameState.transitWalletCilUtils = new CilUtils({
+      privateKey: gameState.transitWalletKeyPair.privateKey,
+      apiUrl: 'https://test-explorer.ubikiri.com/api/',
+      rpcPort: 443,
+      rpcAddress: 'https://rpc-dv-1.ubikiri.com/',
+      rpcUser: 'cilTest',
+      rpcPass: 'd49c1d2735536baa4de1cc6'
+    });
+    await gameState.transitWalletCilUtils.asyncLoaded();
+  }
 
   // Mutations
   const setBid = (bid: number) => {
@@ -27,21 +51,18 @@ export const useGameStore = defineStore("game", () => {
   };
 
   const generateWallet = async () => {
-    gameState.kp = crypto.createKeyPair();
-    gameState.wallet = 'Ux' + gameState.kp.address;
+    gameState.gameWalletKeyPair = crypto.createKeyPair();
+    gameState.wallet = 'Ux' + gameState.gameWalletKeyPair.address;
+    gameState.transitWalletKeyPair = crypto.createKeyPair();
 
-    gameState.cilUtils = new CilUtils({
-      privateKey: gameState.kp.privateKey,
-      apiUrl: 'https://test-explorer.ubikiri.com/api/',
-      rpcPort: 443,
-      rpcAddress: 'https://rpc-dv-1.ubikiri.com/',
-      rpcUser: 'cilTest',
-      rpcPass: 'd49c1d2735536baa4de1cc6'
-    });
-    await gameState.cilUtils.asyncLoaded();
-    const nBalance = await gameState.cilUtils.getBalance();
 
-    gameState.balance = nBalance;   
+    await initCilUtils();   
+    console.log(gameState.gameWalletKeyPair) 
+
+    console.log(gameState.transitWalletKeyPair) 
+    const nBalance = await gameState.gameWalletCilUtils.getBalance();
+    console.log(nBalance);
+    gameState.balance = nBalance // + 1000000; // TEMP!   
   };
 
   const copyWallet = () => {
@@ -81,19 +102,30 @@ export const useGameStore = defineStore("game", () => {
     gameState.parityList = [];
   };
 
-  const startGame = () => {
+  const startGame = async () => {
     if (gameState.parityList.length > 0) {
       resetGame();
     }
-
     gameState.previousBalance = gameState.balance;
 
     let currentBalance = gameState.bid;
 
     for (let i = 0; i < gameState.round; i++) {
+      console.log('round');
       const randomNumber = getRandomNumber();
       const hash = number2Hash(randomNumber);
       const parity = randomNumber % 2 !== 0;
+
+      const txFunds = await gameState.gameWalletCilUtils.createSendCoinsTx([
+        [gameState.transitWalletKeyPair.address, gameState.bid]], 0);
+      // Не забыть отправить ее в сеть
+      await gameState.gameWalletCilUtils.sendTx(txFunds);
+    
+      // Дождаться ее выполнения
+      await gameState.gameWalletCilUtils.waitTxDoneExplorer(txFunds.getHash());
+      const nBalance = await gameState.transitWalletCilUtils.getBalance();
+      console.log(nBalance);
+      
 
       if (currentBalance <= 0) {
         return;

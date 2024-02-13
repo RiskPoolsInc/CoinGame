@@ -13,6 +13,8 @@ export interface IGameState {
   bid: number;
   round: number;
   parityList: IParityList[];
-  kp: any;
-  cilUtils: any,
+  gameWalletKeyPair: any;
+  transitWalletKeyPair: any;
+  gameWalletCilUtils: any;
+  transitWalletCilUtils: any;
 }

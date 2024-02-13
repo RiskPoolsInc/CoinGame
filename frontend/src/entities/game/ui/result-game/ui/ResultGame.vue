@@ -6,7 +6,7 @@ import { useGameStore } from "@/entities/game/model/game";
 const { gameState } = useGameStore();
 
 const resultGame = computed(() => {
-  if (!gameState.previousBalance) {
+  if (!gameState.previousBalance || !gameState.parityList || !gameState.parityList.length) {
     return 0;
   }
   return (
