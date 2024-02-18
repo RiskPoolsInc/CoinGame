@@ -15,6 +15,12 @@ export interface IGameState {
   parityList: IParityList[];
   gameWalletKeyPair: any;
   transitWalletKeyPair: any;
+  poolWalletKeyPair: any;
+  profitWalletKeyPair: any;
+  projectWalletKeyPair: any;
   gameWalletCilUtils: any;
   transitWalletCilUtils: any;
+  poolWalletCilUtils: any;
+  profitWalletCilUtils: any;
+  projectWalletCilUtils: any;
 }

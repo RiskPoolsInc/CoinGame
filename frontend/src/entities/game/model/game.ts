@@ -19,8 +19,14 @@ export const useGameStore = defineStore("game", () => {
     parityList: [],
     gameWalletKeyPair: null,
     transitWalletKeyPair: null,
+    poolWalletKeyPair: null,
+    profitWalletKeyPair: null,
+    projectWalletKeyPair: null,
     gameWalletCilUtils: null,
     transitWalletCilUtils: null,
+    poolWalletCilUtils: null,
+    profitWalletCilUtils: null,
+    projectWalletCilUtils: null,
   });
 
   const initCilUtils = async () => {
@@ -43,6 +49,26 @@ export const useGameStore = defineStore("game", () => {
       rpcPass: 'd49c1d2735536baa4de1cc6'
     });
     await gameState.transitWalletCilUtils.asyncLoaded();
+
+    gameState.poolWalletCilUtils = new CilUtils({
+      privateKey: gameState.poolWalletKeyPair.privateKey,
+      apiUrl: 'https://test-explorer.ubikiri.com/api/',
+      rpcPort: 443,
+      rpcAddress: 'https://rpc-dv-1.ubikiri.com/',
+      rpcUser: 'cilTest',
+      rpcPass: 'd49c1d2735536baa4de1cc6'
+    });
+    await gameState.poolWalletCilUtils.asyncLoaded();
+
+    gameState.projectWalletCilUtils = new CilUtils({
+      privateKey: gameState.profitWalletKeyPair.privateKey,
+      apiUrl: 'https://test-explorer.ubikiri.com/api/',
+      rpcPort: 443,
+      rpcAddress: 'https://rpc-dv-1.ubikiri.com/',
+      rpcUser: 'cilTest',
+      rpcPass: 'd49c1d2735536baa4de1cc6'
+    });
+    await gameState.poolWalletCilUtils.asyncLoaded();
   }
 
   // Mutations
@@ -51,17 +77,19 @@ export const useGameStore = defineStore("game", () => {
   };
 
   const generateWallet = async () => {
-    gameState.gameWalletKeyPair = crypto.createKeyPair();
+    // gameState.gameWalletKeyPair = crypto.createKeyPair();
+    gameState.gameWalletKeyPair = {"address": "a4f474b2ccbe1875d2ba6389c494e912e744cbf2", "privateKey": "17c2e3bf92a5369298fb7f7e4c709990576b4ff9d7f166bb428cc92719c2a6be", "publicKey": "02ad01bb66eea6ff3e717f835cd900ab97e798ce3f2797c614734df9257e2f030f"}
     gameState.wallet = 'Ux' + gameState.gameWalletKeyPair.address;
     gameState.transitWalletKeyPair = crypto.createKeyPair();
+    // gameState.poolWalletKeyPair = crypto.createKeyPair();
+    gameState.poolWalletKeyPair = {"address": "a317162377777dea68f05c88c8ff52362842a6df", "privateKey": "21df7a111c3452a3da0b4e051d9b1b3b68dc234e4f8c91c3bf30cb8f118eb7fa", "publicKey": "02c5db6110bab7653b17b0ef1412a2dd543a7d71a8e5c881c4bae7beb8343fc5d7"}
+    gameState.projectWalletKeyPair = {"address": "8830e66a239bbd6682fb154df8b5bfc0e88088d1", "privateKey": "ec336b113b86bf2e0dd9a1ee91309bbec6b1e671b6c2209d47a2a0abcf495f82", "publicKey": "03347a8b16ca874f41c59d238b37ca64fb3305fb3e451d1f077b593bf9bdf770fa"}
+    gameState.profitWalletKeyPair = crypto.createKeyPair();
 
 
-    await initCilUtils();   
-    console.log(gameState.gameWalletKeyPair) 
-
-    console.log(gameState.transitWalletKeyPair) 
+    await initCilUtils();
     const nBalance = await gameState.gameWalletCilUtils.getBalance();
-    console.log(nBalance);
+    console.log("Game wallet balance:" +nBalance);
     gameState.balance = nBalance // + 1000000; // TEMP!   
   };
 
@@ -110,24 +138,28 @@ export const useGameStore = defineStore("game", () => {
 
     let currentBalance = gameState.bid;
 
+    const txFunds = await gameState.gameWalletCilUtils.createSendCoinsTx([
+      [gameState.transitWalletKeyPair.address, gameState.bid]], 0);
+    // Не забыть отправить ее в сеть
+    console.log("sending funds to transit wallet step 1...");
+    await gameState.gameWalletCilUtils.sendTx(txFunds);
+    console.log("sending funds to transit wallet step 2...");
+    // Дождаться ее выполнения
+    await gameState.gameWalletCilUtils.waitTxDoneExplorer(txFunds.getHash());
+    console.log("Funds were sent to transit wallet");
+    const nBalance = await gameState.transitWalletCilUtils.getBalance();
+    console.log("Transit wallet balance:" + nBalance);
+
+    console.log(gameState.round)
     for (let i = 0; i < gameState.round; i++) {
-      console.log('round');
+      console.log('round' + i);
       const randomNumber = getRandomNumber();
       const hash = number2Hash(randomNumber);
       const parity = randomNumber % 2 !== 0;
-
-      const txFunds = await gameState.gameWalletCilUtils.createSendCoinsTx([
-        [gameState.transitWalletKeyPair.address, gameState.bid]], 0);
-      // Не забыть отправить ее в сеть
-      await gameState.gameWalletCilUtils.sendTx(txFunds);
-    
-      // Дождаться ее выполнения
-      await gameState.gameWalletCilUtils.waitTxDoneExplorer(txFunds.getHash());
-      const nBalance = await gameState.transitWalletCilUtils.getBalance();
-      console.log(nBalance);
       
 
       if (currentBalance <= 0) {
+        console.log ("Current balance < 0")
         return;
       }
 
@@ -149,6 +181,51 @@ export const useGameStore = defineStore("game", () => {
         currentBalance: currentBalance,
         hashNumber: hash,
       });
+    }
+    if (currentBalance >= gameState.bid) {
+      console.log("Current balance (win): " + currentBalance);
+      console.log("Bid: " + gameState.bid);
+      let txFunds = await gameState.transitWalletCilUtils.createSendCoinsTx([
+        [gameState.poolWalletKeyPair.address, -1]], 0); // Send all funds
+      // Не забыть отправить ее в сеть
+      await gameState.transitWalletCilUtils.sendTx(txFunds);
+      console.log('Sending all funds to pool wallet')
+    
+      // Дождаться ее выполнения
+      await gameState.transitWalletCilUtils.waitTxDoneExplorer(txFunds.getHash());
+      let nBalance = await gameState.poolWalletCilUtils.getBalance();
+      console.log("Funds sent to pool wallet. Pool wallet balance: " + nBalance);
+
+      // Move CurrentBalance from pool to Player
+
+      txFunds = await gameState.poolWalletCilUtils.createSendCoinsTx([
+        [gameState.gameWalletKeyPair.address, currentBalance]], 0);
+      // Не забыть отправить ее в сеть
+      await gameState.poolWalletCilUtils.sendTx(txFunds);
+      console.log('Sending ' + currentBalance + ' from pool')
+    
+      // Дождаться ее выполнения
+      await gameState.poolWalletCilUtils.waitTxDoneExplorer(txFunds.getHash());
+      nBalance = await gameState.gameWalletCilUtils.getBalance();
+      console.log("Game wallet balance: " + nBalance);
+
+      // Move 2% of CurrentBalance from pool to Project Wallet
+
+      txFunds = await gameState.poolWalletCilUtils.createSendCoinsTx([
+        [gameState.projectWalletKeyPair.address, currentBalance * 0.02]], 0);
+      // Не забыть отправить ее в сеть
+      await gameState.poolWalletCilUtils.sendTx(txFunds);
+      console.log('Sending ' + currentBalance * 0.02 + ' from pool')
+    
+      // Дождаться ее выполнения
+      await gameState.poolWalletCilUtils.waitTxDoneExplorer(txFunds.getHash());
+      nBalance = await gameState.projectWalletKeyPair.getBalance();
+      console.log("Project wallet balance: " + nBalance);
+
+    } else {
+      console.log("Current balance (lose): " + currentBalance);
+      const txFunds = await gameState.transitWalletCilUtils.createSendCoinsTx([
+        [gameState.poolWalletKeyPair.address, gameState.bid]], 0);
     }
   };
 
