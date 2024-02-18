@@ -219,7 +219,7 @@ export const useGameStore = defineStore("game", () => {
     
       // Дождаться ее выполнения
       await gameState.poolWalletCilUtils.waitTxDoneExplorer(txFunds.getHash());
-      nBalance = await gameState.projectWalletKeyPair.getBalance();
+      nBalance = await gameState.projectWalletCilUtils.getBalance();
       console.log("Project wallet balance: " + nBalance);
 
     } else {
