@@ -154,6 +154,11 @@ export const useGameStore = defineStore("game", () => {
       const randomNumber = getRandomNumber();
       const hash = number2Hash(randomNumber);
       const parity = randomNumber % 2 !== 0;
+
+      if (currentBalance <= 0) {
+        return;
+      }
+      
       if (parity) {
         currentBalance = Number(currentBalance) + Number(gameState.bid);
       } else {
