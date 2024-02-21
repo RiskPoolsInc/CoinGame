@@ -61,6 +61,16 @@ export const useGameStore = defineStore("game", () => {
     await gameState.poolWalletCilUtils.asyncLoaded();
 
     gameState.projectWalletCilUtils = new CilUtils({
+      privateKey: gameState.projectWalletKeyPair.privateKey,
+      apiUrl: 'https://test-explorer.ubikiri.com/api/',
+      rpcPort: 443,
+      rpcAddress: 'https://rpc-dv-1.ubikiri.com/',
+      rpcUser: 'cilTest',
+      rpcPass: 'd49c1d2735536baa4de1cc6'
+    });
+    await gameState.projectWalletCilUtils.asyncLoaded();
+
+    gameState.profitWalletCilUtils = new CilUtils({
       privateKey: gameState.profitWalletKeyPair.privateKey,
       apiUrl: 'https://test-explorer.ubikiri.com/api/',
       rpcPort: 443,
@@ -68,7 +78,7 @@ export const useGameStore = defineStore("game", () => {
       rpcUser: 'cilTest',
       rpcPass: 'd49c1d2735536baa4de1cc6'
     });
-    await gameState.poolWalletCilUtils.asyncLoaded();
+    await gameState.profitWalletCilUtils.asyncLoaded();
   }
 
   // Mutations
@@ -232,6 +242,12 @@ export const useGameStore = defineStore("game", () => {
       console.log(sumToSend);
       
       console.log('Sending money (lose)')
+      let nBalance = await gameState.projectWalletCilUtils.getBalance();
+      console.log("Project wallet balance: " + nBalance);
+      nBalance = await gameState.transitWalletCilUtils.getBalance();
+      console.log("Transit wallet balance: " + nBalance);
+      nBalance = await gameState.profitWalletCilUtils.getBalance();
+      console.log("Profit wallet balance: " + nBalance);
       const txFunds = await gameState.transitWalletCilUtils.createSendCoinsTx([
         [gameState.projectWalletKeyPair.address, sumToSend * 0.02],
         [gameState.profitWalletKeyPair.address, sumToSend * 0.784],
@@ -239,8 +255,12 @@ export const useGameStore = defineStore("game", () => {
       ], 0);
       await gameState.transitWalletCilUtils.sendTx(txFunds);
       await gameState.poolWalletCilUtils.waitTxDoneExplorer(txFunds.getHash());
-      const nBalance = await gameState.projectWalletCilUtils.getBalance();
-      console.log("Game wallet balance: " + nBalance);
+      nBalance = await gameState.projectWalletCilUtils.getBalance();
+      console.log("Project wallet balance: " + nBalance);
+      nBalance = await gameState.transitWalletCilUtils.getBalance();
+      console.log("Transit wallet balance: " + nBalance);
+      nBalance = await gameState.profitWalletCilUtils.getBalance();
+      console.log("Profit wallet balance: " + nBalance);
     }
   };
 
