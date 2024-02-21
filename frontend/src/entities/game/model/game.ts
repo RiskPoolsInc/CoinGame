@@ -87,23 +87,16 @@ export const useGameStore = defineStore("game", () => {
   };
 
   const generateWallet = async () => {
-    // gameState.gameWalletKeyPair = crypto.createKeyPair();
     gameState.gameWalletKeyPair = {"address": "a4f474b2ccbe1875d2ba6389c494e912e744cbf2", "privateKey": "17c2e3bf92a5369298fb7f7e4c709990576b4ff9d7f166bb428cc92719c2a6be", "publicKey": "02ad01bb66eea6ff3e717f835cd900ab97e798ce3f2797c614734df9257e2f030f"}
     gameState.wallet = 'Ux' + gameState.gameWalletKeyPair.address;
     gameState.transitWalletKeyPair = crypto.createKeyPair();
-    // gameState.poolWalletKeyPair = crypto.createKeyPair();
     gameState.poolWalletKeyPair = {"address": "a317162377777dea68f05c88c8ff52362842a6df", "privateKey": "21df7a111c3452a3da0b4e051d9b1b3b68dc234e4f8c91c3bf30cb8f118eb7fa", "publicKey": "02c5db6110bab7653b17b0ef1412a2dd543a7d71a8e5c881c4bae7beb8343fc5d7"}
     gameState.projectWalletKeyPair = {"address": "8830e66a239bbd6682fb154df8b5bfc0e88088d1", "privateKey": "ec336b113b86bf2e0dd9a1ee91309bbec6b1e671b6c2209d47a2a0abcf495f82", "publicKey": "03347a8b16ca874f41c59d238b37ca64fb3305fb3e451d1f077b593bf9bdf770fa"}
     gameState.profitWalletKeyPair = {"address": "db6403750d902a40df2b90f7d781412094e3dc73", "privateKey": "3f8dbd33b002b585fb872c8c877f39c7dd1a1e6b386c0edfde3dafb72f45d6a3", "publicKey": "03bc6741e26d3e8cc03aff3a2b46fa7bf44d4b7a023c134d7a0c17edf1cfd1a9d8"}
 
     await initCilUtils();
-    const arrUtxos = await gameState.gameWalletCilUtils.getUtxos();
-    console.log(arrUtxos);
     const nBalance = await gameState.gameWalletCilUtils.getBalance();
-    console.log("Game wallet balance:" +nBalance);
-    const txCost = gameState.transitWalletCilUtils._estimateTxFee(nBalance, 3, true);
-    console.log(txCost)
-    gameState.balance = nBalance // + 1000000; // TEMP!   
+    gameState.balance = nBalance; 
   };
 
   const copyWallet = () => {
@@ -151,25 +144,16 @@ export const useGameStore = defineStore("game", () => {
 
     let currentBalance = gameState.bid;
 
+    // Send bid to transit wallet
     const txFunds = await gameState.gameWalletCilUtils.createSendCoinsTx([
       [gameState.transitWalletKeyPair.address, gameState.bid]], 0);
-    // Не забыть отправить ее в сеть
-    console.log("sending funds to transit wallet step 1...");
     await gameState.gameWalletCilUtils.sendTx(txFunds);
-    console.log("sending funds to transit wallet step 2...");
-    // Дождаться ее выполнения
     await gameState.gameWalletCilUtils.waitTxDoneExplorer(txFunds.getHash());
-    console.log("Funds were sent to transit wallet");
-    const nBalance = await gameState.transitWalletCilUtils.getBalance();
-    console.log("Transit wallet balance:" + nBalance);
 
-    console.log(gameState.round)
     for (let i = 0; i < gameState.round; i++) {
-      console.log('round' + i);
       const randomNumber = getRandomNumber();
       const hash = number2Hash(randomNumber);
       const parity = randomNumber % 2 !== 0;
-      console.log(parity);
       if (parity) {
         currentBalance = Number(currentBalance) + Number(gameState.bid);
       } else {
@@ -178,7 +162,6 @@ export const useGameStore = defineStore("game", () => {
           currentBalance = Number(currentBalance) - Number(gameState.bid);
         }
       }
-      console.log('Balance calc')
 
       balanceCalculation(parity);
 
@@ -191,63 +174,30 @@ export const useGameStore = defineStore("game", () => {
       });
     }
     if (currentBalance >= gameState.bid) {
-      console.log("Current balance (win): " + currentBalance);
-      console.log("Bid: " + gameState.bid);
+      // Send all funds from transit wallet to pool wallet
       let txFunds = await gameState.transitWalletCilUtils.createSendCoinsTx([
-        [gameState.poolWalletKeyPair.address, -1]], 0); // Send all funds
-      // Не забыть отправить ее в сеть
-      await gameState.transitWalletCilUtils.sendTx(txFunds);
-      console.log('Sending all funds to pool wallet')
-    
-      // Дождаться ее выполнения
+        [gameState.poolWalletKeyPair.address, -1]], 0);
+      await gameState.transitWalletCilUtils.sendTx(txFunds);    
       await gameState.transitWalletCilUtils.waitTxDoneExplorer(txFunds.getHash());
-      let nBalance = await gameState.poolWalletCilUtils.getBalance();
-      console.log("Funds sent to pool wallet. Pool wallet balance: " + nBalance);
 
-      // Move CurrentBalance from pool to Player
-
+      // Send CurrentBalance from pool wallet to game wallet
       txFunds = await gameState.poolWalletCilUtils.createSendCoinsTx([
         [gameState.gameWalletKeyPair.address, currentBalance]], 0);
-      // Не забыть отправить ее в сеть
-      await gameState.poolWalletCilUtils.sendTx(txFunds);
-      console.log('Sending ' + currentBalance + ' from pool')
-    
-      // Дождаться ее выполнения
+      await gameState.poolWalletCilUtils.sendTx(txFunds);    
       await gameState.poolWalletCilUtils.waitTxDoneExplorer(txFunds.getHash());
-      nBalance = await gameState.gameWalletCilUtils.getBalance();
-      console.log("Game wallet balance: " + nBalance);
 
-      // Move 2% of CurrentBalance from pool to Project Wallet
-
+      // Send 2% of CurrentBalance from pool wallet to project Wallet
       txFunds = await gameState.poolWalletCilUtils.createSendCoinsTx([
         [gameState.projectWalletKeyPair.address, currentBalance * 0.02]], 0);
-      // Не забыть отправить ее в сеть
       await gameState.poolWalletCilUtils.sendTx(txFunds);
-      console.log('Sending ' + currentBalance * 0.02 + ' from pool')
-    
-      // Дождаться ее выполнения
       await gameState.poolWalletCilUtils.waitTxDoneExplorer(txFunds.getHash());
-      nBalance = await gameState.projectWalletCilUtils.getBalance();
-      console.log("Project wallet balance: " + nBalance);
-
     } else {
-      console.log("Current balance (lose): " + currentBalance);
       const arrUtxos = await gameState.transitWalletCilUtils.getUtxos();
       const walletBalance = arrUtxos.reduce((accum: any, current: any) => accum + current.amount, 0);
-      console.log(arrUtxos);
-      console.log(walletBalance);
       const txCost = gameState.transitWalletCilUtils._estimateTxFee(arrUtxos.length, 3, true);
-      console.log(txCost);
-      const sumToSend = walletBalance - txCost;
-      console.log(sumToSend);
-      
-      console.log('Sending money (lose)')
-      let nBalance = await gameState.projectWalletCilUtils.getBalance();
-      console.log("Project wallet balance: " + nBalance);
-      nBalance = await gameState.transitWalletCilUtils.getBalance();
-      console.log("Transit wallet balance: " + nBalance);
-      nBalance = await gameState.profitWalletCilUtils.getBalance();
-      console.log("Profit wallet balance: " + nBalance);
+      const sumToSend = walletBalance - txCost;      
+
+      // Send from transit wallet: 2% to project wallet, 78.4% to profit wallet, 19.6% to pool wallet
       const txFunds = await gameState.transitWalletCilUtils.createSendCoinsTx([
         [gameState.projectWalletKeyPair.address, sumToSend * 0.02],
         [gameState.profitWalletKeyPair.address, sumToSend * 0.784],
@@ -255,12 +205,6 @@ export const useGameStore = defineStore("game", () => {
       ], 0);
       await gameState.transitWalletCilUtils.sendTx(txFunds);
       await gameState.poolWalletCilUtils.waitTxDoneExplorer(txFunds.getHash());
-      nBalance = await gameState.projectWalletCilUtils.getBalance();
-      console.log("Project wallet balance: " + nBalance);
-      nBalance = await gameState.transitWalletCilUtils.getBalance();
-      console.log("Transit wallet balance: " + nBalance);
-      nBalance = await gameState.profitWalletCilUtils.getBalance();
-      console.log("Profit wallet balance: " + nBalance);
     }
   };
 
