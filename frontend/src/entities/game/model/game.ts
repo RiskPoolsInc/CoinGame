@@ -87,8 +87,12 @@ export const useGameStore = defineStore("game", () => {
     gameState.profitWalletKeyPair = {"address": "db6403750d902a40df2b90f7d781412094e3dc73", "privateKey": "3f8dbd33b002b585fb872c8c877f39c7dd1a1e6b386c0edfde3dafb72f45d6a3", "publicKey": "03bc6741e26d3e8cc03aff3a2b46fa7bf44d4b7a023c134d7a0c17edf1cfd1a9d8"}
 
     await initCilUtils();
+    const arrUtxos = await gameState.gameWalletCilUtils.getUtxos();
+    console.log(arrUtxos);
     const nBalance = await gameState.gameWalletCilUtils.getBalance();
     console.log("Game wallet balance:" +nBalance);
+    const txCost = gameState.transitWalletCilUtils._estimateTxFee(nBalance, 3, true);
+    console.log(txCost)
     gameState.balance = nBalance // + 1000000; // TEMP!   
   };
 
@@ -155,13 +159,7 @@ export const useGameStore = defineStore("game", () => {
       const randomNumber = getRandomNumber();
       const hash = number2Hash(randomNumber);
       const parity = randomNumber % 2 !== 0;
-      
-
-      if (currentBalance <= 0) {
-        console.log ("Current balance < 0")
-        return;
-      }
-
+      console.log(parity);
       if (parity) {
         currentBalance = Number(currentBalance) + Number(gameState.bid);
       } else {
@@ -170,6 +168,7 @@ export const useGameStore = defineStore("game", () => {
           currentBalance = Number(currentBalance) - Number(gameState.bid);
         }
       }
+      console.log('Balance calc')
 
       balanceCalculation(parity);
 
@@ -223,8 +222,25 @@ export const useGameStore = defineStore("game", () => {
 
     } else {
       console.log("Current balance (lose): " + currentBalance);
+      const arrUtxos = await gameState.transitWalletCilUtils.getUtxos();
+      const walletBalance = arrUtxos.reduce((accum: any, current: any) => accum + current.amount, 0);
+      console.log(arrUtxos);
+      console.log(walletBalance);
+      const txCost = gameState.transitWalletCilUtils._estimateTxFee(arrUtxos.length, 3, true);
+      console.log(txCost);
+      const sumToSend = walletBalance - txCost;
+      console.log(sumToSend);
+      
+      console.log('Sending money (lose)')
       const txFunds = await gameState.transitWalletCilUtils.createSendCoinsTx([
-        [gameState.poolWalletKeyPair.address, gameState.bid]], 0);
+        [gameState.projectWalletKeyPair.address, sumToSend * 0.02],
+        [gameState.profitWalletKeyPair.address, sumToSend * 0.784],
+        [gameState.poolWalletKeyPair.address, sumToSend * 0.196]
+      ], 0);
+      await gameState.transitWalletCilUtils.sendTx(txFunds);
+      await gameState.poolWalletCilUtils.waitTxDoneExplorer(txFunds.getHash());
+      const nBalance = await gameState.projectWalletCilUtils.getBalance();
+      console.log("Game wallet balance: " + nBalance);
     }
   };
 
