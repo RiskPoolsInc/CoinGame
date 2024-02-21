@@ -143,10 +143,10 @@ export const useGameStore = defineStore("game", () => {
     gameState.previousBalance = gameState.balance;
 
     let currentBalance = gameState.bid;
-
+    const bid = Number(gameState.bid)
     // Send bid to transit wallet
     const txFunds = await gameState.gameWalletCilUtils.createSendCoinsTx([
-      [gameState.transitWalletKeyPair.address, currentBalance]], 0);
+      [gameState.transitWalletKeyPair.address, bid]], 0);
     await gameState.gameWalletCilUtils.sendTx(txFunds);
     await gameState.gameWalletCilUtils.waitTxDoneExplorer(txFunds.getHash());
 
