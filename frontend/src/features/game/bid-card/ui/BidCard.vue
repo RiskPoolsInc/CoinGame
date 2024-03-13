@@ -55,7 +55,7 @@ const onStart = () => {
         v-model="slider"
         color="white"
         marker-labels
-        :min="0"
+        :min="3"
         :max="10"
       />
     </div>
