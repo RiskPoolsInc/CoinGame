@@ -24,17 +24,17 @@ const scrollToTop = () => {
         <div
           class="footer-content__links row col-lg-8 col-md-8 col-sm-10 col-xs-12 justify-center"
         >
-          <router-link class="footer-content__link" to="/docuemts">
+          <a target="_blank" rel="noopener noreferrer" class="footer-content__link" href="/dummy.pdf">
             Our documents
-          </router-link>
+          </a>
 
-          <router-link class="footer-content__link" to="/doc">
+          <a target="_blank" rel="noopener noreferrer" class="footer-content__link" href="/dummy.pdf">
             Terms of use
-          </router-link>
+          </a>
 
-          <router-link class="footer-content__link" to="/privacy">
+          <a target="_blank" rel="noopener noreferrer" class="footer-content__link" href="/dummy.pdf">
             Privacy Policy
-          </router-link>
+          </a>
         </div>
 
         <div
