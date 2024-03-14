@@ -125,7 +125,7 @@ export const useGameStore = defineStore("game", () => {
 
   const resetGame = () => {
     gameState.previousBalance = gameState.balance;
-    gameState.parityList = [];
+    gameState.parityList.length = 0;
   };
 
   const generalReset = async () => {
@@ -133,7 +133,7 @@ export const useGameStore = defineStore("game", () => {
     gameState.previousBalance = 0;
     gameState.bid = 0;
     gameState.round = 3;
-    gameState.parityList = [];
+    gameState.parityList.length = 0;
   };
 
   const startGame = async () => {
@@ -150,7 +150,9 @@ export const useGameStore = defineStore("game", () => {
     await gameState.gameWalletCilUtils.sendTx(txFunds);
     await gameState.gameWalletCilUtils.waitTxDoneExplorer(txFunds.getHash());
 
+    console.log(gameState.round);
     for (let i = 0; i < gameState.round; i++) {
+      console.log(i);
       const randomNumber = getRandomNumber();
       const hash = number2Hash(randomNumber);
       const parity = randomNumber % 2 !== 0;
