@@ -10,7 +10,7 @@ export interface IGameState {
   wallet: string;
   balance: number;
   previousBalance: number;
-  bid: number;
+  bid: number | null;
   round: number;
   parityList: IParityList[];
   gameWalletKeyPair: any;
