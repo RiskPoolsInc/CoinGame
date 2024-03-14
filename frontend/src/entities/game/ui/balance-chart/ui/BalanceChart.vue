@@ -13,7 +13,7 @@ let annotations = reactive<any>([]);
 
 const datasets = computed(() => {
   const list = gameState.parityList.map((item) => item.currentBalance);
-  return list.length > 0 ? [gameState.bid, ...list] : [];
+  return list.length > 0 ? [gameState.bidForBalanceChart, ...list] : [];
 });
 
 const points = computed<any[]>(() => {

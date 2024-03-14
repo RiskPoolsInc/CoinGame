@@ -15,6 +15,7 @@ export const useGameStore = defineStore("game", () => {
     balance: 0,
     previousBalance: 0,
     bid: null,
+    bidForBalanceChart: 0,
     round: 3,
     parityList: [],
     gameWalletKeyPair: null,
@@ -132,6 +133,7 @@ export const useGameStore = defineStore("game", () => {
     gameState.balance = 1000000;   
     gameState.previousBalance = 0;
     gameState.bid = null;
+    gameState.bidForBalanceChart = 0;
     gameState.round = 3;
     gameState.parityList.length = 0;
   };
@@ -143,7 +145,8 @@ export const useGameStore = defineStore("game", () => {
     gameState.previousBalance = gameState.balance;
 
     let currentBalance = gameState.bid || 0;
-    const bid = Number(gameState.bid)
+    const bid = Number(gameState.bid);
+    gameState.bidForBalanceChart = bid;
     // Send bid to transit wallet
     const txFunds = await gameState.gameWalletCilUtils.createSendCoinsTx([
       [gameState.transitWalletKeyPair.address, bid]], 0);

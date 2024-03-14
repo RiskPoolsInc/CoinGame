@@ -11,6 +11,7 @@ export interface IGameState {
   balance: number;
   previousBalance: number;
   bid: number | null;
+  bidForBalanceChart: number | null;
   round: number;
   parityList: IParityList[];
   gameWalletKeyPair: any;
