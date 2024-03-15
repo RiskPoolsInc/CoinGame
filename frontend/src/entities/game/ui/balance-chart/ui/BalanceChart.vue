@@ -118,6 +118,12 @@ onMounted(() => {
       },
       toolbar: {
         show: false,
+        tools: {
+          zoom: false,
+        }
+      },
+      zoom: {
+        enabled: false,
       },
       fontFamily: "Padauk",
       offsetY: -20,
