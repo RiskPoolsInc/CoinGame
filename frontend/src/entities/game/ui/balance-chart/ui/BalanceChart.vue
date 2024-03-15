@@ -8,6 +8,7 @@ const { gameState } = useGameStore();
 let list = ref<Array<number>>([]);
 
 let chart = reactive<any>(null);
+let interval = reactive<any>(null);
 
 let annotations = reactive<any>([]);
 
@@ -24,13 +25,16 @@ const points = computed<any[]>(() => {
 });
 
 watch(datasets, async (newSet) => {
+  if (interval) {
+    clearInterval(interval);
+  }
   let i = 0;
   list.value = [];
   annotations = [];
 
   // add2List(newSet[0]);
 
-  const interval = setInterval(() => {
+  interval = setInterval(() => {
     if (i === newSet.length || !newSet.length) {
       clearInterval(interval);
       return;
