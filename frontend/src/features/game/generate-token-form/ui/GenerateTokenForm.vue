@@ -25,10 +25,10 @@ const handleCopyWallet = () => {
 
 <template>
   <div class="generate-token-form">
-    <div class="row justify-sm-center" style="justify-content: center">
       <div
-        class="generate-token-form__wrapper row items-stretch col-lg-12 col-md-12 col-sm-9 col-xs-12"
+        class="generate-token-form__wrapper"
       >
+      <div class="generate-token-form__items">
         <div class="mt-auto generate-token-form__generate">
           <VButton
             label="GENERATE"
@@ -55,14 +55,14 @@ const handleCopyWallet = () => {
             label="Wallet balance, UBX"
           />
         </div>
-
         <div class="mt-auto generate-token-form__chip">
           <VChip v-if="gameState.wallet" color="success"> COMPLETED </VChip>
           <VChip v-else color="danger"> EMPTY </VChip>
         </div>
+      </div>
 
         <div
-          class="generate-token-form__action-btn col row justify-end mt-auto ml-auto"
+          class="generate-token-form__action-btn"
         >
           <VButton
             label="COPY WALLET"
@@ -77,7 +77,6 @@ const handleCopyWallet = () => {
         </div>
       </div>
     </div>
-  </div>
 </template>
 
 <style scoped lang="scss">

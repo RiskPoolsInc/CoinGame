@@ -2,7 +2,18 @@
   margin-top: 16px;
 
   &__wrapper {
-    column-gap: 37px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 37px;
+  }
+
+  &__items {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 37px;
   }
 
   &__wallet {
@@ -18,18 +29,29 @@
   }
 }
 
+@media (max-width: 1480px) {
+  .generate-token-form {
+    &__wrapper {
+      flex-direction: column;
+    }
+  
+    &__items {
+  
+    }
+  }
+}
+
 @media (max-width: 1024px) {
   .generate-token-form {
     &__wrapper {
-      row-gap: 40px;
-      justify-content: start;
-      column-gap: 60px;
-      padding: 0 14px;
+      flex-direction: column;
     }
+
+    &__items {}
+    
     &__generate {
       text-align: center;
       width: 170px;
-      margin: auto;
     }
 
     &__action-btn {
@@ -64,6 +86,10 @@
     &__action-btn {
       width: 100%;
       justify-content: center;
+    }
+
+    &__generate {
+      margin: auto;
     }
   }
 }
