@@ -6,8 +6,10 @@ import VButton from "@/shared/ui/base-components/v-button";
 import VInput from "@/shared/ui/base-components/v-input/ui/VInput.vue";
 
 import VChip from "@/shared/ui/base-components/v-chip";
+import { ref } from "vue";
 
 const $q = useQuasar();
+const walletIsAlreadyGenerated = ref(false);
 
 const { gameState, generateWallet, copyWallet } = useGameStore();
 
@@ -36,7 +38,8 @@ const handleCopyWallet = () => {
             class-name="full-width"
             text-color="dark"
             size="lg"
-            @click="generateWallet"
+            :disabled = "walletIsAlreadyGenerated"
+            @click="generateWallet(); walletIsAlreadyGenerated = true"
           />
         </div>
 

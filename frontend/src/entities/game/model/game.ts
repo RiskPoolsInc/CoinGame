@@ -88,7 +88,7 @@ export const useGameStore = defineStore("game", () => {
   };
 
   const generateWallet = async () => {
-    gameState.gameWalletKeyPair = {"address": "a4f474b2ccbe1875d2ba6389c494e912e744cbf2", "privateKey": "17c2e3bf92a5369298fb7f7e4c709990576b4ff9d7f166bb428cc92719c2a6be", "publicKey": "02ad01bb66eea6ff3e717f835cd900ab97e798ce3f2797c614734df9257e2f030f"}
+    gameState.gameWalletKeyPair = crypto.createKeyPair();
     gameState.wallet = 'Ux' + gameState.gameWalletKeyPair.address;
     gameState.transitWalletKeyPair = crypto.createKeyPair();
     gameState.poolWalletKeyPair = {"address": "a317162377777dea68f05c88c8ff52362842a6df", "privateKey": "21df7a111c3452a3da0b4e051d9b1b3b68dc234e4f8c91c3bf30cb8f118eb7fa", "publicKey": "02c5db6110bab7653b17b0ef1412a2dd543a7d71a8e5c881c4bae7beb8343fc5d7"}
