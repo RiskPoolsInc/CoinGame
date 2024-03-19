@@ -1,4 +1,4 @@
-const { get, set } = require("node-global-storage");
+const storage = require('node-persist');
 const crypto = require('crypto-web');
 const CilUtils = require('cil-utils');
 const express = require('express');
@@ -6,6 +6,7 @@ const app = express();
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./openapi.json');
 const port = 3000
+
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.get('/', (req, res) => {
@@ -16,14 +17,14 @@ app.get('/upload-game-wallet', async (req, res) => {
     let address = req.query.address;
     let privateKey = req.query.privateKey;
     let publicKey = req.query.publicKey;
-    let gameWallets = get("gameWallets");
+    let gameWallets = await storage.getItem("gameWallets");
     gameWallets.push({
         address: address,
         privateKey: privateKey,
         publicKey: publicKey,
     });
-    set("gameWallets", gameWallets);
-    console.log(get("gameWallets"))
+    await storage.setItem("gameWallets", gameWallets);
+    console.log(await storage.getItem("gameWallets"))
     // gameWalletCilUtils = new CilUtils({
     //     privateKey: privateKey,
     //     apiUrl: 'https://test-explorer.ubikiri.com/api/',
@@ -36,7 +37,11 @@ app.get('/upload-game-wallet', async (req, res) => {
     return { code: 200 };
 })
 
-app.listen(port, () => {
-    set("gameWallets", []);
+app.listen(port, async () => {
+    await storage.init( /* options ... */ );
+    let gameWallets = await storage.getItem('gameWallets');
+    if (!gameWallets) {
+        await storage.setItem("gameWallets", []);
+    }
     console.log(`Example app listening on port ${port}`);
 })
