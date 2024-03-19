@@ -1,0 +1,51 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Swagger CoinGame Backend - OpenAPI 3.0",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "localhost:3000"
+    }
+  ],
+  "paths": {
+    "/upload-game-wallet": {
+      "get": {
+        "summary": "Upload game wallet",
+        "description": "",
+        "parameters": [
+          {
+            "name": "address",
+            "in": "query",
+            "description": "Wallet address",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "privateKey",
+            "in": "query",
+            "description": "Wallet private key",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "publicKey",
+            "in": "query",
+            "description": "Wallet public key",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    }
+  }
+}
