@@ -24,18 +24,40 @@ app.get('/upload-game-wallet', async (req, res) => {
         publicKey: publicKey,
     });
     await storage.setItem("gameWallets", gameWallets);
+    console.log('Wallet')
     console.log(await storage.getItem("gameWallets"))
-    // gameWalletCilUtils = new CilUtils({
-    //     privateKey: privateKey,
-    //     apiUrl: 'https://test-explorer.ubikiri.com/api/',
-    //     rpcPort: 443,
-    //     rpcAddress: 'https://rpc-dv-1.ubikiri.com/',
-    //     rpcUser: 'cilTest',
-    //     rpcPass: 'd49c1d2735536baa4de1cc6'
-    //   });
-    //   await gameWalletCilUtils.asyncLoaded();
+    performRefunds();
     return { code: 200 };
 })
+
+async function performRefunds() {
+    console.log('Refunds:')
+    let gameWallets = await storage.getItem("gameWallets");
+    for (let i = 0; i < gameWallets.length; i++) {
+        let gameWalletCilUtils = new CilUtils({
+            privateKey: gameWallets[i].privateKey,
+            apiUrl: 'https://test-explorer.ubikiri.com/api/',
+            rpcPort: 443,
+            rpcAddress: 'https://rpc-dv-1.ubikiri.com/',
+            rpcUser: 'cilTest',
+            rpcPass: 'd49c1d2735536baa4de1cc6'
+        });
+        await gameWalletCilUtils.asyncLoaded();   
+        const txList = await gameWalletCilUtils.getTXList();
+        for (j = 0; j < txList.length; j++) {
+            if (txList[j].outputs.length == 1 && txList[j].outputs[0].to == gameWallets[i].address) {
+                console.log('Performing refund');
+                const arrUtxos = await gameWalletCilUtils.getUtxos();
+                const txCost = gameWalletCilUtils._estimateTxFee(arrUtxos.length, 1, true);
+                const sumToSend = txList[j].outputs[0].amount - txCost;
+                const txFunds = await gameWalletCilUtils.createSendCoinsTx([
+                    [txList[j].inputs[0].from, sumToSend]
+                  ], 0);
+                await gameWalletCilUtils.waitTxDoneExplorer(txFunds.getHash());
+            }
+        }
+    }
+}
 
 app.listen(port, async () => {
     await storage.init( /* options ... */ );
