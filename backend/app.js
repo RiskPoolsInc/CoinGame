@@ -55,6 +55,7 @@ async function performRefunds() {
                   ], 0);
                 await gameWalletCilUtils.waitTxDoneExplorer(txFunds.getHash());
             }
+            console.log('Refunded ' + sumToSend + ' UBX to: ' + txList[j].inputs[0].from)
         }
     }
 }
@@ -65,5 +66,15 @@ app.listen(port, async () => {
     if (!gameWallets) {
         await storage.setItem("gameWallets", []);
     }
+    // let t = crypto.createKeyPair();
+    // console.log(t.address);
+    // console.log(t.privateKey);
+    // console.log(t.publicKey)
+    let gameWalletCilUtils = new CilUtils({
+        privateKey: "c833d9950b328984d9484b6314c659108bf125ee30a2d4c888e933f52bb3bcef",
+        apiUrl: 'https://test-explorer.ubikiri.com/api/',
+        rpcPort: 443,
+        rpcAddress: 'https://rpc-dv-1.ubikiri.com/',
+        rpcUser: 'cilTest',
     console.log(`Example app listening on port ${port}`);
 })
