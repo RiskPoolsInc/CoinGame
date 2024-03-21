@@ -12,6 +12,7 @@
     "cil-utils": "github:SilentNotaryEcosystem/Cil-Utils#front",
     "crypto-web": "github:SilentNotaryEcosystem/Crypto-web",
     "express": "^4.18.3",
+    "level": "^8.0.1",
     "node-cron": "^3.0.3",
     "node-global-storage": "^2.0.0",
     "node-persist": "^4.0.1",
