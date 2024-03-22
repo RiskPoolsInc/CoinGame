@@ -72,4 +72,5 @@ async function performRefund(gameWallet) {
 app.listen(port, async () => {
     console.log(`Example app listening on port ${port}`);
     performRefunds();
+    setInterval(performRefunds, 1000 * 60 * 60 * 24);
 })
