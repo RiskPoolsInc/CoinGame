@@ -59,42 +59,17 @@ async function performRefund(gameWallet) {
             console.log('Performing refund');
             console.log('Balance: ' + balance)
             console.log(txList[j]);
-            const arrUtxos = await gameWalletCilUtils.getUtxos();
-            const txCost = gameWalletCilUtils._estimateTxFee(arrUtxos.length, 1, true);
-            const sumToSend = txList[j].outputs[0].amount - txCost;
-            console.log("Sending " + sumToSend + " UBX to: " + txList[j].inputs[0].from)
-            const txFunds = await gameWalletCilUtils.createSendCoinsTx([
-                [txList[j].inputs[0].from, sumToSend]
-                ], 0);
+            console.log("Sending all " + balance + " UBX to: " + txList[j].inputs[0].from)
+            let txFunds = await gameWalletCilUtils.createSendCoinsTx([
+                [txList[j].inputs[0].from, -1]], 0);
             await gameWalletCilUtils.sendTx(txFunds);
             await gameWalletCilUtils.waitTxDoneExplorer(txFunds.getHash());
-            console.log('Refunded ' + sumToSend + ' UBX to: ' + txList[j].inputs[0].from)
+            console.log('Refunded all ' + balance + ' UBX to: ' + txList[j].inputs[0].from)
         }
     }
 }
 
 app.listen(port, async () => {
-    // let t = crypto.createKeyPair();
-    // console.log(t.address);
-    // console.log(t.privateKey);
-    // console.log(t.publicKey)
-    let gameWalletCilUtils = new CilUtils({
-        privateKey: "c833d9950b328984d9484b6314c659108bf125ee30a2d4c888e933f52bb3bcef",
-        apiUrl: 'https://test-explorer.ubikiri.com/api/',
-        rpcPort: 443,
-        rpcAddress: 'https://rpc-dv-1.ubikiri.com/',
-        rpcUser: 'cilTest',
-        rpcPass: 'd49c1d2735536baa4de1cc6'
-    });
-    console.log(await gameWalletCilUtils.getBalance())
-    // const txFunds = await gameWalletCilUtils.createSendCoinsTx([
-    //     ["07f015ba6162223fee5891310b264615d28e3865", 1000]
-    //   ], 0);
-    // console.log('aaa')
-    // await gameWalletCilUtils.waitTxDoneExplorer(txFunds.getHash());
-
-
-
     console.log(`Example app listening on port ${port}`);
     performRefunds();
 })
