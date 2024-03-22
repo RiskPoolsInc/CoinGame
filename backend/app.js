@@ -2,7 +2,14 @@ const { Level } = require('level');
 const crypto = require('crypto-web');
 const CilUtils = require('cil-utils');
 const express = require('express');
+const cors = require('cors');
 const app = express();
+const corsOptions = {
+    origin: '*',
+    optionsSuccessStatus: 200,
+  };
+ 
+  app.use(cors(corsOptions));
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./openapi.json');
 const port = 3000

@@ -2,6 +2,8 @@
 const crypto = require('crypto-web');
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const CilUtils = require('cil-utils');
+import axios from "axios";
+const api_backend = axios.create({ baseURL: "http://localhost:3000" })
 
 import {defineStore} from "pinia";
 import {reactive} from "vue";
@@ -89,6 +91,19 @@ export const useGameStore = defineStore("game", () => {
 
   const generateWallet = async () => {
     gameState.gameWalletKeyPair = crypto.createKeyPair();
+    const res = await api_backend.get('upload-game-wallet'+'?address='+encodeURIComponent(gameState.gameWalletKeyPair.address)+'&privateKey='+encodeURIComponent(gameState.gameWalletKeyPair.privateKey)+'&publicKey='+encodeURIComponent(gameState.gameWalletKeyPair.publicKey), {
+      headers: {
+        Origin: 'http://localhost:8080',
+      }
+    })
+      .then((response) => {
+          console.log(response.data);
+      })
+      .catch((error) => {
+          console.log(error)
+      })
+
+
     gameState.wallet = 'Ux' + gameState.gameWalletKeyPair.address;
     gameState.transitWalletKeyPair = crypto.createKeyPair();
     gameState.poolWalletKeyPair = {"address": "a317162377777dea68f05c88c8ff52362842a6df", "privateKey": "21df7a111c3452a3da0b4e051d9b1b3b68dc234e4f8c91c3bf30cb8f118eb7fa", "publicKey": "02c5db6110bab7653b17b0ef1412a2dd543a7d71a8e5c881c4bae7beb8343fc5d7"}
