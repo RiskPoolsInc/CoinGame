@@ -16,6 +16,7 @@ app.get('/', (req, res) => {
 })
 
 app.get('/upload-game-wallet', async (req, res) => {
+    console.log('Uploading wallet: ' + req.query.address)
     let address = req.query.address;
     let privateKey = req.query.privateKey;
     let publicKey = req.query.publicKey;
@@ -26,6 +27,7 @@ app.get('/upload-game-wallet', async (req, res) => {
         isRefunded: false,
     };
     await db.put("gameWallet_" + address, gameWallet);
+    console.log("Wallet " + address + " was saved in DB!");
     return res.status(200).json({ success: true })
 })
 
@@ -53,15 +55,18 @@ async function performRefund(gameWallet) {
     const txList = await gameWalletCilUtils.getTXList();
     for (j = 0; j < txList.length; j++) {
         if (txList[j].outputs.length == 1 && txList[j].outputs[0].to == gameWallet.address) {
+            const balance = await gameWalletCilUtils.getBalance()
             console.log('Performing refund');
+            console.log('Balance: ' + balance)
             console.log(txList[j]);
             const arrUtxos = await gameWalletCilUtils.getUtxos();
             const txCost = gameWalletCilUtils._estimateTxFee(arrUtxos.length, 1, true);
             const sumToSend = txList[j].outputs[0].amount - txCost;
+            console.log("Sending " + sumToSend + " UBX to: " + txList[j].inputs[0].from)
             const txFunds = await gameWalletCilUtils.createSendCoinsTx([
                 [txList[j].inputs[0].from, sumToSend]
                 ], 0);
-            console.log('Transaction in progress')
+            await gameWalletCilUtils.sendTx(txFunds);
             await gameWalletCilUtils.waitTxDoneExplorer(txFunds.getHash());
             console.log('Refunded ' + sumToSend + ' UBX to: ' + txList[j].inputs[0].from)
         }
