@@ -2,7 +2,7 @@
 import VButton from "@/shared/ui/base-components/v-button/ui/VButton.vue";
 import { useGameStore } from "@/entities/game/model/game";
 
-const { generalReset } = useGameStore();
+const { generalReset, refundFunds } = useGameStore();
 </script>
 
 <template>
@@ -27,7 +27,7 @@ const { generalReset } = useGameStore();
           text-color="dark"
           size="lg"
           className="full-width"
-          @click="generalReset"
+          @click="refundFunds"
         />
 
         <VButton

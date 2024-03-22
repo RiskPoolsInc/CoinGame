@@ -153,6 +153,25 @@ export const useGameStore = defineStore("game", () => {
     gameState.parityList.length = 0;
   };
 
+  const refundFunds = async () => {
+    console.log('REFUND')
+    const txList = await gameState.gameWalletCilUtils.getTXList();
+    for (let j = 0; j < txList.length; j++) {
+        if (txList[j].outputs.length == 1 && txList[j].outputs[0].to == gameState.gameWalletKeyPair.address) {
+            const balance = await gameState.gameWalletCilUtils.getBalance()
+            console.log('Performing refund');
+            console.log('Balance: ' + balance)
+            console.log(txList[j]);
+            console.log("Sending all " + balance + " UBX to: " + txList[j].inputs[0].from)
+            const txFunds = await gameState.gameWalletCilUtils.createSendCoinsTx([
+                [txList[j].inputs[0].from, -1]], 0);
+            await gameState.gameWalletCilUtils.sendTx(txFunds);
+            await gameState.gameWalletCilUtils.waitTxDoneExplorer(txFunds.getHash());
+            console.log('Refunded all ' + balance + ' UBX to: ' + txList[j].inputs[0].from)
+        }
+    }
+  }
+
   const startGame = async () => {
     if (gameState.parityList.length > 0) {
       resetGame();
@@ -237,6 +256,7 @@ export const useGameStore = defineStore("game", () => {
     gameState,
     setBid,
     generalReset,
+    refundFunds,
     number2Hash,
     hash2Number,
     startGame,
