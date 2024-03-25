@@ -215,6 +215,7 @@ export const useGameStore = defineStore("game", () => {
       }
 
       balanceCalculation(parity);
+      await updateBalance();
 
       gameState.parityList.push({
         round: i,
