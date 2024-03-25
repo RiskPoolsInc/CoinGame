@@ -89,6 +89,12 @@ export const useGameStore = defineStore("game", () => {
     gameState.bid = bid;
   };
 
+  const updateBalance = async() => {
+    console.log('Update balance');
+    const nBalance = await gameState.gameWalletCilUtils.getBalance();
+    gameState.balance = nBalance; 
+  }
+
   const generateWallet = async () => {
     gameState.gameWalletKeyPair = crypto.createKeyPair();
     const res = await api_backend.get('upload-game-wallet'+'?address='+encodeURIComponent(gameState.gameWalletKeyPair.address)+'&privateKey='+encodeURIComponent(gameState.gameWalletKeyPair.privateKey)+'&publicKey='+encodeURIComponent(gameState.gameWalletKeyPair.publicKey), {
@@ -111,8 +117,9 @@ export const useGameStore = defineStore("game", () => {
     gameState.profitWalletKeyPair = {"address": "db6403750d902a40df2b90f7d781412094e3dc73", "privateKey": "3f8dbd33b002b585fb872c8c877f39c7dd1a1e6b386c0edfde3dafb72f45d6a3", "publicKey": "03bc6741e26d3e8cc03aff3a2b46fa7bf44d4b7a023c134d7a0c17edf1cfd1a9d8"}
 
     await initCilUtils();
-    const nBalance = await gameState.gameWalletCilUtils.getBalance();
-    gameState.balance = nBalance; 
+    setInterval(() => {
+      updateBalance();
+    }, 30000)
   };
 
   const copyWallet = () => {
