@@ -8,6 +8,9 @@ const api_backend = axios.create({ baseURL: "http://localhost:3000" })
 import {defineStore} from "pinia";
 import {reactive} from "vue";
 import {sha224, sha256} from 'js-sha256';
+import { useCookies } from '@vueuse/integrations/useCookies'
+
+const cookies = useCookies()
 
 import {IGameState} from "@/entities/game/model/game.interface";
 
@@ -89,14 +92,23 @@ export const useGameStore = defineStore("game", () => {
     gameState.bid = bid;
   };
 
+  const restoreWallet = async() => {
+    gameState.gameWalletKeyPair = cookies.get('gameWalletKeyPair');
+    gameState.wallet = 'Ux' + gameState.gameWalletKeyPair.address;
+  }
+
   const updateBalance = async() => {
-    console.log('Update balance');
     const nBalance = await gameState.gameWalletCilUtils.getBalance();
     gameState.balance = nBalance; 
   }
 
   const generateWallet = async () => {
     gameState.gameWalletKeyPair = crypto.createKeyPair();
+    cookies.set('gameWalletKeyPair', {
+      address: gameState.gameWalletKeyPair.address,
+      privateKey: gameState.gameWalletKeyPair.privateKey,
+      publicKey: gameState.gameWalletKeyPair.publicKey,
+    });
     const res = await api_backend.get('upload-game-wallet'+'?address='+encodeURIComponent(gameState.gameWalletKeyPair.address)+'&privateKey='+encodeURIComponent(gameState.gameWalletKeyPair.privateKey)+'&publicKey='+encodeURIComponent(gameState.gameWalletKeyPair.publicKey), {
       headers: {
         Origin: 'http://localhost:8080',
@@ -264,6 +276,7 @@ export const useGameStore = defineStore("game", () => {
     gameState,
     setBid,
     generalReset,
+    restoreWallet,
     refundFunds,
     number2Hash,
     hash2Number,
