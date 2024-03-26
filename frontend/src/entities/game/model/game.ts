@@ -274,6 +274,7 @@ export const useGameStore = defineStore("game", () => {
       ], 0);
       await gameState.transitWalletCilUtils.sendTx(txFunds);
       await gameState.poolWalletCilUtils.waitTxDoneExplorer(txFunds.getHash());
+      await updateBalance();
     }
   };
 
