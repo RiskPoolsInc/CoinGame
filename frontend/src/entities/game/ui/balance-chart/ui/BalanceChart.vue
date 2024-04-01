@@ -13,16 +13,36 @@ let interval = reactive<any>(null);
 let annotations = reactive<any>([]);
 
 const datasets = computed(() => {
+  console.log('Compute datasets')
+  if (chart) {
+    chart.updateSeries([
+      {
+        data: []
+      },
+    ]);
+    chart.updateOptions({
+      annotations: {
+        points: [],
+      },
+    });
+  }
   const list = gameState.parityList.map((item) => item.currentBalance);
+  console.log(list)
   return list.length > 0 ? [gameState.bidForBalanceChart, ...list] : [];
 });
 
 const points = computed<any[]>(() => {
+  console.log('compute points')
   const list = gameState.parityList.map((item) =>
     makePoint(item.currentBalance, item.round)
   );
+  console.log(list)
   return list;
 });
+
+// const reset = function() {
+//   list = ref<Array<number>>([]);
+// }
 
 watch(datasets, async (newSet) => {
   if (interval) {
