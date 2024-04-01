@@ -214,7 +214,7 @@ export const useGameStore = defineStore("game", () => {
     await gameState.gameWalletCilUtils.waitTxDoneExplorer(txFunds.getHash());
 
     console.log(gameState.round);
-    const tPaityList = [];
+    const tParityList = [];
     for (let i = 0; i < gameState.round; i++) {
       console.log(i);
       const randomNumber = getRandomNumber();
@@ -222,7 +222,7 @@ export const useGameStore = defineStore("game", () => {
       const parity = randomNumber % 2 !== 0;
 
       if (currentBalance <= 0) {
-        return;
+        break;
       }
       
       if (parity) {
@@ -237,7 +237,7 @@ export const useGameStore = defineStore("game", () => {
       balanceCalculation(parity);
       await updateBalance();
 
-      tPaityList.push({
+      tParityList.push({
         round: i,
         number: randomNumber,
         parity: parity,
@@ -245,7 +245,8 @@ export const useGameStore = defineStore("game", () => {
         hashNumber: hash,
       });
     }
-    gameState.parityList = tPaityList;
+    console.log(tParityList)
+    gameState.parityList = tParityList;
     if (currentBalance >= (gameState.bid || 0)) {
       // Send all funds from transit wallet to pool wallet
       let txFunds = await gameState.transitWalletCilUtils.createSendCoinsTx([
