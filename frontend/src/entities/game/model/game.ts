@@ -93,7 +93,9 @@ export const useGameStore = defineStore("game", () => {
   };
 
   const restoreWallet = async() => {
-    generateWallet(true);
+    if (cookies.get('gameWalletKeyPair')) {
+      generateWallet(true);
+    }
   }
 
   const updateBalance = async() => {
