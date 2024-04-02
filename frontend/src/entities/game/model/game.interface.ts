@@ -7,6 +7,7 @@ export interface IParityList {
 }
 
 export interface IGameState {
+  inProgress: boolean,
   wallet: string;
   balance: number;
   previousBalance: number;

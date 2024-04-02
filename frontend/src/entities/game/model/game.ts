@@ -16,6 +16,7 @@ import {IGameState} from "@/entities/game/model/game.interface";
 
 export const useGameStore = defineStore("game", () => {
   const gameState = reactive<IGameState>({
+    inProgress: false,
     wallet: "",
     balance: 0,
     previousBalance: 0,
@@ -199,6 +200,7 @@ export const useGameStore = defineStore("game", () => {
   }
 
   const startGame = async () => {
+    gameState.inProgress = true;
     if (gameState.parityList.length > 0) {
       resetGame();
     }
@@ -281,6 +283,7 @@ export const useGameStore = defineStore("game", () => {
       await gameState.poolWalletCilUtils.waitTxDoneExplorer(txFunds.getHash());
       await updateBalance();
     }
+    gameState.inProgress = false;
   };
 
   return {

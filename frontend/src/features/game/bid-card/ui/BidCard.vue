@@ -22,7 +22,8 @@ const statusPlayButton = computed(() => {
   return !(
     Number(gameState.bid) >= 10000 &&
     gameState.round >= 3 &&
-    gameState.wallet
+    gameState.wallet &&
+    !gameState.inProgress
   );
 });
 
