@@ -181,8 +181,13 @@ export const useGameStore = defineStore("game", () => {
   };
 
   const refundFunds = async () => {
+    if (gameState.balance == 0) {
+      return
+    }
     console.log('REFUND')
+    gameState.inProgress = true
     const txList = await gameState.gameWalletCilUtils.getTXList();
+    console.log(txList);
     for (let j = 0; j < txList.length; j++) {
         if (txList[j].outputs.length == 1 && txList[j].outputs[0].to == gameState.gameWalletKeyPair.address) {
             const balance = await gameState.gameWalletCilUtils.getBalance()
@@ -195,8 +200,10 @@ export const useGameStore = defineStore("game", () => {
             await gameState.gameWalletCilUtils.sendTx(txFunds);
             await gameState.gameWalletCilUtils.waitTxDoneExplorer(txFunds.getHash());
             console.log('Refunded all ' + balance + ' UBX to: ' + txList[j].inputs[0].from)
+            break;
         }
     }
+    gameState.inProgress = false
   }
 
   const startGame = async () => {

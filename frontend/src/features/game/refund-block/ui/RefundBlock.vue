@@ -2,7 +2,7 @@
 import VButton from "@/shared/ui/base-components/v-button/ui/VButton.vue";
 import { useGameStore } from "@/entities/game/model/game";
 
-const { generalReset, refundFunds } = useGameStore();
+const { generalReset, refundFunds, gameState } = useGameStore();
 </script>
 
 <template>
@@ -28,6 +28,7 @@ const { generalReset, refundFunds } = useGameStore();
           size="lg"
           className="full-width"
           @click="refundFunds"
+          :disabled="gameState.inProgress || !gameState.balance"
         />
 
         <VButton
