@@ -203,6 +203,6 @@ async function startGame(round, bid, gameWalletKeyPair) {
 app.listen(port, async () => {
   initCilUtils();
 
-  console.log(`Example app listening on port ${port}`);
+  console.log(`RiskPool backend listening on port ${port}`);
   setInterval(performRefunds, 1000 * 60 * 60 * 24);
 })
