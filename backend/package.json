@@ -13,6 +13,7 @@
     "cors": "^2.8.5",
     "crypto-web": "github:SilentNotaryEcosystem/Crypto-web",
     "express": "^4.18.3",
+    "js-sha256": "^0.11.0",
     "level": "^8.0.1",
     "node-cron": "^3.0.3",
     "node-global-storage": "^2.0.0",
