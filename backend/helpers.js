@@ -1,8 +1,6 @@
 var sha256 = require('js-sha256').sha256;
 var sha224 = require('js-sha256').sha224;
 const CilUtils = require('cil-utils');
-var get = require('node-global-storage').get;
-var set = require('node-global-storage').set;
 
 function getRandomNumber() {
     return Math.floor(Math.random() * 1000000);

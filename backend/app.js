@@ -123,7 +123,7 @@ async function startGame(round, bid, gameWalletKeyPair) {
     [transitWalletKeyPair.address, bid]], 0);
   await gameWalletCilUtils.sendTx(txFunds);
   await gameWalletCilUtils.waitTxDoneExplorer(txFunds.getHash());
-  console.log('Funds sent to transit wallet')
+  console.log('Funds sent from game wallet to transit wallet: UBX ' + bid)
 
 
   let currentBalance = bid || 0;
@@ -149,15 +149,6 @@ async function startGame(round, bid, gameWalletKeyPair) {
       }
     }
 
-    //balance calculation
-    // if (parity) {
-    //   balance += Number(bid);
-    // } else {
-    //   balance -= Number(bid);
-    // }
-
-    balance = await gameWalletCilUtils.getBalance(); // !!
-
     tParityList.push({
       round: i,
       number: randomNumber,
@@ -173,22 +164,23 @@ async function startGame(round, bid, gameWalletKeyPair) {
       [global.poolWalletKeyPair.address, -1]], 0);
     await transitWalletCilUtils.sendTx(txFunds);
     await transitWalletCilUtils.waitTxDoneExplorer(txFunds.getHash());
-    console.log('Funds sent to pool wallet')
+    console.log('All funds were sent from transit wallet to pool wallet')
 
     // Send CurrentBalance from pool wallet to game wallet
     txFunds = await global.poolWalletCilUtils.createSendCoinsTx([
       [global.gameWalletKeyPair.address, currentBalance]], 0);
     await global.poolWalletCilUtils.sendTx(txFunds);
     await global.poolWalletCilUtils.waitTxDoneExplorer(txFunds.getHash());
-    console.log('Funds sent to game wallet')
+    console.log('CurrentBalance was sent from pool wallet to game wallet')
 
     // Send 2% of CurrentBalance from pool wallet to project Wallet
     txFunds = await global.poolWalletCilUtils.createSendCoinsTx([
       [global.projectWalletKeyPair.address, currentBalance * 0.02]], 0);
     await global.poolWalletCilUtils.sendTx(txFunds);
     await global.poolWalletCilUtils.waitTxDoneExplorer(txFunds.getHash());
-    console.log('Funds sent to project wallet')
+    console.log('2% of CurrentBalance was sent from pool wallet to project Wallet')
   } else {
+    //Estimate funds available for sending
     const arrUtxos = await transitWalletCilUtils.getUtxos();
     const walletBalance = arrUtxos.reduce((accum, current) => accum + current.amount, 0);
     const txCost = transitWalletCilUtils._estimateTxFee(arrUtxos.length, 3, true);
@@ -202,7 +194,7 @@ async function startGame(round, bid, gameWalletKeyPair) {
     ], 0);
     await transitWalletCilUtils.sendTx(txFunds);
     await global.poolWalletCilUtils.waitTxDoneExplorer(txFunds.getHash());
-    // await updateBalance();
+    console.log('From transit wallet funds were sent: 2% to project wallet, 78.4% to profit wallet, 19.6% to pool wallet')
   }
   console.log('IP: F')
   return { success: true, parityList: tParityList }
