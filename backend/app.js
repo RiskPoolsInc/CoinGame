@@ -16,6 +16,7 @@ const swaggerDocument = require('./openapi.json');
 const port = 3000
 var cron = require('node-cron');
 const db = new Level('refunds', { valueEncoding: 'json' })
+const db_operations_log = new Level('operations_log', { valueEncoding: 'json' })
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
@@ -196,12 +197,18 @@ async function startGame(round, bid, gameWalletKeyPair) {
     await global.poolWalletCilUtils.waitTxDoneExplorer(txFunds.getHash());
     console.log('From transit wallet funds were sent: 2% to project wallet, 78.4% to profit wallet, 19.6% to pool wallet')
   }
-  console.log('IP: F')
+  let numberOfGamesInDb = await db_operations_log.get("numberOfGames");
+  numberOfGamesInDb = Number(numberOfGamesInDb) + 1;
+  await db_operations_log.put("gameResult_" + numberOfGamesInDb, [gameWalletKeyPair, transitWalletKeyPair, tParityList]);
+  await db_operations_log.put("numberOfGames", numberOfGamesInDb);
   return { success: true, parityList: tParityList }
 };
 
 app.listen(port, async () => {
   initCilUtils();
+  const value = await db_operations_log.get("numberOfGames", (err) => {
+    db_operations_log.put("numberOfGames", 1)
+  })
 
   console.log(`RiskPool backend listening on port ${port}`);
   setInterval(performRefunds, 1000 * 60 * 60 * 24);

@@ -3,6 +3,7 @@ node_modules
 .node-persist
 /dist
 /refunds
+/operations_log
 
 
 # local env files
