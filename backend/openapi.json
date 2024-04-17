@@ -13,7 +13,7 @@
     "/upload-game-wallet": {
       "get": {
         "summary": "Upload game wallet",
-        "description": "",
+        "description": "Uploads a game wallet at the start of the game. If funds are left at the wallet, later they are automatically refunded.",
         "parameters": [
           {
             "name": "address",
@@ -35,6 +35,59 @@
             "name": "publicKey",
             "in": "query",
             "description": "Wallet public key",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/play-game": {
+      "get": {
+        "summary": "Upload game wallet",
+        "description": "Uploads a game wallet at the start of the game. If funds are left at the wallet, later they are automatically refunded.",
+        "parameters": [
+          {
+            "name": "round",
+            "in": "query",
+            "description": "Number of rounds",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "bid",
+            "in": "query",
+            "description": "Player's bid",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "gameWalletAddress",
+            "in": "query",
+            "description": "Game wallet address",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "gameWalletPrivateKey",
+            "in": "query",
+            "description": "Game wallet private key",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "gameWalletPublicKey",
+            "in": "query",
+            "description": "Game wallet public key",
             "schema": {
               "type": "string"
             }
