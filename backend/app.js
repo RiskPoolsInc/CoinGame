@@ -1,3 +1,4 @@
+require('dotenv').config()
 const { Level } = require('level');
 const crypto = require('crypto-web');
 const CilUtils = require('cil-utils');
@@ -14,9 +15,9 @@ app.use(cors(corsOptions));
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./openapi.json');
 const port = 3000
-var cron = require('node-cron');
-const db = new Level('refunds', { valueEncoding: 'json' })
-const db_operations_log = new Level('operations_log', { valueEncoding: 'json' })
+const t = process.env.REFUNDS_DB_PATH
+const db = new Level(process.env.REFUNDS_DB_PATH, { valueEncoding: 'json' })
+const db_operations_log = new Level(process.env.OPERATIONS_LOG_DB_PATH, { valueEncoding: 'json' })
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
@@ -72,11 +73,11 @@ async function performRefund(gameWallet) {
   console.log('Performing refunds for wallet: ' + gameWallet.address);
   let gameWalletCilUtils = new CilUtils({
     privateKey: gameWallet.privateKey,
-    apiUrl: 'https://test-explorer.ubikiri.com/api/',
-    rpcPort: 443,
-    rpcAddress: 'https://rpc-dv-1.ubikiri.com/',
-    rpcUser: 'cilTest',
-    rpcPass: 'd49c1d2735536baa4de1cc6'
+    apiUrl: process.env.CIL_UTILS_API_URL,
+    rpcPort: process.env.CIL_UTILS_RPC_PORT,
+    rpcAddress: process.env.CIL_UTILS_RPC_ADDRESS,
+    rpcUser: process.env.CIL_UTILS_RPC_USER,
+    rpcPass: process.env.CIL_UTILS_RPC_PASS
   });
   await gameWalletCilUtils.asyncLoaded();
   const txList = await gameWalletCilUtils.getTXList();
@@ -100,11 +101,11 @@ async function startGame(round, bid, gameWalletKeyPair) {
   // Open game wallet for this player
   gameWalletCilUtils = new CilUtils({
     privateKey: gameWalletKeyPair.privateKey,
-    apiUrl: 'https://test-explorer.ubikiri.com/api/',
-    rpcPort: 443,
-    rpcAddress: 'https://rpc-dv-1.ubikiri.com/',
-    rpcUser: 'cilTest',
-    rpcPass: 'd49c1d2735536baa4de1cc6'
+    apiUrl: process.env.CIL_UTILS_API_URL,
+    rpcPort: process.env.CIL_UTILS_RPC_PORT,
+    rpcAddress: process.env.CIL_UTILS_RPC_ADDRESS,
+    rpcUser: process.env.CIL_UTILS_RPC_USER,
+    rpcPass: process.env.CIL_UTILS_RPC_PASS
   });
   await gameWalletCilUtils.asyncLoaded();
   console.log('Game wallet balance: ' + await gameWalletCilUtils.getBalance())
@@ -113,11 +114,11 @@ async function startGame(round, bid, gameWalletKeyPair) {
   transitWalletKeyPair = crypto.createKeyPair();
   transitWalletCilUtils = new CilUtils({
     privateKey: transitWalletKeyPair.privateKey,
-    apiUrl: 'https://test-explorer.ubikiri.com/api/',
-    rpcPort: 443,
-    rpcAddress: 'https://rpc-dv-1.ubikiri.com/',
-    rpcUser: 'cilTest',
-    rpcPass: 'd49c1d2735536baa4de1cc6'
+    apiUrl: process.env.CIL_UTILS_API_URL,
+    rpcPort: process.env.CIL_UTILS_RPC_PORT,
+    rpcAddress: process.env.CIL_UTILS_RPC_ADDRESS,
+    rpcUser: process.env.CIL_UTILS_RPC_USER,
+    rpcPass: process.env.CIL_UTILS_RPC_PASS
   });
   await transitWalletCilUtils.asyncLoaded();
   const txFunds = await gameWalletCilUtils.createSendCoinsTx([
