@@ -3,21 +3,28 @@ const { Level } = require('level');
 const crypto = require('crypto-web');
 const CilUtils = require('cil-utils');
 const express = require('express');
-const cors = require('cors');
+// const cors = require('cors');
 const app = express();
-const corsOptions = {
-  origin: process.env.CORS_ORIGIN,
-  optionsSuccessStatus: 200,
-};
+// const corsOptions = {
+//   origin: process.env.CORS_ORIGIN,
+//   optionsSuccessStatus: 200,
+// };
 const { getRandomNumber, number2Hash, hash2Number, initCilUtils } = require('./helpers.js')
 
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./openapi.json');
 const port = 3000
 const t = process.env.REFUNDS_DB_PATH
 const db = new Level(process.env.REFUNDS_DB_PATH, { valueEncoding: 'json' })
 const db_operations_log = new Level(process.env.OPERATIONS_LOG_DB_PATH, { valueEncoding: 'json' })
+
+app.all('*', function (req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  next();
+});
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
