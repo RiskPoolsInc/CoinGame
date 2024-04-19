@@ -2,13 +2,13 @@
 apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:
-  name: letsencrypt-webapp-coingame
+  name: letsencrypt-webapi-coingame
 spec:
   acme:
     preferredChain: ""
     email:  {{ .Values.certificate.email}}
     privateKeySecretRef:
-      name: coingame-issuer-account-key
+      name: coingame-api-issuer-account-key
     server: https://acme-v02.api.letsencrypt.org/directory
     solvers:
       - http01:

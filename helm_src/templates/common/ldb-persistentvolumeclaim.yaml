@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  labels:
+    app: coingame-refunds
+  name: coingame-refunds
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 4Gi
+
+
+  # kubectl patch pv pvc-412d839a-396a-4fd6-83b3-f6a919553af5 -p '{"spec":{"persistentVolumeReclaimPolicy":"Retain"}}'
