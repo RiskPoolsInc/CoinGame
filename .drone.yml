@@ -184,7 +184,7 @@ steps:
     image: plugins/docker
     settings:
       dry-run: 'true'
-      context: .
+      context: backend
       dockerfile: backend/Dockerfile
       repo: dhb.ubikiri.com/coingame-api
       <<: *docker_creds

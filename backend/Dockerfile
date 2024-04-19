@@ -1,11 +1,11 @@
 FROM node:18 as builder
-WORKDIR /proxy
+WORKDIR /app
 
-COPY /backend/package*.json /proxy/
+COPY /package*.json ./
 
 RUN npm install
 
-COPY ./backend/ /backend/
+COPY ./ ./
 
 
 # Expose port
