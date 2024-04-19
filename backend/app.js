@@ -6,7 +6,7 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 const corsOptions = {
-  origin: '*',
+  origin: process.env.CORS_ORIGIN,
   optionsSuccessStatus: 200,
 };
 const { getRandomNumber, number2Hash, hash2Number, initCilUtils } = require('./helpers.js')

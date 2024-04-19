@@ -75,7 +75,6 @@ export const useGameStore = defineStore("game", () => {
     });
     const res = await api_backend.get('upload-game-wallet' + '?address=' + encodeURIComponent(gameState.gameWalletKeyPair.address) + '&privateKey=' + encodeURIComponent(gameState.gameWalletKeyPair.privateKey) + '&publicKey=' + encodeURIComponent(gameState.gameWalletKeyPair.publicKey), {
       headers: {
-        Origin: 'http://localhost:8080',
       }
     })
       .then((response) => {
@@ -215,7 +214,6 @@ export const useGameStore = defineStore("game", () => {
       '&gameWalletPrivateKey=' + encodeURIComponent(gameState.gameWalletKeyPair.privateKey) +
       '&gameWalletPublicKey=' + encodeURIComponent(gameState.gameWalletKeyPair.publicKey), {
       headers: {
-        Origin: 'http://localhost:8080',
       }
     })
       .then((response) => {
