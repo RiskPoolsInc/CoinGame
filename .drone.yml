@@ -24,6 +24,15 @@ steps:
       repo: dhb.ubikiri.com/coingame-front
       <<: *docker_creds
 
+  - name: buildapi
+    image: plugins/docker
+    settings:
+      context: .
+      dockerfile: backend/Dockerfile
+      repo: dhb.ubikiri.com/coingame-api
+      <<: *docker_creds
+    depends_on:
+      - buildfront
 
   - name: notification
     image: appleboy/drone-telegram
@@ -45,6 +54,7 @@ steps:
         - success
     depends_on:
       - buildfront
+      - buildapi
 
 
 trigger:
@@ -80,7 +90,15 @@ steps:
       repo: dhb.ubikiri.com/coingame-front
       <<: *docker_creds
 
-
+  - name: buildapi
+    image: plugins/docker
+    settings:
+      context: .
+      dockerfile: backend/Dockerfile
+      repo: dhb.ubikiri.com/coingame-api
+      <<: *docker_creds
+    depends_on:
+      - buildfront
 
   - name: deploy # deploy to kubernetes using a Helm chart - we need to copy helm dir without values.yaml to repo
     image: pelotech/drone-helm3
@@ -99,9 +117,11 @@ steps:
       reuse_values: true
       values:
         - "webapp.tag=drone-${DRONE_COMMIT_SHA:0:8}"
+        - "webapi.tag=drone-${DRONE_COMMIT_SHA:0:8}"
       cleanup_failed_upgrade: true
     depends_on:
       - buildfront
+      - buildapi
 
 
   - name: notification
@@ -124,6 +144,7 @@ steps:
         - success
     depends_on:
       - buildfront
+      - buildapi
       - deploy
 
 trigger:
@@ -159,6 +180,16 @@ steps:
       repo: dhb.ubikiri.com/coingame-front
       <<: *docker_creds
 
+  - name: buildapi
+    image: plugins/docker
+    settings:
+      dry-run: 'true'
+      context: .
+      dockerfile: backend/Dockerfile
+      repo: dhb.ubikiri.com/coingame-api
+      <<: *docker_creds
+    depends_on:
+      - buildfront
 
   - name: notification
     image: appleboy/drone-telegram
@@ -180,6 +211,7 @@ steps:
         - success
     depends_on:
       - buildfront
+      - buildapi
 
 
 trigger:
