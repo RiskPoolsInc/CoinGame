@@ -1,11 +1,11 @@
 FROM node:18 as builder
 WORKDIR /app
 
-COPY /package*.json ./
+COPY /package*.json /app/
 
 RUN npm install
 
-COPY ./ ./
+COPY ./ /app/
 
 
 # Expose port
