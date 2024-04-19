@@ -27,7 +27,7 @@ steps:
   - name: buildapi
     image: plugins/docker
     settings:
-      context: .
+      context: backend
       dockerfile: backend/Dockerfile
       repo: dhb.ubikiri.com/coingame-api
       <<: *docker_creds
@@ -93,7 +93,7 @@ steps:
   - name: buildapi
     image: plugins/docker
     settings:
-      context: .
+      context: backend
       dockerfile: backend/Dockerfile
       repo: dhb.ubikiri.com/coingame-api
       <<: *docker_creds
