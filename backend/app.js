@@ -122,6 +122,8 @@ async function startGame(round, bid, gameWalletKeyPair) {
   await gameWalletCilUtils.sendTx(txFunds);
   await gameWalletCilUtils.waitTxDoneExplorer(txFunds.getHash());
   console.log('Funds sent from game wallet to transit wallet: UBX ' + bid)
+  console.log('Transit wallet balance: ' + await transitWalletCilUtils.getBalance());
+  console.log(transitWalletKeyPair);
 
 
   let currentBalance = bid || 0;
