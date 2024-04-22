@@ -11,6 +11,7 @@
   "dependencies": {
     "cil-utils": "github:SilentNotaryEcosystem/Cil-Utils#front",
     "cors": "^2.8.5",
+    "crypto": "^1.0.1",
     "crypto-web": "github:SilentNotaryEcosystem/Crypto-web",
     "dotenv": "^16.4.5",
     "express": "^4.18.3",

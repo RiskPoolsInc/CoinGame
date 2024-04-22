@@ -1,6 +1,11 @@
 var sha256 = require('js-sha256').sha256;
 var sha224 = require('js-sha256').sha224;
 const CilUtils = require('cil-utils');
+var crypto = require("crypto");
+
+function getId() {
+    return crypto.randomBytes(20).toString('hex');
+}
 
 function getRandomNumber() {
     return Math.floor(Math.random() * 1000000);
@@ -55,5 +60,6 @@ module.exports = {
     getRandomNumber,
     number2Hash,
     hash2Number,
-    initCilUtils
+    initCilUtils,
+    getId
 }

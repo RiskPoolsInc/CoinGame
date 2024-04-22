@@ -216,10 +216,26 @@ export const useGameStore = defineStore("game", () => {
       headers: {
       }
     })
-      .then((response) => {
+      .then(async (response) => {
         console.log(response.data);
-        gameState.parityList = response.data.parityList;
-        gameState.inProgress = false;
+        const gameid = response.data.gameid
+
+        while (gameState.inProgress) {
+          const gameRes = await api_backend.get('game-status' + '?gameid=' + encodeURIComponent(gameid), {
+            headers: {
+            }
+          }).then(async (response) => {
+            if (response.data.status == "1") {
+              gameState.parityList = response.data.parityList;
+              gameState.inProgress = false;
+            } else {
+              await new Promise(r => setTimeout(r, 5000));
+            }
+          }).catch((error) => {
+            console.log(error)
+            gameState.inProgress = false;
+          })
+        }
       })
       .catch((error) => {
         console.log(error)

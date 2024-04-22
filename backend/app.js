@@ -6,7 +6,7 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 app.use(cors());
-const { getRandomNumber, number2Hash, hash2Number, initCilUtils } = require('./helpers.js')
+const { getId, getRandomNumber, number2Hash, hash2Number, initCilUtils } = require('./helpers.js')
 
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./openapi.json');
@@ -49,8 +49,28 @@ app.get('/play-game', async (req, res) => {
     publicKey: gameWalletPublicKey
   }
   console.log(gameWalletKeyPair)
-  let jsonres = await startGame(round, bid, gameWalletKeyPair)
-  return res.status(200).json(jsonres)
+  let gameId = getId();
+  console.log('Game ID: ' + gameId);
+  startGame(round, bid, gameWalletKeyPair, gameId) // this is async, and we don't wait for finish execution
+  return res.status(200).json({ gameid: gameId })
+})
+
+app.get('/game-status', async (req, res) => {
+  console.log('Checking game status: ' + req.query.gameid)
+  let gameId = req.query.gameid;
+  let gameCheck = null
+  let value = await db_operations_log.get(gameId)
+  console.log(value)
+  if (value) {
+    if (value[0]) {
+      gameCheck = { status: value[0], caption: "Game finished", parityList: value[1] }
+    } else {
+      gameCheck = { status: value[0], caption: "Game in progress", parityList: null }
+    }
+  } else {
+    gameCheck = { status: -1, caption: "Game doesn't exist", parityList: null }
+  }
+  return res.status(200).json(gameCheck)
 })
 
 async function performRefunds() {
@@ -92,7 +112,9 @@ async function performRefund(gameWallet) {
   }
 }
 
-async function startGame(round, bid, gameWalletKeyPair) {
+async function startGame(round, bid, gameWalletKeyPair, gameId) {
+  console.log('Game was put in DB ' + gameId)
+  await db_operations_log.put(gameId, [0, null]); // pending
   // Open game wallet for this player
   gameWalletCilUtils = new CilUtils({
     privateKey: gameWalletKeyPair.privateKey,
@@ -117,10 +139,6 @@ async function startGame(round, bid, gameWalletKeyPair) {
   });
   await transitWalletCilUtils.asyncLoaded();
   console.log('Sending funds from game wallet to transit wallet:  UBX ' + bid)
-  const txFunds = await gameWalletCilUtils.createSendCoinsTx([
-    [transitWalletKeyPair.address, bid]], 0);
-  await gameWalletCilUtils.sendTx(txFunds);
-  await gameWalletCilUtils.waitTxDoneExplorer(txFunds.getHash());
   try {
     const txFunds = await gameWalletCilUtils.createSendCoinsTx([
       [transitWalletKeyPair.address, bid]], 0);
@@ -211,6 +229,7 @@ async function startGame(round, bid, gameWalletKeyPair) {
   }
   let numberOfGamesInDb = await db_operations_log.get("numberOfGames");
   numberOfGamesInDb = Number(numberOfGamesInDb) + 1;
+  await db_operations_log.put(gameId, [1, tParityList]); // finished
   await db_operations_log.put("gameResult_" + numberOfGamesInDb, [gameWalletKeyPair, transitWalletKeyPair, tParityList]);
   await db_operations_log.put("numberOfGames", numberOfGamesInDb);
   return { success: true, parityList: tParityList }
