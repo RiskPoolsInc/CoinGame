@@ -116,6 +116,7 @@ async function startGame(round, bid, gameWalletKeyPair) {
     rpcPass: process.env.CIL_UTILS_RPC_PASS
   });
   await transitWalletCilUtils.asyncLoaded();
+  console.log('Sending funds from game wallet to transit wallet:  UBX ' + bid)
   const txFunds = await gameWalletCilUtils.createSendCoinsTx([
     [transitWalletKeyPair.address, bid]], 0);
   await gameWalletCilUtils.sendTx(txFunds);
@@ -157,6 +158,9 @@ async function startGame(round, bid, gameWalletKeyPair) {
   console.log(tParityList)
   if (currentBalance >= (bid || 0)) {
     // Send all funds from transit wallet to pool wallet
+    console.log('Sending all funds were sent from transit wallet to pool wallet')
+    console.log('Transit wallet balance: ' + await transitWalletCilUtils.getBalance())
+    console.log('Global pool wallet address: ' + global.poolWalletKeyPair.address)
     let txFunds = await transitWalletCilUtils.createSendCoinsTx([
       [global.poolWalletKeyPair.address, -1]], 0);
     await transitWalletCilUtils.sendTx(txFunds);
@@ -184,6 +188,8 @@ async function startGame(round, bid, gameWalletKeyPair) {
     const sumToSend = walletBalance - txCost;
 
     // Send from transit wallet: 2% to project wallet, 78.4% to profit wallet, 19.6% to pool wallet
+    console.log('Sending all funds were sent from transit wallet: 2% to project wallet, 78.4% to profit wallet, 19.6% to pool wallet')
+    console.log('Transit wallet balance: ' + await transitWalletCilUtils.getBalance())
     const txFunds = await transitWalletCilUtils.createSendCoinsTx([
       [global.projectWalletKeyPair.address, sumToSend * 0.02],
       [global.profitWalletKeyPair.address, sumToSend * 0.784],
