@@ -128,7 +128,8 @@ async function startGame(round, bid, gameWalletKeyPair, gameId) {
     rpcPass: process.env.CIL_UTILS_RPC_PASS
   });
   await gameWalletCilUtils.asyncLoaded();
-  console.log('Game wallet balance: ' + await gameWalletCilUtils.getBalance())
+  const gameWalletBalance = await gameWalletCilUtils.getBalance()
+  console.log('Game wallet balance: ' + gameWalletBalance)
 
   // Generate transit wallet for this player
   transitWalletKeyPair = crypto.createKeyPair();
@@ -141,16 +142,29 @@ async function startGame(round, bid, gameWalletKeyPair, gameId) {
     rpcPass: process.env.CIL_UTILS_RPC_PASS
   });
   await transitWalletCilUtils.asyncLoaded();
-  console.log('Sending funds from game wallet to transit wallet:  UBX ' + bid)
+  //Estimate sum to send from GameWallet to Transit wallet. If the Game Wallet balance is sufficient for withdrawing
+  // both bid and commission - we withdraw both. It Game Wallet Balance > bid. but < bid + comission - we withdraw 
+  // (bid - commission) + comission = bid
+  const arrUtxos = await gameWalletCilUtils.getUtxos();
+  const walletBalance = arrUtxos.reduce((accum, current) => accum + current.amount, 0);
+  const txCost = gameWalletCilUtils._estimateTxFee(arrUtxos.length, 1, true) * 1.5;
+  let sumToSend = 0
+  if (bid + txCost > gameWalletBalance) {
+    sumToSend = bid - txCost
+  } else {
+    sumToSend = bid
+  }
+
+  console.log('Sending funds from game wallet to transit wallet:  UBX ' + sumToSend)
   try {
     const txFunds = await gameWalletCilUtils.createSendCoinsTx([
-      [transitWalletKeyPair.address, bid]], 0);
+      [transitWalletKeyPair.address, sumToSend]], 0);
     await gameWalletCilUtils.sendTx(txFunds);
     await gameWalletCilUtils.waitTxDoneExplorer(txFunds.getHash());
   } catch (e) {
     console.log(e)
   }
-  console.log('Funds sent from game wallet to transit wallet: UBX ' + bid)
+  console.log('Funds sent from game wallet to transit wallet: UBX ' + sumToSend)
   console.log('Transit wallet balance: ' + await transitWalletCilUtils.getBalance());
   console.log(transitWalletKeyPair);
 
