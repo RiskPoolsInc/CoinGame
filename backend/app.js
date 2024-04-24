@@ -40,6 +40,9 @@ app.get('/play-game', async (req, res) => {
   console.log('Play game with wallet: ' + req.query.gameWalletAddress)
   let round = req.query.round;
   let bid = Number(req.query.bid);
+  if (bid < Number(process.env.MIN_BID) || bid > Number(process.env.MAX_BID)) {
+    res.status(400).json({ error: "Incorrect bid amount" })
+  }
   let gameWalletAddress = req.query.gameWalletAddress;
   let gameWalletPrivateKey = req.query.gameWalletPrivateKey;
   let gameWalletPublicKey = req.query.gameWalletPublicKey;
