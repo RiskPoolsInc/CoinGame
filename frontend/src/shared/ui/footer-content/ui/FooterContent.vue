@@ -26,7 +26,8 @@
             Terms of use
           </a> -->
 
-          <a target="_blank" rel="noopener noreferrer" class="footer-content__link" href="/dummy.pdf">
+          <a target="_blank" rel="noopener noreferrer" class="footer-content__link"
+            href="/RISKPOOLS PRIVACY POLICY.pdf">
             Privacy Policy
           </a>
         </div>
