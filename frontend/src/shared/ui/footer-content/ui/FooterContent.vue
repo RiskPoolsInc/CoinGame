@@ -1,10 +1,10 @@
 <script setup lang="ts">
-const scrollToTop = () => {
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth",
-  });
-};
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
 </script>
 
 <template>
@@ -13,33 +13,25 @@ const scrollToTop = () => {
       <div class="footer-content__main row justify-between">
         <div class="col-lg-2 col-md-2 sm-2">
           <div class="footer-content__logo">
-            <img
-              @click="scrollToTop"
-              src="./images/logo.svg"
-              alt="footer-content logo"
-            />
+            <img @click="scrollToTop" src="./images/logo.svg" alt="footer-content logo" />
           </div>
         </div>
 
-        <div
-          class="footer-content__links row col-lg-8 col-md-8 col-sm-10 col-xs-12 justify-center"
-        >
-          <a target="_blank" rel="noopener noreferrer" class="footer-content__link" href="/dummy.pdf">
+        <div class="footer-content__links row col-lg-8 col-md-8 col-sm-10 col-xs-12 justify-center">
+          <!-- <a target="_blank" rel="noopener noreferrer" class="footer-content__link" href="/dummy.pdf">
             Our documents
           </a>
 
           <a target="_blank" rel="noopener noreferrer" class="footer-content__link" href="/dummy.pdf">
             Terms of use
-          </a>
+          </a> -->
 
           <a target="_blank" rel="noopener noreferrer" class="footer-content__link" href="/dummy.pdf">
             Privacy Policy
           </a>
         </div>
 
-        <div
-          class="footer-content__company-label col-lg-2 col-md-2 col-xs-12 text-right"
-        >
+        <div class="footer-content__company-label col-lg-2 col-md-2 col-xs-12 text-right">
           (с) Riskpools 2023
         </div>
       </div>
@@ -48,5 +40,5 @@ const scrollToTop = () => {
 </template>
 
 <style scoped lang="scss">
-@import "./styles.module";
+  @import "./styles.module";
 </style>
