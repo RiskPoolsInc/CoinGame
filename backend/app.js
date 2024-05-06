@@ -237,8 +237,8 @@ async function startGame(round, bid, gameWalletKeyPair, gameId) {
     console.log('Transit wallet balance: ' + await transitWalletCilUtils.getBalance())
     const txFunds = await transitWalletCilUtils.createSendCoinsTx([
       [global.projectWalletKeyPair.address, sumToSend * 0.02],
-      [global.profitWalletKeyPair.address, sumToSend * 0.784],
-      [global.poolWalletKeyPair.address, sumToSend * 0.196]
+      [global.poolWalletKeyPair.address, sumToSend * 0.784],
+      [global.profitWalletKeyPair.address, sumToSend * 0.196]
     ], 0);
     await transitWalletCilUtils.sendTx(txFunds);
     await global.poolWalletCilUtils.waitTxDoneExplorer(txFunds.getHash());
