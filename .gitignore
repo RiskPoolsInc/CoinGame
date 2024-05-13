@@ -3,5 +3,6 @@
 
 */helm_src/*alues*ml
 /helm_src/*alues*ml
+*/package-lock.json
 ClientApp/.env
 .idea

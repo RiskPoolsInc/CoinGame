@@ -30,6 +30,10 @@
             href="/RISKPOOLS PRIVACY POLICY.pdf">
             Privacy Policy
           </a>
+          <a target="_blank" rel="noopener noreferrer" class="footer-content__link"
+            href="/Business Proposal Doc.pdf">
+            Business Proposal Doc
+          </a>
         </div>
 
         <div class="footer-content__company-label col-lg-2 col-md-2 col-xs-12 text-right">
