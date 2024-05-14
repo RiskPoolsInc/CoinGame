@@ -4,8 +4,10 @@ import HashTable from "@/features/game/hash-table/ui/HashTable.vue";
 import VButton from "@/shared/ui/base-components/v-button/ui/VButton.vue";
 import { useGameStore } from "@/entities/game/model/game";
 import { HASH_TABLE_COLUMNS } from "@/entities/game/model/constants";
+import {useGame} from "@/shared/composables/useGame";
 
 const { gameState } = useGameStore();
+const {bidNotice} = useGame()
 
 const downloadTxtFile = () => {
   let text = "";
@@ -40,7 +42,9 @@ const downloadTxtFile = () => {
           Place your bet and select the number of game rounds
           <br class="xl-hide lg-hide md-hide" />
           (coin tosses).
+          <br class="xl-hide lg-hide md-hide" />
         </div>
+        <div class="toss-a-coin__notice" v-text="bidNotice"/>
       </div>
 
       <div class="col-lg-4 sm-hide xs-hide md-hide">

@@ -1,6 +1,6 @@
 // eslint-disable-next-line
 // @ts-ignore
-import { CIL_UTILS_API_URL, CIL_UTILS_RPC_PORT, CIL_UTILS_RPC_ADDRESS, CIL_UTILS_RPC_USER, CIL_UTILS_RPC_PASS, BACKEND_URL } from '../../../../config.js'
+import { CIL_UTILS_API_URL, CIL_UTILS_RPC_PORT, CIL_UTILS_RPC_ADDRESS, CIL_UTILS_RPC_USER, CIL_UTILS_RPC_PASS, BACKEND_URL } from '../../../../config'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const crypto = require('crypto-web');
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -9,7 +9,7 @@ import axios from "axios";
 const api_backend = axios.create({ baseURL: BACKEND_URL })
 
 import { defineStore } from "pinia";
-import { reactive } from "vue";
+import { reactive} from "vue";
 import { sha224, sha256 } from 'js-sha256';
 import { useCookies } from '@vueuse/integrations/useCookies'
 
@@ -207,7 +207,7 @@ export const useGameStore = defineStore("game", () => {
     //   });
     // }
     // console.log(tParityList)
-    // const res = await 
+    // const res = await
     const res = await api_backend.get('play-game' + '?round=' + encodeURIComponent(gameState.round) +
       '&bid=' + encodeURIComponent(bid) +
       '&gameWalletAddress=' + encodeURIComponent(gameState.gameWalletKeyPair.address) +
@@ -245,13 +245,13 @@ export const useGameStore = defineStore("game", () => {
     //   // Send all funds from transit wallet to pool wallet
     //   let txFunds = await gameState.transitWalletCilUtils.createSendCoinsTx([
     //     [gameState.poolWalletKeyPair.address, -1]], 0);
-    //   await gameState.transitWalletCilUtils.sendTx(txFunds);    
+    //   await gameState.transitWalletCilUtils.sendTx(txFunds);
     //   await gameState.transitWalletCilUtils.waitTxDoneExplorer(txFunds.getHash());
 
     //   // Send CurrentBalance from pool wallet to game wallet
     //   txFunds = await gameState.poolWalletCilUtils.createSendCoinsTx([
     //     [gameState.gameWalletKeyPair.address, currentBalance]], 0);
-    //   await gameState.poolWalletCilUtils.sendTx(txFunds);    
+    //   await gameState.poolWalletCilUtils.sendTx(txFunds);
     //   await gameState.poolWalletCilUtils.waitTxDoneExplorer(txFunds.getHash());
 
     //   // Send 2% of CurrentBalance from pool wallet to project Wallet
@@ -263,7 +263,7 @@ export const useGameStore = defineStore("game", () => {
     //   const arrUtxos = await gameState.transitWalletCilUtils.getUtxos();
     //   const walletBalance = arrUtxos.reduce((accum: any, current: any) => accum + current.amount, 0);
     //   const txCost = gameState.transitWalletCilUtils._estimateTxFee(arrUtxos.length, 3, true);
-    //   const sumToSend = walletBalance - txCost;      
+    //   const sumToSend = walletBalance - txCost;
 
     //   // Send from transit wallet: 2% to project wallet, 78.4% to profit wallet, 19.6% to pool wallet
     //   const txFunds = await gameState.transitWalletCilUtils.createSendCoinsTx([
