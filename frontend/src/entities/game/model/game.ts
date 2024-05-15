@@ -12,6 +12,7 @@ import { defineStore } from "pinia";
 import { reactive} from "vue";
 import { sha224, sha256 } from 'js-sha256';
 import { useCookies } from '@vueuse/integrations/useCookies'
+import {copyToClipboard} from "quasar";
 
 const cookies = useCookies()
 
@@ -94,8 +95,8 @@ export const useGameStore = defineStore("game", () => {
     }, 30000)
   };
 
-  const copyWallet = () => {
-    navigator.clipboard.writeText(gameState.wallet);
+  const copyWallet = async () => {
+    await copyToClipboard(gameState.wallet);
   };
 
   const number2Hash = (number: number) => {
