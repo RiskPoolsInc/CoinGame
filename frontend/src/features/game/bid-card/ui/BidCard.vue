@@ -1,14 +1,18 @@
 <script setup lang="ts">
-  import VInput from "@/shared/ui/base-components/v-input/ui/VInput.vue";
-  import VButton from "@/shared/ui/base-components/v-button/ui/VButton.vue";
-  import { useGameStore } from "@/entities/game/model/game";
-  import { computed, ref, watch } from "vue";
-  import { MIN_BID, MAX_BID } from '../../../../../config.js'
+import VInput from "@/shared/ui/base-components/v-input/ui/VInput.vue";
+import VButton from "@/shared/ui/base-components/v-button/ui/VButton.vue";
+import {useGameStore} from "@/entities/game/model/game";
+import {computed, onMounted, ref, watch} from "vue";
+import {MAX_BID, MIN_BID} from '../../../../../config'
+import {useGame} from "@/shared/composables/useGame";
+import numberWithSpaces from "@/shared/lib/helpers/numberWithSpaces";
 
-  const { gameState, startGame } = useGameStore();
+const { gameState, startGame } = useGameStore();
+  const {bidNotice} = useGame()
 
   const confirm = ref(false);
   const error = ref(false);
+  const bid = ref('');
   let slider = ref(3);
 
   watch(slider, (newVal) => {
@@ -18,6 +22,19 @@
     }
     gameState.round = newVal;
   });
+
+  watch(bid, (newValue) => {
+    gameState.bid = newValue ? parseFloat(newValue.replace(/\s/g, '')) : 0;
+  })
+
+  onMounted(() => {
+    if (!gameState.bid) return
+    bid.value = numberWithSpaces(gameState.bid)
+  })
+
+  const handleBidKeyup = () => {
+    bid.value = bid.value ? numberWithSpaces(bid.value) : ''
+  }
 
   const statusPlayButton = computed(() => {
     return !(
@@ -44,8 +61,8 @@
   <div class="bid-card">
     <div class="row justify-center">
       <div class="col-lg-4 col-md-4 col-sm-5 col-xs-10">
-        <VInput class="bid-card__input" v-model="gameState.bid" label="Your bid, UBX"
-          :rules="[val => (Number(val) >= MIN_BID && Number(val) <= MAX_BID) || 'Bid should be between ' + MIN_BID + ' and ' + MAX_BID + ' UBX']" />
+        <VInput class="bid-card__input" v-model="bid" @keyup="handleBidKeyup" label="Your bid, UBX"
+          :rules="[() => (Number(gameState.bid) >= MIN_BID && Number(gameState.bid) <= MAX_BID) || bidNotice]" />
       </div>
     </div>
 

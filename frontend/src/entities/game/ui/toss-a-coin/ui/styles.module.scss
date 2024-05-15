@@ -8,11 +8,17 @@
   }
 
   &__subtitle {
+    margin-top: 30px;
+  }
+
+  &__notice {
+    margin-bottom: 15px;
+  }
+
+  &__subtitle, &__notice {
     color: var(--color-gray-2);
     font-weight: 400;
     font-size: 22px;
-    margin-bottom: 15px;
-    margin-top: 30px;
   }
 
   &__copy-btn {
@@ -27,7 +33,7 @@
       font-size: 26px;
     }
 
-    &__subtitle {
+    &__subtitle, &__notice {
       font-size: 22px;
     }
 
@@ -49,9 +55,16 @@
       font-size: 22px;
     }
 
-    &__subtitle {
+    &__subtitle, &__notice {
       font-size: 14px;
-      margin: 24px 0;
+    }
+
+    &__subtitle {
+      margin-top: 24px;
+    }
+
+    &__notice {
+      margin-bottom: 24px;
     }
   }
 }

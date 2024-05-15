@@ -2,15 +2,18 @@
 import { computed } from "vue";
 import VInput from "@/shared/ui/base-components/v-input/ui/VInput.vue";
 import { useGameStore } from "@/entities/game/model/game";
+import numberWithSpaces from "@/shared/lib/helpers/numberWithSpaces";
+import {useGame} from "@/shared/composables/useGame";
 
 const { gameState } = useGameStore();
+const {formattedBalance} = useGame()
 
 const resultGame = computed(() => {
   if (!gameState.previousBalance || !gameState.parityList || !gameState.parityList.length) {
     return 0;
   }
   return (
-    gameState.parityList[gameState.parityList.length - 1].currentBalance || 0
+    numberWithSpaces(gameState.parityList[gameState.parityList.length - 1].currentBalance) || 0
   );
 });
 </script>
@@ -26,7 +29,7 @@ const resultGame = computed(() => {
       <div class="col-lg-6 col-md-12 col-sm-7 col-xs-12 row result-game__item">
         <div class="result-game__label">Your game wallet balance, UBX</div>
         <VInput
-          v-model="gameState.balance"
+          :model-value="formattedBalance"
           class="result-game__input"
           disabled
         />
