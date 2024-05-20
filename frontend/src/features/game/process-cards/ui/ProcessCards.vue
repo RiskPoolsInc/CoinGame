@@ -12,27 +12,13 @@ let list = ref<any[]>([]);
 const datasets = computed(() => gameState.parityList);
 
 watch(
-  datasets,
-  async (newSet) => {
-    let i = 0;
-    list.value = [];
-
-    const interval = setInterval(() => {
-      if (i === newSet.length || !newSet.length) {
-        clearInterval(interval);
-        return;
-      }
-
-      add2List(newSet[i]);
-      i++;
-    }, 1000);
-  },
-  { deep: true }
+    datasets,
+    async (newSet) => {
+      // Append new items to the list instead of replacing it entirely
+      list.value = [...list.value, ...newSet].filter((v,i,a)=>a.findIndex(v2=>(JSON.stringify(v) === JSON.stringify(v2)))===i)
+    },
+    { deep: true }
 );
-
-const add2List = (value: any) => {
-  list.value = [...list.value, value];
-};
 </script>
 
 <template>
@@ -59,7 +45,7 @@ const add2List = (value: any) => {
     </div>
 
     <div
-      class="col-lg-6 col-md-12 col-sm-10 col-xs-12 process-card__table-wrapper"
+        class="col-lg-6 col-md-12 col-sm-10 col-xs-12 process-card__table-wrapper"
     >
       <div class="process-card__table">
         <HashTable2 :columns="PROCESS_CARDS_TABLE_COLUMNS" :rows="list" />

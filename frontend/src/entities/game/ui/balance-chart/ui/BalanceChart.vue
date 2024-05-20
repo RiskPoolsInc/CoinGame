@@ -3,60 +3,39 @@ import { computed, onMounted, reactive, ref, watch } from "vue";
 import ApexCharts from "apexcharts";
 import { useGameStore } from "@/entities/game/model/game";
 
+// Extract game state from the store
 const { gameState } = useGameStore();
 
-let list = ref<Array<number>>([]);
+// Reactive and ref variables
+const list = ref<number[]>([]);
+const chart = ref<ApexCharts | null>(null);
+const interval = ref<number | null>(null);
+const annotations = ref<any[]>([]);
 
-let chart = reactive<any>(null);
-let interval = reactive<any>(null);
-
-let annotations = reactive<any>([]);
-
+// Compute the datasets for the chart
 const datasets = computed(() => {
-  console.log('Compute datasets')
-  if (chart) {
-    chart.updateSeries([
-      {
-        data: []
-      },
-    ]);
-    chart.updateOptions({
-      annotations: {
-        points: [],
-      },
-    });
-  }
-  const list = gameState.parityList.map((item) => item.currentBalance);
-  console.log(list)
-  return list.length > 0 ? [gameState.bidForBalanceChart, ...list] : [];
+  console.log('Compute datasets');
+  const parityList = gameState.parityList.map(item => item.currentBalance);
+  console.log(parityList);
+  return parityList.length > 0 ? [gameState.bidForBalanceChart, ...parityList] : [];
 });
 
-const points = computed<any[]>(() => {
-  console.log('compute points')
-  const list = gameState.parityList.map((item) =>
-    makePoint(item.currentBalance, item.round)
-  );
-  console.log(list)
-  return list;
+// Compute the annotation points for the chart
+const points = computed(() => {
+  console.log('Compute points');
+  return gameState.parityList.map(item => makePoint(item.currentBalance, item.round));
 });
 
-// const reset = function() {
-//   list = ref<Array<number>>([]);
-// }
-
-watch(datasets, async (newSet) => {
-  if (interval) {
-    clearInterval(interval);
+// Watch for changes in datasets and update the chart accordingly
+watch(datasets, (newSet) => {
+  if (interval.value) {
+    clearInterval(interval.value);
   }
-  let i = 0;
-  list.value = [];
-  annotations = [];
 
-  // add2List(newSet[0]);
-
-  interval = setInterval(() => {
+  let i = list.value.length; // Start from the current length of the list
+  interval.value = setInterval(() => {
     if (i === newSet.length || !newSet.length) {
-      clearInterval(interval);
+      clearInterval(interval.value!);
       return;
     }
 
@@ -65,65 +44,59 @@ watch(datasets, async (newSet) => {
       add2Annotations(points.value[i]);
     }
 
-    chart.updateSeries([
-      {
-        data: list.value,
-      },
-    ]);
+    updateChart();
 
-    chart.updateOptions({
-      annotations: {
-        points: annotations,
-      },
-    });
     i++;
   }, 1000);
 });
 
-const makePoint = (value: number, round: number) => {
-  return {
-    x: round + 1,
-    y: value,
-    marker: {
-      size: 8.5,
-      fillColor: "rgba(145, 150, 219, 0.50)",
-      strokeColor: "#9196DB",
+// Function to create an annotation point
+const makePoint = (value: number, round: number) => ({
+  x: round + 1,
+  y: value,
+  marker: {
+    size: 8.5,
+    fillColor: "rgba(145, 150, 219, 0.50)",
+    strokeColor: "#9196DB",
+  },
+  label: {
+    offsetY: 0,
+    borderColor: "transparent",
+    style: {
+      color: "#BFC9E2",
+      background: "transparent",
+      fontFamily: ["Padauk"],
+      fontSize: "12px",
+      fontWeight: 700,
     },
-    label: {
-      offsetY: 0,
-      borderColor: "transparent",
-      style: {
-        color: "#BFC9E2",
-        background: "transparent",
-        fontFamily: ["Padauk"],
-        fontSize: "12px",
-        fontWeight: 700,
-      },
-      text: value,
-    },
-  };
-};
+    text: value,
+  },
+});
 
+// Function to add a value to the list
 const add2List = (value: number) => {
   list.value = [...list.value, value];
 };
 
+// Function to add an annotation
 const add2Annotations = (annotation: any) => {
-  annotations = [...annotations, annotation];
+  annotations.value = [...annotations.value, annotation];
 };
 
+// Function to update the chart with new data
+const updateChart = () => {
+  chart.value?.updateSeries([{ data: list.value }]);
+  chart.value?.updateOptions({
+    annotations: { points: annotations.value },
+  });
+};
+
+// Initialize the chart on mount
 onMounted(() => {
-  var options = {
-    series: [
-      {
-        name: "Round",
-        data: list.value,
-      },
-    ],
-    labels: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-    annotations: {
-      points: annotations,
-    },
+  const options = {
+    series: [{ name: "Round", data: list.value }],
+    labels: Array.from({ length: 11 }, (_, i) => i),
+    annotations: { points: annotations.value },
     chart: {
       background: "#18212E",
       height: 350,
@@ -136,47 +109,24 @@ onMounted(() => {
         blur: 10,
         opacity: 0.2,
       },
-      toolbar: {
-        show: false,
-        tools: {
-          zoom: false,
-        }
-      },
-      zoom: {
-        enabled: false,
-      },
+      toolbar: { show: false, tools: { zoom: false } },
+      zoom: { enabled: false },
       fontFamily: "Padauk",
       offsetY: -20,
     },
-    tooltip: {
-      enabled: false,
-    },
+    tooltip: { enabled: false },
     colors: ["#9196DB", "#9196DB"],
-    dataLabels: {
-      enabled: false,
-    },
-    stroke: {
-      curve: "straight",
-    },
+    dataLabels: { enabled: false },
+    stroke: { curve: "straight" },
     grid: {
       show: true,
       borderColor: "rgba(191, 201, 226, 0.50)",
       strokeDashArray: 0,
       position: "back",
-      xaxis: {
-        lines: {
-          show: true,
-        },
-      },
-      yaxis: {
-        lines: {
-          show: true,
-        },
-      },
+      xaxis: { lines: { show: true } },
+      yaxis: { lines: { show: true } },
     },
-    markers: {
-      size: 0,
-    },
+    markers: { size: 0 },
     xaxis: {
       type: "numeric",
       tickAmount: 10,
@@ -188,9 +138,7 @@ onMounted(() => {
           fontFamily: "Padauk",
           fontWeight: 700,
         },
-        formatter: function (val: string) {
-          return parseInt(val);
-        },
+        formatter: (val: string) => parseInt(val),
       },
     },
     yaxis: {
@@ -206,13 +154,11 @@ onMounted(() => {
       },
       showAlways: false,
     },
-    legend: {
-      display: false,
-    },
+    legend: { display: false },
   };
 
-  chart = new ApexCharts(document.querySelector("#chart"), options);
-  chart.render();
+  chart.value = new ApexCharts(document.querySelector("#chart") as HTMLElement, options);
+  chart.value.render();
 });
 </script>
 
@@ -228,6 +174,7 @@ onMounted(() => {
   margin-left: -10px;
   margin-top: 20px;
 }
+
 .title {
   margin: -20px auto 10px auto;
   color: var(--color-white);
@@ -236,6 +183,7 @@ onMounted(() => {
   text-align: center;
   font-family: Padauk;
 }
+
 @media (max-width: 550px) {
   .title {
     font-size: 14px;
