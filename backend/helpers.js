@@ -19,6 +19,10 @@ function hash2Number(hash) {
     return sha224(hash);
 };
 
+function randomDelay() {
+    return new Promise(resolve => setTimeout(resolve,  (Math.random() * 60000)));
+}
+
 const initCilUtils = async () => {
 
     global.poolWalletKeyPair = { "address": process.env.POOL_WALLET_ADDRESS, "privateKey": process.env.POOL_WALLET_PRIVATE_KEY, "publicKey": process.env.POOL_WALLET_PUBLIC_KEY }
@@ -41,5 +45,6 @@ module.exports = {
     number2Hash,
     hash2Number,
     initCilUtils,
-    getId
+    getId,
+    randomDelay
 }

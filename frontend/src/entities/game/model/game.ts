@@ -226,8 +226,10 @@ export const useGameStore = defineStore("game", () => {
             headers: {
             }
           }).then(async (response) => {
-            if (response.data.status == "1") {
+            if (response.data.status !== "-1") {
               gameState.parityList = response.data.parityList;
+            }
+            if (response.data.status == "1") {
               gameState.inProgress = false;
             } else {
               await new Promise(r => setTimeout(r, 5000));
