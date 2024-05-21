@@ -19,6 +19,12 @@ watch(
     },
     { deep: true }
 );
+
+watch(() => gameState.inProgress, (newValue) => {
+  if (newValue) {
+    list.value = []
+  }
+})
 </script>
 
 <template>

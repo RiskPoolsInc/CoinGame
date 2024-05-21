@@ -177,7 +177,7 @@ async function initGame (gameId, bid) {
 async function updateParityListAndBalance (round, bid, currentBalance, gameId)  {
   const tParityList = [];
   for (let i = 0; i < round; i++) {
-    await randomDelay()
+    await randomDelay(round)
     console.log('Playing round: ' + i);
     const randomNumber = getRandomNumber();
     const hash = number2Hash(randomNumber);

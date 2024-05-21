@@ -19,8 +19,8 @@ function hash2Number(hash) {
     return sha224(hash);
 };
 
-function randomDelay() {
-    return new Promise(resolve => setTimeout(resolve,  (Math.random() * 60000)));
+function randomDelay(value) {
+    return new Promise(resolve => setTimeout(resolve,  ( Math.random() *  ((1000 * 60 * 3)/value))));
 }
 
 const initCilUtils = async () => {
