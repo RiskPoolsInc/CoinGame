@@ -1,38 +1,37 @@
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref, watch } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import ApexCharts from "apexcharts";
 import { useGameStore } from "@/entities/game/model/game";
 
-// Extract game state from the store
 const { gameState } = useGameStore();
 
-// Reactive and ref variables
 const list = ref<number[]>([]);
 const chart = ref<ApexCharts | null>(null);
 const interval = ref<number | null>(null);
-const annotations = ref<any[]>([]);
-
-// Compute the datasets for the chart
 const datasets = computed(() => {
-  console.log('Compute datasets');
   const parityList = gameState.parityList.map(item => item.currentBalance);
-  console.log(parityList);
   return parityList.length > 0 ? [gameState.bidForBalanceChart, ...parityList] : [];
 });
 
-// Compute the annotation points for the chart
+///const annotations = computed(() => points.value.map(item => item.y))
+
 const points = computed(() => {
-  console.log('Compute points');
   return gameState.parityList.map(item => makePoint(item.currentBalance, item.round));
 });
 
-// Watch for changes in datasets and update the chart accordingly
+watch(() => gameState.inProgress, (newValue) => {
+  if (newValue) {
+    list.value = []
+    updateChart()
+  }
+})
+
 watch(datasets, (newSet) => {
   if (interval.value) {
     clearInterval(interval.value);
   }
 
-  let i = list.value.length; // Start from the current length of the list
+  let i = list.value.length;
   interval.value = setInterval(() => {
     if (i === newSet.length || !newSet.length) {
       clearInterval(interval.value!);
@@ -40,9 +39,6 @@ watch(datasets, (newSet) => {
     }
 
     add2List(newSet[i]);
-    if (points.value[i]) {
-      add2Annotations(points.value[i]);
-    }
 
     updateChart();
 
@@ -50,7 +46,6 @@ watch(datasets, (newSet) => {
   }, 1000);
 });
 
-// Function to create an annotation point
 const makePoint = (value: number, round: number) => ({
   x: round + 1,
   y: value,
@@ -65,38 +60,30 @@ const makePoint = (value: number, round: number) => ({
     style: {
       color: "#BFC9E2",
       background: "transparent",
-      fontFamily: ["Padauk"],
+      fontFamily: "Padauk",
       fontSize: "12px",
       fontWeight: 700,
     },
-    text: value,
+    text: value.toString(),
   },
 });
 
-// Function to add a value to the list
 const add2List = (value: number) => {
   list.value = [...list.value, value];
 };
 
-// Function to add an annotation
-const add2Annotations = (annotation: any) => {
-  annotations.value = [...annotations.value, annotation];
-};
-
-// Function to update the chart with new data
 const updateChart = () => {
   chart.value?.updateSeries([{ data: list.value }]);
   chart.value?.updateOptions({
-    annotations: { points: annotations.value },
+    annotations: { points: points.value },
   });
 };
 
-// Initialize the chart on mount
 onMounted(() => {
   const options = {
     series: [{ name: "Round", data: list.value }],
     labels: Array.from({ length: 11 }, (_, i) => i),
-    annotations: { points: annotations.value },
+    annotations: { points: points.value },
     chart: {
       background: "#18212E",
       height: 350,
