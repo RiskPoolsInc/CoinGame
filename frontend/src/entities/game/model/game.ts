@@ -215,6 +215,7 @@ export const useGameStore = defineStore("game", () => {
             }
             if (response.data.status == "1") {
               gameState.inProgress = false;
+              await updateBalance();
             } else {
               await new Promise(r => setTimeout(r, 5000));
             }
