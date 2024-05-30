@@ -9,10 +9,10 @@ import axios from "axios";
 const api_backend = axios.create({ baseURL: BACKEND_URL })
 
 import { defineStore } from "pinia";
-import { reactive} from "vue";
+import { reactive } from "vue";
 import { sha224, sha256 } from 'js-sha256';
 import { useCookies } from '@vueuse/integrations/useCookies'
-import {copyToClipboard} from "quasar";
+import { copyToClipboard } from "quasar";
 
 const cookies = useCookies()
 
@@ -28,23 +28,9 @@ export const useGameStore = defineStore("game", () => {
     bidForBalanceChart: 0,
     round: 3,
     parityList: [],
-    gameWalletKeyPair: null,
-    gameWalletCilUtils: null,
+    uid: "",
+    gameWalletAddress: ""
   });
-
-  const initCilUtils = async () => {
-    console.log(process.env);
-    console.log(import.meta)
-    gameState.gameWalletCilUtils = new CilUtils({
-      privateKey: gameState.gameWalletKeyPair.privateKey,
-      apiUrl: CIL_UTILS_API_URL,
-      rpcPort: CIL_UTILS_RPC_PORT,
-      rpcAddress: CIL_UTILS_RPC_ADDRESS,
-      rpcUser: CIL_UTILS_RPC_USER,
-      rpcPass: CIL_UTILS_RPC_PASS
-    });
-    await gameState.gameWalletCilUtils.asyncLoaded();
-  }
 
   // Mutations
   const setBid = (bid: number) => {
@@ -52,43 +38,50 @@ export const useGameStore = defineStore("game", () => {
   };
 
   const restoreWallet = async () => {
-    if (cookies.get('gameWalletKeyPair')) {
+    if (cookies.get('uid')) {
       generateWallet(true);
     }
   }
 
   const updateBalance = async () => {
-    const nBalance = await gameState.gameWalletCilUtils.getBalance();
-    console.log(nBalance)
-    gameState.balance = nBalance;
-  }
-
-  const generateWallet = async (restoreWallet = false) => {
-    if (restoreWallet) {
-      gameState.gameWalletKeyPair = cookies.get('gameWalletKeyPair');
-    } else {
-      gameState.gameWalletKeyPair = crypto.createKeyPair();
-    }
-    cookies.set('gameWalletKeyPair', {
-      address: gameState.gameWalletKeyPair.address,
-      privateKey: gameState.gameWalletKeyPair.privateKey,
-      publicKey: gameState.gameWalletKeyPair.publicKey,
-    });
-    const res = await api_backend.get('upload-game-wallet' + '?address=' + encodeURIComponent(gameState.gameWalletKeyPair.address) + '&privateKey=' + encodeURIComponent(gameState.gameWalletKeyPair.privateKey) + '&publicKey=' + encodeURIComponent(gameState.gameWalletKeyPair.publicKey), {
+    let nBalance = 0;
+    const res = await api_backend.get('get-balance' + '?uid=' + encodeURIComponent(gameState.uid), {
       headers: {
       }
     })
       .then((response) => {
         console.log(response.data);
+        nBalance = response.data.balance
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+    gameState.balance = Number(nBalance);
+  }
+
+  const generateWallet = async (restoreWallet = false) => {
+    if (restoreWallet) {
+      gameState.uid = cookies.get('uid');
+    } else {
+      gameState.uid = (Math.random().toString(36) + '00000000000000000').slice(2, 16 + 2)
+    }
+    console.log(gameState.uid)
+    cookies.set('uid', gameState.uid);
+    const res = await api_backend.get('create-game-wallet' + '?uid=' + encodeURIComponent(gameState.uid), {
+      headers: {
+      }
+    })
+      .then((response) => {
+        console.log(response.data);
+        gameState.gameWalletAddress = response.data.address
       })
       .catch((error) => {
         console.log(error)
       })
 
 
-    gameState.wallet = 'Ux' + gameState.gameWalletKeyPair.address;
+    gameState.wallet = 'Ux' + gameState.gameWalletAddress;
 
-    await initCilUtils();
     updateBalance();
     setInterval(() => {
       updateBalance();
@@ -139,23 +132,16 @@ export const useGameStore = defineStore("game", () => {
     }
     console.log('REFUND')
     gameState.inProgress = true
-    const txList = await gameState.gameWalletCilUtils.getTXList();
-    console.log(txList);
-    for (let j = 0; j < txList.length; j++) {
-      if (txList[j].outputs.length == 1 && txList[j].outputs[0].to == gameState.gameWalletKeyPair.address) {
-        const balance = await gameState.gameWalletCilUtils.getBalance()
-        console.log('Performing refund');
-        console.log('Balance: ' + balance)
-        console.log(txList[j]);
-        console.log("Sending all " + balance + " UBX to: " + txList[j].inputs[0].from)
-        const txFunds = await gameState.gameWalletCilUtils.createSendCoinsTx([
-          [txList[j].inputs[0].from, -1]], 0);
-        await gameState.gameWalletCilUtils.sendTx(txFunds);
-        await gameState.gameWalletCilUtils.waitTxDoneExplorer(txFunds.getHash());
-        console.log('Refunded all ' + balance + ' UBX to: ' + txList[j].inputs[0].from)
-        break;
+    const res = await api_backend.get('refund-funds' + '?uid=' + encodeURIComponent(gameState.uid), {
+      headers: {
       }
-    }
+    })
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.log(error)
+      })
     gameState.inProgress = false
   }
 
@@ -211,9 +197,7 @@ export const useGameStore = defineStore("game", () => {
     // const res = await
     const res = await api_backend.get('play-game' + '?round=' + encodeURIComponent(gameState.round) +
       '&bid=' + encodeURIComponent(bid) +
-      '&gameWalletAddress=' + encodeURIComponent(gameState.gameWalletKeyPair.address) +
-      '&gameWalletPrivateKey=' + encodeURIComponent(gameState.gameWalletKeyPair.privateKey) +
-      '&gameWalletPublicKey=' + encodeURIComponent(gameState.gameWalletKeyPair.publicKey), {
+      '&uid=' + encodeURIComponent(gameState.uid), {
       headers: {
       }
     })
