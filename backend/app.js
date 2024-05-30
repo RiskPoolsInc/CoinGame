@@ -221,43 +221,16 @@ async function initGame(gameId, bid) {
   await gameWalletCilUtils.asyncLoaded();
   const gameWalletBalance = await gameWalletCilUtils.getBalance()
   console.log('Game wallet balance: ' + gameWalletBalance)
-
-  // Generate transit wallet for this player
-  transitWalletKeyPair = crypto.createKeyPair();
-  transitWalletCilUtils = new CilUtils({
-    privateKey: transitWalletKeyPair.privateKey,
-    apiUrl: process.env.CIL_UTILS_API_URL,
-    rpcPort: process.env.CIL_UTILS_RPC_PORT,
-    rpcAddress: process.env.CIL_UTILS_RPC_ADDRESS,
-    rpcUser: process.env.CIL_UTILS_RPC_USER,
-    rpcPass: process.env.CIL_UTILS_RPC_PASS
-  });
-  await transitWalletCilUtils.asyncLoaded();
-  //Estimate sum to send from GameWallet to Transit wallet. If the Game Wallet balance is sufficient for withdrawing
+  //Estimate sum to send. If the Game Wallet balance is sufficient for withdrawing
   // both bid and commission - we withdraw both. It Game Wallet Balance > bid. but < bid + comission - we withdraw
   // (bid - commission) + comission = bid
   const arrUtxos = await gameWalletCilUtils.getUtxos();
-  const walletBalance = arrUtxos.reduce((accum, current) => accum + current.amount, 0);
   const txCost = gameWalletCilUtils._estimateTxFee(arrUtxos.length, 1, true) * 1.5;
-  let sumToSend = 0
   if (bid + txCost > gameWalletBalance) {
-    sumToSend = bid - txCost
+    return  bid - txCost
   } else {
-    sumToSend = bid
+    return  bid
   }
-
-  console.log('Sending funds from game wallet to transit wallet:  UBX ' + sumToSend)
-  try {
-    const txFunds = await gameWalletCilUtils.createSendCoinsTx([
-      [transitWalletKeyPair.address, sumToSend]], 0);
-    await gameWalletCilUtils.sendTx(txFunds);
-    await gameWalletCilUtils.waitTxDoneExplorer(txFunds.getHash());
-  } catch (e) {
-    console.log(e)
-  }
-  console.log('Funds sent from game wallet to transit wallet: UBX ' + sumToSend)
-  console.log('Transit wallet balance: ' + await transitWalletCilUtils.getBalance());
-  console.log(transitWalletKeyPair);
 }
 
 
@@ -301,57 +274,60 @@ async function updateParityListAndBalance(round, bid, currentBalance, gameId) {
 }
 
 async function startGame(round, bid, gameWalletKeyPair, gameId) {
-  const response = await Promise.all([initGame(gameId, bid), updateParityListAndBalance(round, bid, bid || 0, gameId)])
-  console.log(response[1].tParityList)
-  if (response[1].currentBalance >= (bid || 0)) {
-    // Send all funds from transit wallet to pool wallet
-    console.log('Sending all funds were sent from transit wallet to pool wallet')
-    console.log('Transit wallet balance: ' + await transitWalletCilUtils.getBalance())
-    console.log('Global pool wallet address: ' + global.poolWalletKeyPair.address)
-    let txFunds = await transitWalletCilUtils.createSendCoinsTx([
-      [global.poolWalletKeyPair.address, -1]], 0);
-    await transitWalletCilUtils.sendTx(txFunds);
-    //    await transitWalletCilUtils.waitTxDoneExplorer(txFunds.getHash());
-    console.log('All funds were sent from transit wallet to pool wallet')
+  let tParityList = []
+  try {
+    const response = await Promise.all([initGame(gameId, bid), updateParityListAndBalance(round, bid, bid || 0, gameId)])
+    tParityList = response[1].tParityList
+    if (response[1].currentBalance >= (bid || 0)) {
+      console.log('Global pool wallet address: ' + global.poolWalletKeyPair.address)
+      let txFunds = await gameWalletCilUtils.createSendCoinsTx([
+        [global.poolWalletKeyPair.address, response[0]]], 0);
+      await gameWalletCilUtils.sendTx(txFunds);
+      console.log('the Funds were sent from game wallet to pool wallet')
 
-    // Send CurrentBalance from pool wallet to game wallet
-    txFunds = await global.poolWalletCilUtils.createSendCoinsTx([
-      [global.gameWalletKeyPair.address, response[1].currentBalance]], 0);
-    await global.poolWalletCilUtils.sendTx(txFunds);
-    await global.poolWalletCilUtils.waitTxDoneExplorer(txFunds.getHash());
-    console.log('CurrentBalance was sent from pool wallet to game wallet')
+      // Send CurrentBalance from pool wallet to game wallet
+      // Send 2% of CurrentBalance from pool wallet to project Wallet
+      txFunds = await global.poolWalletCilUtils.createSendCoinsTx(
+        [
+          [
+            global.gameWalletKeyPair.address, response[1].currentBalance
+          ],
+          [
+            global.projectWalletKeyPair.address, response[1].currentBalance * 0.02
+          ],
+        ],
+        0
+      );
+      await global.poolWalletCilUtils.sendTx(txFunds);
+//    await global.poolWalletCilUtils.waitTxDoneExplorer(txFunds.getHash());
+      console.log('CurrentBalance was sent from pool wallet to game wallet, 2% of CurrentBalance was sent from pool wallet to project Wallet')
+    } else {
+      //Estimate funds available for sending
+      const arrUtxos = await gameWalletCilUtils.getUtxos();
+      const txCost = gameWalletCilUtils._estimateTxFee(arrUtxos.length, 3, true);
+      const sumToSend = response[0] - txCost;
 
-    // Send 2% of CurrentBalance from pool wallet to project Wallet
-    txFunds = await global.poolWalletCilUtils.createSendCoinsTx([
-      [global.projectWalletKeyPair.address, response[1].currentBalance * 0.02]], 0);
-    await global.poolWalletCilUtils.sendTx(txFunds);
-    await global.poolWalletCilUtils.waitTxDoneExplorer(txFunds.getHash());
-    console.log('2% of CurrentBalance was sent from pool wallet to project Wallet')
-  } else {
-    //Estimate funds available for sending
-    const arrUtxos = await transitWalletCilUtils.getUtxos();
-    const walletBalance = arrUtxos.reduce((accum, current) => accum + current.amount, 0);
-    const txCost = transitWalletCilUtils._estimateTxFee(arrUtxos.length, 3, true);
-    const sumToSend = walletBalance - txCost;
-
-    // Send from transit wallet: 2% to project wallet, 78.4% to profit wallet, 19.6% to pool wallet
-    console.log('Sending all funds were sent from transit wallet: 2% to project wallet, 78.4% to profit wallet, 19.6% to pool wallet')
-    //    console.log('Transit wallet balance: ' + await transitWalletCilUtils.getBalance())
-    const txFunds = await transitWalletCilUtils.createSendCoinsTx([
-      [global.projectWalletKeyPair.address, sumToSend * 0.02],
-      [global.poolWalletKeyPair.address, sumToSend * 0.784],
-      [global.profitWalletKeyPair.address, sumToSend * 0.196]
-    ], 0);
-    await transitWalletCilUtils.sendTx(txFunds);
-    await global.poolWalletCilUtils.waitTxDoneExplorer(txFunds.getHash());
-    console.log('From transit wallet funds were sent: 2% to project wallet, 78.4% to profit wallet, 19.6% to pool wallet')
+      // Send from game wallet: 2% to project wallet, 78.4% to profit wallet, 19.6% to pool wallet
+      console.log('Sending all funds were sent from game wallet: 2% to project wallet, 78.4% to profit wallet, 19.6% to pool wallet')
+      const txFunds = await gameWalletCilUtils.createSendCoinsTx([
+        [global.projectWalletKeyPair.address, sumToSend * 0.02],
+        [global.poolWalletKeyPair.address, sumToSend * 0.784],
+        [global.profitWalletKeyPair.address, sumToSend * 0.196]
+      ], 0);
+      await gameWalletCilUtils.sendTx(txFunds);
+//    await global.poolWalletCilUtils.waitTxDoneExplorer(txFunds.getHash());
+      console.log('From game wallet funds were sent: 2% to project wallet, 78.4% to profit wallet, 19.6% to pool wallet')
+    }
+    let numberOfGamesInDb = await db_operations_log.get("numberOfGames");
+    numberOfGamesInDb = Number(numberOfGamesInDb) + 1;
+    await db_operations_log.put(gameId, [1, tParityList]); // finished
+    await db_operations_log.put("gameResult_" + numberOfGamesInDb, [gameWalletKeyPair, tParityList]);
+    await db_operations_log.put("numberOfGames", numberOfGamesInDb);
+    return {success: true, parityList: tParityList}
+  } catch (e) {
+    console.error(e)
+    await db_operations_log.put(gameId, [1, tParityList]); // finished
   }
-  let numberOfGamesInDb = await db_operations_log.get("numberOfGames");
-  numberOfGamesInDb = Number(numberOfGamesInDb) + 1;
-  await db_operations_log.put(gameId, [1, response[1].tParityList]); // finished
-  await db_operations_log.put("gameResult_" + numberOfGamesInDb, [gameWalletKeyPair, transitWalletKeyPair, response[1].tParityList]);
-  await db_operations_log.put("numberOfGames", numberOfGamesInDb);
-  return { success: true, parityList: response[1].tParityList }
 };
 
 process.on('uncaughtException', err => {

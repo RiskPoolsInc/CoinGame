@@ -19,8 +19,14 @@ function hash2Number(hash) {
     return sha224(hash);
 };
 
+function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 function randomDelay(value) {
-    return new Promise(resolve => setTimeout(resolve,  ( Math.random() *  ((1000 * 60 * 3)/value))));
+    return new Promise(resolve => setTimeout(resolve,  getRandomInt(10000/value, 20000/value)));
 }
 
 const initCilUtils = async () => {
