@@ -79,8 +79,9 @@ export const useGameStore = defineStore("game", () => {
         console.log(error)
       })
 
-
-    gameState.wallet = 'Ux' + gameState.gameWalletAddress;
+    if (gameState.gameWalletAddress.length > 0) {
+      gameState.wallet = 'Ux' + gameState.gameWalletAddress;
+    }
 
     updateBalance();
     setInterval(() => {
