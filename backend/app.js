@@ -136,35 +136,40 @@ app.get('/get-balance', async (req, res) => {
 })
 
 app.get('/refund-funds', async (req, res) => {
-  let uid = req.query.uid
-  console.log('Performing refunds for: ' + uid)
-  if (await db_game_wallets.get(uid)) {
-    gameWallet = await db_game_wallets.get(uid)
-  }
-  gameWalletCilUtils = new CilUtils({
-    privateKey: gameWallet.privateKey,
-    apiUrl: process.env.CIL_UTILS_API_URL,
-    rpcPort: process.env.CIL_UTILS_RPC_PORT,
-    rpcAddress: process.env.CIL_UTILS_RPC_ADDRESS,
-    rpcUser: process.env.CIL_UTILS_RPC_USER,
-    rpcPass: process.env.CIL_UTILS_RPC_PASS
-  });
-  const txList = await gameWalletCilUtils.getTXList();
-  console.log(txList);
-  for (let j = 0; j < txList.length; j++) {
-    if (txList[j].outputs.length == 1 && txList[j].outputs[0].to == gameWallet.address) {
-      const balance = await gameWalletCilUtils.getBalance()
-      console.log('Performing refund');
-      console.log('Balance: ' + balance)
-      console.log(txList[j]);
-      console.log("Sending all " + balance + " UBX to: " + txList[j].inputs[0].from)
-      const txFunds = await gameWalletCilUtils.createSendCoinsTx([
-        [txList[j].inputs[0].from, -1]], 0);
-      await gameWalletCilUtils.sendTx(txFunds);
-      await gameWalletCilUtils.waitTxDoneExplorer(txFunds.getHash());
-      console.log('Refunded all ' + balance + ' UBX to: ' + txList[j].inputs[0].from)
-      break;
+  try {
+    let uid = req.query.uid
+    console.log('Performing refunds for: ' + uid)
+    if (await db_game_wallets.get(uid)) {
+      gameWallet = await db_game_wallets.get(uid)
     }
+    gameWalletCilUtils = new CilUtils({
+      privateKey: gameWallet.privateKey,
+      apiUrl: process.env.CIL_UTILS_API_URL,
+      rpcPort: process.env.CIL_UTILS_RPC_PORT,
+      rpcAddress: process.env.CIL_UTILS_RPC_ADDRESS,
+      rpcUser: process.env.CIL_UTILS_RPC_USER,
+      rpcPass: process.env.CIL_UTILS_RPC_PASS
+    });
+    const txList = await gameWalletCilUtils.getTXList();
+    console.log(txList);
+    for (let j = 0; j < txList.length; j++) {
+      if (txList[j].outputs.length == 1 && txList[j].outputs[0].to == gameWallet.address) {
+        const balance = await gameWalletCilUtils.getBalance()
+        console.log('Performing refund');
+        console.log('Balance: ' + balance)
+        console.log(txList[j]);
+        console.log("Sending all " + balance + " UBX to: " + txList[j].inputs[0].from)
+        const txFunds = await gameWalletCilUtils.createSendCoinsTx([
+          [txList[j].inputs[0].from, -1]], 0);
+        await gameWalletCilUtils.sendTx(txFunds);
+        await gameWalletCilUtils.waitTxDoneExplorer(txFunds.getHash());
+        console.log('Refunded all ' + balance + ' UBX to: ' + txList[j].inputs[0].from)
+        break;
+      }
+    }
+    return res.status(200).json({ "success": "true" })
+  } catch (e) {
+    return res.status(400).json({ "error": e })
   }
 })
 

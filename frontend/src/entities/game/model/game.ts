@@ -138,10 +138,15 @@ export const useGameStore = defineStore("game", () => {
       }
     })
       .then((response) => {
+        gameState.inProgress = false
         console.log(response.data);
       })
       .catch((error) => {
+        gameState.inProgress = false
         console.log(error)
+      })
+      .finally(() => {
+        gameState.inProgress = false
       })
     gameState.inProgress = false
   }
