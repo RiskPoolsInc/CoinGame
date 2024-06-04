@@ -137,9 +137,10 @@ app.get('/get-balance', async (req, res) => {
 
 app.get('/refund-funds', async (req, res) => {
   let uid = req.query.uid
-  gameWallet = await db_game_wallets.get(uid, (err) => {
-    return res.status(400).json({ "error": err })
-  })
+  console.log('Performing refunds for: ' + uid)
+  if (await db_game_wallets.get(uid)) {
+    gameWallet = await db_game_wallets.get(uid)
+  }
   gameWalletCilUtils = new CilUtils({
     privateKey: gameWallet.privateKey,
     apiUrl: process.env.CIL_UTILS_API_URL,
