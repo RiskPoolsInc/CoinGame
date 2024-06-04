@@ -6,3 +6,5 @@
 */package-lock.json
 ClientApp/.env
 .idea
+/backend/game_statuses
+/backend/game_wallets

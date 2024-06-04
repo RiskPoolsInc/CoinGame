@@ -85,7 +85,7 @@ export const useGameStore = defineStore("game", () => {
     updateBalance();
     setInterval(() => {
       updateBalance();
-    }, 30000)
+    }, 10000)
   };
 
   const copyWallet = async () => {
@@ -155,46 +155,7 @@ export const useGameStore = defineStore("game", () => {
     // let currentBalance = gameState.bid || 0;
     const bid = Number(gameState.bid);
     gameState.bidForBalanceChart = bid;
-    // Send bid to transit wallet
-    // const txFunds = await gameState.gameWalletCilUtils.createSendCoinsTx([
-    //   [gameState.transitWalletKeyPair.address, bid]], 0);
-    // await gameState.gameWalletCilUtils.sendTx(txFunds);
-    // await gameState.gameWalletCilUtils.waitTxDoneExplorer(txFunds.getHash());
 
-    // console.log(gameState.round);
-    // const tParityList = [];
-    // for (let i = 0; i < gameState.round; i++) {
-    //   console.log(i);
-    //   const randomNumber = getRandomNumber();
-    //   const hash = number2Hash(randomNumber);
-    //   const parity = randomNumber % 2 !== 0;
-
-    //   if (currentBalance <= 0) {
-    //     break;
-    //   }
-
-    //   if (parity) {
-    //     currentBalance = Number(currentBalance) + Number(gameState.bid);
-    //   } else {
-    //     if (Number(currentBalance) - Number(gameState.bid) < 0) { return; }
-    //     else {
-    //       currentBalance = Number(currentBalance) - Number(gameState.bid);
-    //     }
-    //   }
-
-    //   balanceCalculation(parity);
-    //   await updateBalance();
-
-    //   tParityList.push({
-    //     round: i,
-    //     number: randomNumber,
-    //     parity: parity,
-    //     currentBalance: currentBalance,
-    //     hashNumber: hash,
-    //   });
-    // }
-    // console.log(tParityList)
-    // const res = await
     const res = await api_backend.get('play-game' + '?round=' + encodeURIComponent(gameState.round) +
       '&bid=' + encodeURIComponent(bid) +
       '&uid=' + encodeURIComponent(gameState.uid), {
@@ -229,41 +190,6 @@ export const useGameStore = defineStore("game", () => {
         console.log(error)
         gameState.inProgress = false;
       })
-    // if (currentBalance >= (gameState.bid || 0)) {
-    //   // Send all funds from transit wallet to pool wallet
-    //   let txFunds = await gameState.transitWalletCilUtils.createSendCoinsTx([
-    //     [gameState.poolWalletKeyPair.address, -1]], 0);
-    //   await gameState.transitWalletCilUtils.sendTx(txFunds);
-    //   await gameState.transitWalletCilUtils.waitTxDoneExplorer(txFunds.getHash());
-
-    //   // Send CurrentBalance from pool wallet to game wallet
-    //   txFunds = await gameState.poolWalletCilUtils.createSendCoinsTx([
-    //     [gameState.gameWalletKeyPair.address, currentBalance]], 0);
-    //   await gameState.poolWalletCilUtils.sendTx(txFunds);
-    //   await gameState.poolWalletCilUtils.waitTxDoneExplorer(txFunds.getHash());
-
-    //   // Send 2% of CurrentBalance from pool wallet to project Wallet
-    //   txFunds = await gameState.poolWalletCilUtils.createSendCoinsTx([
-    //     [gameState.projectWalletKeyPair.address, currentBalance * 0.02]], 0);
-    //   await gameState.poolWalletCilUtils.sendTx(txFunds);
-    //   await gameState.poolWalletCilUtils.waitTxDoneExplorer(txFunds.getHash());
-    // } else {
-    //   const arrUtxos = await gameState.transitWalletCilUtils.getUtxos();
-    //   const walletBalance = arrUtxos.reduce((accum: any, current: any) => accum + current.amount, 0);
-    //   const txCost = gameState.transitWalletCilUtils._estimateTxFee(arrUtxos.length, 3, true);
-    //   const sumToSend = walletBalance - txCost;
-
-    //   // Send from transit wallet: 2% to project wallet, 78.4% to profit wallet, 19.6% to pool wallet
-    //   const txFunds = await gameState.transitWalletCilUtils.createSendCoinsTx([
-    //     [gameState.projectWalletKeyPair.address, sumToSend * 0.02],
-    //     [gameState.profitWalletKeyPair.address, sumToSend * 0.784],
-    //     [gameState.poolWalletKeyPair.address, sumToSend * 0.196]
-    //   ], 0);
-    //   await gameState.transitWalletCilUtils.sendTx(txFunds);
-    //   await gameState.poolWalletCilUtils.waitTxDoneExplorer(txFunds.getHash());
-    //   await updateBalance();
-    // }
-    // console.log('IP: F')
   };
 
   return {
