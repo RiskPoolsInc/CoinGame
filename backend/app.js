@@ -322,10 +322,12 @@ async function startGame(round, bid, gameWalletKeyPair, gameId) {
       // Send CurrentBalance from pool wallet to game wallet
       // Send 2% of CurrentBalance from pool wallet to project Wallet
       // The user pays all commissions
+      console.log('aaa: ' + response[1].currentBalance)
+      console.log('aaa: ' + (response[1].currentBalance * 0.98 - poolWalletTxCost))
       txFunds = await global.poolWalletCilUtils.createSendCoinsTx(
         [
           [
-            global.gameWalletKeyPair.address, response[1].currentBalance * 0.98 - poolWalletTxCost
+            global.gameWalletKeyPair.address, (response[1].currentBalance * 0.98 - poolWalletTxCost)
           ],
           [
             global.projectWalletKeyPair.address, response[1].currentBalance * 0.02
@@ -334,7 +336,7 @@ async function startGame(round, bid, gameWalletKeyPair, gameId) {
         0
       );
       await global.poolWalletCilUtils.sendTx(txFunds);
-      //    await global.poolWalletCilUtils.waitTxDoneExplorer(txFunds.getHash());
+      await global.poolWalletCilUtils.waitTxDoneExplorer(txFunds.getHash());
       console.log('CurrentBalance was sent from pool wallet to game wallet, 2% of CurrentBalance was sent from pool wallet to project Wallet')
     } else {
       //Estimate funds available for sending
