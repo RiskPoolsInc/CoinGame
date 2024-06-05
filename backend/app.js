@@ -68,7 +68,7 @@ app.get('/play-game', async (req, res) => {
     return res.status(200).json({ gameid: gameId })
   } catch (e) {
     console.error(e)
-    logger.error(JSON.stringify(e), { gameId: gameId, uid: uid })
+    logger.error(JSON.stringify(e))
     return res.status(501).json({ error: "The game ended unexpectedly" })
   }
 })
@@ -368,7 +368,7 @@ async function startGame(round, bid, gameWalletKeyPair, gameId) {
     return { success: true, parityList: tParityList }
   } catch (e) {
     console.error(e)
-    logger.error(JSON.stringify(e), { gameId: gameId })
+    logger.error(JSON.stringify(e))
     await db_game_statuses.put(gameId, [1, tParityList]); // finished
   }
 };
