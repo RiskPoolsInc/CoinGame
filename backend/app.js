@@ -23,6 +23,14 @@ db_game_statuses.has = db.has
 
 
 const logger = winston.createLogger({
+  format: winston.format.combine(
+    winston.format.timestamp({
+      format: 'YYYY-MM-DD HH:mm:ss'
+    }),
+    winston.format.errors({ stack: true }),
+    winston.format.splat(),
+    winston.format.json()
+  ),
   transports: [
     new winston.transports.Console(),
     new winston.transports.File({ filename: 'error.log', level: 'error' }),
@@ -41,10 +49,11 @@ app.get('/play-game', async (req, res) => {
     let round = req.query.round;
     let bid = Number(req.query.bid);
     let uid = req.query.uid
-    logger.info(`==================================================================`)
-    logger.info(`Playing game for user ${uid}. Rounds = ${round}. Bid = ${bid} UBX.`)
+    let gameId = getId();
+    logger.info(`==================================================================`, { gameId: gameId, uid: uid })
+    logger.info(`Playing game for user ${uid}. Rounds = ${round}. Bid = ${bid} UBX.`, { gameId: gameId, uid: uid })
     if (bid < Number(process.env.MIN_BID) || bid > Number(process.env.MAX_BID)) {
-      logger.warn(`Incorrect bid amount. MIN_BID =  ${process.env.MIN_BID}. MAX_BID = ${process.env.MAX_BID}`)
+      logger.warn(`Incorrect bid amount. MIN_BID =  ${process.env.MIN_BID}. MAX_BID = ${process.env.MAX_BID}`, { gameId: gameId, uid: uid })
       res.status(400).json({ error: "Incorrect bid amount" })
     }
     gameWallet = await db_game_wallets.get(uid)
@@ -53,20 +62,20 @@ app.get('/play-game', async (req, res) => {
       privateKey: gameWallet.privateKey,
       publicKey: gameWallet.publicKey,
     }
-    logger.info(`Game wallet key pair: ${JSON.stringify(gameWalletKeyPair)}`)
-    let gameId = getId();
-    logger.info('Game ID: ' + gameId);
+    logger.info(`Game wallet key pair: ${JSON.stringify(gameWalletKeyPair)}`, { gameId: gameId, uid: uid })
+    logger.info('Game ID: ' + gameId, { gameId: gameId, uid: uid });
     startGame(round, bid, gameWalletKeyPair, gameId) // this is async, and we don't wait for finish execution
     return res.status(200).json({ gameid: gameId })
   } catch (e) {
     console.error(e)
+    logger.error(JSON.stringify(e), { gameId: gameId, uid: uid })
     return res.status(501).json({ error: "The game ended unexpectedly" })
   }
 })
 
 app.get('/game-status', async (req, res) => {
-  logger.info('Checking game status: ' + req.query.gameid)
   let gameId = req.query.gameid;
+  logger.info('Checking game status: ' + req.query.gameid, { gameId: gameId })
   let gameCheck = null
   let value = await db_game_statuses.get(gameId)
   if (value) {
@@ -83,13 +92,13 @@ app.get('/game-status', async (req, res) => {
 
 app.get('/create-game-wallet', async (req, res) => {
   let uid = req.query.uid
-  logger.info('Creating game wallet for user: ' + uid)
+  logger.info('Creating game wallet for user: ' + uid, { uid: uid })
   let gameWallet = {}
   isRestored = true
   if (await db_game_wallets.has(uid)) {
     gameWallet = await db_game_wallets.get(uid)
   } else {
-    logger.info('Wallet for uid not found')
+    logger.info('Wallet for uid not found', { uid: uid })
     gameWalletKeyPair = crypto.createKeyPair();
     gameWallet = {
       address: gameWalletKeyPair.address,
@@ -99,7 +108,7 @@ app.get('/create-game-wallet', async (req, res) => {
     db_game_wallets.put(uid, gameWallet)
     isRestored = false
   }
-  logger.info("Address: " + gameWallet.address)
+  logger.info("Address: " + gameWallet.address, { uid: uid })
   return res.status(200).json({ "isRestored": isRestored, "address": gameWallet.address })
 })
 
@@ -108,6 +117,7 @@ app.get('/get-balance', async (req, res) => {
   if (await db_game_wallets.has(uid)) {
     gameWallet = await db_game_wallets.get(uid)
   } else {
+    logger.warn("wallet for user with uid doesn't exist", { uid: uid })
     return res.status(400).json({ "error": "wallet for user with uid doesn't exist" })
   }
   gameWalletCilUtils = new CilUtils({
@@ -125,7 +135,7 @@ app.get('/get-balance', async (req, res) => {
 app.get('/refund-funds', async (req, res) => {
   try {
     let uid = req.query.uid
-    logger.info('Performing refunds for: ' + uid)
+    logger.info('Performing refunds for: ' + uid, { uid: uid })
     if (await db_game_wallets.get(uid)) {
       gameWallet = await db_game_wallets.get(uid)
     }
@@ -142,15 +152,15 @@ app.get('/refund-funds', async (req, res) => {
     for (let j = 0; j < txList.length; j++) {
       if (txList[j].outputs.length == 1 && txList[j].outputs[0].to == gameWallet.address) {
         const balance = await gameWalletCilUtils.getBalance()
-        logger.info('Performing refund');
-        logger.info('Balance: ' + balance)
-        logger.info(txList[j]);
-        logger.info("Sending all " + balance + " UBX to: " + txList[j].inputs[0].from)
+        logger.info('Performing refund', { uid: uid });
+        logger.info('Balance: ' + balance, { uid: uid })
+        logger.info(txList[j], { uid: uid });
+        logger.info("Sending all " + balance + " UBX to: " + txList[j].inputs[0].from, { uid: uid })
         const txFunds = await gameWalletCilUtils.createSendCoinsTx([
           [txList[j].inputs[0].from, -1]], 0);
         await gameWalletCilUtils.sendTx(txFunds);
         await gameWalletCilUtils.waitTxDoneExplorer(txFunds.getHash());
-        logger.info('Refunded all ' + balance + ' UBX to: ' + txList[j].inputs[0].from)
+        logger.info('Refunded all ' + balance + ' UBX to: ' + txList[j].inputs[0].from, { uid: uid })
         break;
       }
     }
@@ -202,7 +212,7 @@ async function performRefund(gameWallet) {
 
 async function initGame(gameId, bid) {
   await db_game_statuses.put(gameId, [0, []]); // pending
-  logger.info('Game was put in DB: ' + gameId)
+  logger.info('Game was put in DB: ' + gameId, { gameId: gameId })
   // Open game wallet for this player
   gameWalletCilUtils = new CilUtils({
     privateKey: gameWalletKeyPair.privateKey,
@@ -214,7 +224,7 @@ async function initGame(gameId, bid) {
   });
   await gameWalletCilUtils.asyncLoaded();
   const gameWalletBalance = await gameWalletCilUtils.getBalance()
-  logger.info('Game wallet was opened. Balance: ' + gameWalletBalance)
+  logger.info('Game wallet was opened. Balance: ' + gameWalletBalance, { gameId: gameId })
 
   transitWalletKeyPair = crypto.createKeyPair();
   transitWalletCilUtils = new CilUtils({
@@ -226,8 +236,8 @@ async function initGame(gameId, bid) {
     rpcPass: process.env.CIL_UTILS_RPC_PASS
   });
   await transitWalletCilUtils.asyncLoaded();
-  logger.info('Transit wallet was opened. Balance: ' + gameWalletBalance)
-  logger.info(`Transit wallet key pair: ${JSON.stringify(transitWalletKeyPair)}`)
+  logger.info('Transit wallet was opened. Balance: ' + gameWalletBalance, { gameId: gameId })
+  logger.info(`Transit wallet key pair: ${transitWalletKeyPair.address} ${transitWalletKeyPair.privateKey} ${transitWalletKeyPair.publicKey}`, { gameId: gameId })
 
   //Estimate sum to send. If the Game Wallet balance is sufficient for withdrawing
   // both bid and commission - we withdraw both. It Game Wallet Balance > bid. but < bid + comission - we withdraw
@@ -240,7 +250,7 @@ async function initGame(gameId, bid) {
   } else {
     sumToSend = bid
   }
-  logger.info(`Sum to send from game wallet to transit wallet: ${sumToSend}`)
+  logger.info(`Sum to send from game wallet to transit wallet: ${sumToSend}`, { gameId: gameId })
   return { sumToSend }
 }
 
@@ -249,7 +259,7 @@ async function updateParityListAndBalance(round, bid, currentBalance, gameId) {
   const tParityList = [];
   for (let i = 0; i < round; i++) {
     await randomDelay(round)
-    logger.info('Playing round: ' + i);
+    logger.info('Playing round: ' + i, { gameId: gameId });
     const randomNumber = getRandomNumber();
     const hash = number2Hash(randomNumber);
     const parity = randomNumber % 2 !== 0;
@@ -274,7 +284,7 @@ async function updateParityListAndBalance(round, bid, currentBalance, gameId) {
       currentBalance: currentBalance,
       hashNumber: hash,
     });
-    logger.info('Put game statuses to db')
+    logger.info('Put game statuses to db', { gameId: gameId })
     await db_game_statuses.put(
       gameId,
       [
@@ -282,7 +292,7 @@ async function updateParityListAndBalance(round, bid, currentBalance, gameId) {
         tParityList.slice(0, -1)
       ]); // pending
   }
-  logger.info('Parity lost:' + tParityList)
+  logger.info('Parity list:' + JSON.stringify(tParityList), { gameId: gameId })
   return { currentBalance, tParityList }
 }
 
@@ -290,25 +300,25 @@ async function startGame(round, bid, gameWalletKeyPair, gameId) {
   let tParityList = []
   try {
     const response1 = await initGame(gameId, bid)
-    logger.info(`Sending funds from game wallet to transit wallet. Transit wallet address: ${transitWalletKeyPair.address}. Sum to send: ${response1.sumToSend} `)
+    logger.info(`Sending funds from game wallet to transit wallet. Transit wallet address: ${transitWalletKeyPair.address}. Sum to send: ${response1.sumToSend} `, { gameId: gameId })
     const txFunds = await gameWalletCilUtils.createSendCoinsTx([
       [transitWalletKeyPair.address, response1.sumToSend]], 0);
     await gameWalletCilUtils.sendTx(txFunds);
     const response2 = await updateParityListAndBalance(round, bid, bid || 0, gameId)
     const response = [response1, response2];
     await gameWalletCilUtils.waitTxDoneExplorer(txFunds.getHash());
-    logger.info(response1.sumToSend + ' UBX were sent from game wallet to transit wallet')
+    logger.info(response1.sumToSend + ' UBX were sent from game wallet to transit wallet', { gameId: gameId })
     tParityList = response[1].tParityList
     if (response[1].currentBalance >= (bid || 0)) {
       // Send all funds from transit wallet to pool wallet
-      logger.info('Sending all funds from transit wallet to pool wallet')
-      logger.info('Transit wallet balance: ' + await transitWalletCilUtils.getBalance())
-      logger.info('Global pool wallet address: ' + global.poolWalletKeyPair.address)
+      logger.info('Sending all funds from transit wallet to pool wallet', { gameId: gameId })
+      logger.info('Transit wallet balance: ' + await transitWalletCilUtils.getBalance(), { gameId: gameId })
+      logger.info('Global pool wallet address: ' + global.poolWalletKeyPair.address, { gameId: gameId })
       let txFunds = await transitWalletCilUtils.createSendCoinsTx([
         [global.poolWalletKeyPair.address, -1]], 0);
       await transitWalletCilUtils.sendTx(txFunds);
       await transitWalletCilUtils.waitTxDoneExplorer(txFunds.getHash());
-      logger.info('All funds were sent from transit wallet to pool wallet')
+      logger.info('All funds were sent from transit wallet to pool wallet', { gameId: gameId })
 
       // estimate pool wallet to game wallet commission
       const poolWalletArrUtxos = await poolWalletCilUtils.getUtxos();
@@ -317,7 +327,7 @@ async function startGame(round, bid, gameWalletKeyPair, gameId) {
       // Send CurrentBalance from pool wallet to game wallet
       // Send 2% of CurrentBalance from pool wallet to project Wallet
       // The user pays all commissions
-      logger.info('Sending CurrentBalance from pool wallet to game wallet. Sending 2% of CurrentBalance from pool wallet to project Wallet. ')
+      logger.info('Sending CurrentBalance from pool wallet to game wallet. Sending 2% of CurrentBalance from pool wallet to project Wallet. ', { gameId: gameId })
       txFunds = await global.poolWalletCilUtils.createSendCoinsTx(
         [
           [
@@ -331,7 +341,7 @@ async function startGame(round, bid, gameWalletKeyPair, gameId) {
       );
       await global.poolWalletCilUtils.sendTx(txFunds);
       await global.poolWalletCilUtils.waitTxDoneExplorer(txFunds.getHash());
-      logger.info('CurrentBalance was sent from pool wallet to game wallet, 2% of CurrentBalance was sent from pool wallet to project Wallet')
+      logger.info('CurrentBalance was sent from pool wallet to game wallet, 2% of CurrentBalance was sent from pool wallet to project Wallet', { gameId: gameId })
     } else {
       //Estimate funds available for sending
       const arrUtxos = await transitWalletCilUtils.getUtxos();
@@ -339,7 +349,7 @@ async function startGame(round, bid, gameWalletKeyPair, gameId) {
       const sumToSend = response[0].sumToSend - txCost;
 
       // Send from game wallet: 2% to project wallet, 78.4% to profit wallet, 19.6% to pool wallet
-      logger.info(`Sending all ${sumToSend} UBX funds from transit wallet: 2% to project wallet, 78.4% to profit wallet, 19.6% to pool wallet`)
+      logger.info(`Sending all ${sumToSend} UBX funds from transit wallet: 2% to project wallet, 78.4% to profit wallet, 19.6% to pool wallet`, { gameId: gameId })
       const txFunds = await transitWalletCilUtils.createSendCoinsTx([
         [global.projectWalletKeyPair.address, sumToSend * 0.02],
         [global.poolWalletKeyPair.address, sumToSend * 0.784],
@@ -347,18 +357,18 @@ async function startGame(round, bid, gameWalletKeyPair, gameId) {
       ], 0);
       await transitWalletCilUtils.sendTx(txFunds);
       await transitWalletCilUtils.waitTxDoneExplorer(txFunds.getHash());
-      logger.info('From transit wallet funds were sent: 2% to project wallet, 78.4% to profit wallet, 19.6% to pool wallet')
+      logger.info('From transit wallet funds were sent: 2% to project wallet, 78.4% to profit wallet, 19.6% to pool wallet', { gameId: gameId })
     }
     let numberOfGamesInDb = await db_operations_log.get("numberOfGames");
     numberOfGamesInDb = Number(numberOfGamesInDb) + 1;
     await db_game_statuses.put(gameId, [1, tParityList]); // finished
     await db_operations_log.put("gameResult_" + numberOfGamesInDb, [gameWalletKeyPair, tParityList]);
     await db_operations_log.put("numberOfGames", numberOfGamesInDb);
-    logger.info('Game finished')
+    logger.info('Game finished', { gameId: gameId })
     return { success: true, parityList: tParityList }
   } catch (e) {
     console.error(e)
-    logger.error(JSON.stringify(e))
+    logger.error(JSON.stringify(e), { gameId: gameId })
     await db_game_statuses.put(gameId, [1, tParityList]); // finished
   }
 };
