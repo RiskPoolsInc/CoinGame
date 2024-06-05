@@ -8,3 +8,5 @@ ClientApp/.env
 .idea
 /backend/game_statuses
 /backend/game_wallets
+backend/combined.log
+backend/error.log

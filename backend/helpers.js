@@ -26,7 +26,7 @@ function getRandomInt(min, max) {
 }
 
 function randomDelay(value) {
-    return new Promise(resolve => setTimeout(resolve,  getRandomInt(10000/value, 20000/value)));
+    return new Promise(resolve => setTimeout(resolve, getRandomInt(10000 / value, 20000 / value)));
 }
 
 const initCilUtils = async () => {
@@ -46,11 +46,25 @@ const initCilUtils = async () => {
     await global.poolWalletCilUtils.asyncLoaded();
 }
 
+const dbHas = async function (key) {
+    try {
+        await this.get(key);
+        return true;
+    } catch (e) {
+        if (e.notFound) {
+            return false;
+        } else {
+            throw e; // rethrow other exceptions
+        }
+    }
+};
+
 module.exports = {
     getRandomNumber,
     number2Hash,
     hash2Number,
     initCilUtils,
     getId,
-    randomDelay
+    randomDelay,
+    dbHas
 }
