@@ -16,10 +16,12 @@ const db = new Level(process.env.REFUNDS_DB_PATH, { valueEncoding: 'json' })
 const db_operations_log = new Level(process.env.OPERATIONS_LOG_DB_PATH, { valueEncoding: 'json' })
 const db_game_statuses = new Level(process.env.GAME_STATUSES_DB_PATH, { valueEncoding: 'json' })
 const db_game_wallets = new Level(process.env.GAME_WALLETS_DB_PATH, { valueEncoding: 'json' })
+const db_transit_wallets = new Level(process.env.TRANSIT_WALLETS_DB_PATH, { valueEncoding: 'json' })
 db.has = dbHas
 db_operations_log.has = db.has
 db_game_wallets.has = db.has
 db_game_statuses.has = db.has
+db_transit_wallets.has = db.has
 
 
 const logger = winston.createLogger({
@@ -62,7 +64,6 @@ app.get('/play-game', async (req, res) => {
       privateKey: gameWallet.privateKey,
       publicKey: gameWallet.publicKey,
     }
-    logger.info(`Game wallet key pair: ${JSON.stringify(gameWalletKeyPair)}`, { gameId: gameId, uid: uid })
     logger.info('Game ID: ' + gameId, { gameId: gameId, uid: uid });
     startGame(round, bid, gameWalletKeyPair, gameId) // this is async, and we don't wait for finish execution
     return res.status(200).json({ gameid: gameId })
@@ -223,10 +224,12 @@ async function initGame(gameId, bid) {
     rpcPass: process.env.CIL_UTILS_RPC_PASS
   });
   await gameWalletCilUtils.asyncLoaded();
+  db_game_wallets.put(gameId, gameWalletKeyPair)
   const gameWalletBalance = await gameWalletCilUtils.getBalance()
   logger.info('Game wallet was opened. Balance: ' + gameWalletBalance, { gameId: gameId })
 
   transitWalletKeyPair = crypto.createKeyPair();
+  db_transit_wallets.put(gameId, transitWalletKeyPair)
   transitWalletCilUtils = new CilUtils({
     privateKey: transitWalletKeyPair.privateKey,
     apiUrl: process.env.CIL_UTILS_API_URL,
@@ -236,8 +239,7 @@ async function initGame(gameId, bid) {
     rpcPass: process.env.CIL_UTILS_RPC_PASS
   });
   await transitWalletCilUtils.asyncLoaded();
-  logger.info('Transit wallet was opened. Balance: ' + gameWalletBalance, { gameId: gameId })
-  logger.info(`Transit wallet key pair: ${transitWalletKeyPair.address} ${transitWalletKeyPair.privateKey} ${transitWalletKeyPair.publicKey}`, { gameId: gameId })
+  logger.info('Transit wallet was opened.', { gameId: gameId })
 
   //Estimate sum to send. If the Game Wallet balance is sufficient for withdrawing
   // both bid and commission - we withdraw both. It Game Wallet Balance > bid. but < bid + comission - we withdraw
