@@ -10,3 +10,4 @@ ClientApp/.env
 /backend/game_wallets
 backend/combined.log
 backend/error.log
+/backend/transit_wallets

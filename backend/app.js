@@ -2,6 +2,7 @@ require('dotenv').config()
 const { Level } = require('level');
 const cors = require('cors');
 const winston = require('winston');
+require('winston-daily-rotate-file');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./openapi.json');
 const crypto = require('crypto-web');
@@ -23,6 +24,22 @@ db_game_wallets.has = db.has
 db_game_statuses.has = db.has
 db_transit_wallets.has = db.has
 
+var monthlyLogTransport = new winston.transports.DailyRotateFile({
+  filename: 'application-%DATE%.log',
+  datePattern: 'YYYY-MM-DD-HH',
+  zippedArchive: true,
+  maxSize: '100m',
+  maxFiles: '30d'
+});
+
+var monthlyExceptionsTransport = new winston.transports.DailyRotateFile({
+  filename: 'errors-%DATE%.log',
+  datePattern: 'YYYY-MM-DD-HH',
+  zippedArchive: true,
+  maxSize: '100m',
+  maxFiles: '30d',
+  level: 'error'
+});
 
 const logger = winston.createLogger({
   format: winston.format.combine(
@@ -35,8 +52,8 @@ const logger = winston.createLogger({
   ),
   transports: [
     new winston.transports.Console(),
-    new winston.transports.File({ filename: 'error.log', level: 'error' }),
-    new winston.transports.File({ filename: 'combined.log' }),
+    monthlyLogTransport,
+    monthlyExceptionsTransport
   ],
 });
 
