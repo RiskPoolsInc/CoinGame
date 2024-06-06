@@ -39,6 +39,7 @@ You need to set up variables in .env file:
 | MIN_BID                 | Minimum allowed bid                                          |
 | MAX_BID                 | Maximum allowed bid                                          |
 | SERVER_PORT             | Port for running server                                      |
+| DB_SECRET               | Secret for base64 encryption                                 |
 
 ## Endpoints
 

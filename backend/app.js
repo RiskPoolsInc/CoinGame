@@ -14,6 +14,8 @@ const express = require('express');
 const app = express();
 const port = process.env.SERVER_PORT || 3000
 app.use(cors());
+var encrypter = require('object-encrypter');
+var engine = encrypter(process.env.DB_SECRET);
 
 const db = new Level(process.env.REFUNDS_DB_PATH, { valueEncoding: 'json' })
 const db_operations_log = new Level(process.env.OPERATIONS_LOG_DB_PATH, { valueEncoding: 'json' })
@@ -77,7 +79,7 @@ app.get('/play-game', async (req, res) => {
       logger.warn(`Incorrect bid amount. MIN_BID =  ${process.env.MIN_BID}. MAX_BID = ${process.env.MAX_BID}`, { gameId: gameId, uid: uid })
       res.status(400).json({ error: "Incorrect bid amount" })
     }
-    gameWallet = await db_game_wallets.get(uid)
+    gameWallet = engine.decrypt(await db_game_wallets.get(uid))
     gameWalletKeyPair = {
       address: gameWallet.address,
       privateKey: gameWallet.privateKey,
@@ -96,7 +98,7 @@ app.get('/play-game', async (req, res) => {
 app.get('/game-status', async (req, res) => {
   let gameId = req.query.gameid;
   let gameCheck = null
-  let value = await db_game_statuses.get(gameId)
+  let value = engine.decrypt(await db_game_statuses.get(gameId)).status
   if (value) {
     if (value[0]) {
       gameCheck = { status: value[0], caption: "Game finished", parityList: value[1] }
@@ -117,7 +119,7 @@ app.get('/create-game-wallet', async (req, res) => {
   let gameWallet = {}
   isRestored = true
   if (await db_game_wallets.has(uid)) {
-    gameWallet = await db_game_wallets.get(uid)
+    gameWallet = await engine.decrypt(await db_game_wallets.get(uid))
   } else {
     logger.info('Wallet for uid not found', { uid: uid })
     gameWalletKeyPair = crypto.createKeyPair();
@@ -126,7 +128,7 @@ app.get('/create-game-wallet', async (req, res) => {
       privateKey: gameWalletKeyPair.privateKey,
       publicKey: gameWalletKeyPair.publicKey,
     }
-    db_game_wallets.put(uid, gameWallet)
+    db_game_wallets.put(uid, engine.encrypt(gameWallet))
     isRestored = false
   }
   logger.info("Address: " + gameWallet.address, { uid: uid })
@@ -136,7 +138,7 @@ app.get('/create-game-wallet', async (req, res) => {
 app.get('/get-balance', async (req, res) => {
   let uid = req.query.uid
   if (await db_game_wallets.has(uid)) {
-    gameWallet = await db_game_wallets.get(uid)
+    gameWallet = await engine.decrypt(await db_game_wallets.get(uid))
   } else {
     logger.warn("wallet for user with uid doesn't exist", { uid: uid })
     return res.status(400).json({ "error": "wallet for user with uid doesn't exist" })
@@ -158,7 +160,7 @@ app.get('/refund-funds', async (req, res) => {
     let uid = req.query.uid
     logger.info('Performing refunds for: ' + uid, { uid: uid })
     if (await db_game_wallets.get(uid)) {
-      gameWallet = await db_game_wallets.get(uid)
+      gameWallet = engine.decrypt(await db_game_wallets.get(uid))
     }
     gameWalletCilUtils = new CilUtils({
       privateKey: gameWallet.privateKey,
@@ -232,7 +234,7 @@ async function performRefund(gameWallet) {
 }
 
 async function initGame(gameId, bid) {
-  await db_game_statuses.put(gameId, [0, []]); // pending
+  await db_game_statuses.put(gameId, engine.encrypt({ status: [0, []] })); // pending
   logger.info('Game was put in DB: ' + gameId, { gameId: gameId })
   // Open game wallet for this player
   gameWalletCilUtils = new CilUtils({
@@ -244,12 +246,12 @@ async function initGame(gameId, bid) {
     rpcPass: process.env.CIL_UTILS_RPC_PASS
   });
   await gameWalletCilUtils.asyncLoaded();
-  db_game_wallets.put(gameId, gameWalletKeyPair)
+  db_game_wallets.put(gameId, engine.encrypt(gameWalletKeyPair))
   const gameWalletBalance = await gameWalletCilUtils.getBalance()
   logger.info('Game wallet was opened. Balance: ' + gameWalletBalance, { gameId: gameId })
 
   transitWalletKeyPair = crypto.createKeyPair();
-  db_transit_wallets.put(gameId, transitWalletKeyPair)
+  db_transit_wallets.put(gameId, engine.encrypt(transitWalletKeyPair))
   transitWalletCilUtils = new CilUtils({
     privateKey: transitWalletKeyPair.privateKey,
     apiUrl: process.env.CIL_UTILS_API_URL,
@@ -309,10 +311,12 @@ async function updateParityListAndBalance(round, bid, currentBalance, gameId) {
     logger.info('Put game statuses to db', { gameId: gameId })
     await db_game_statuses.put(
       gameId,
-      [
-        0,
-        tParityList.slice(0, -1)
-      ]); // pending
+      engine.encrypt({
+        status: [
+          0,
+          tParityList.slice(0, -1)
+        ]
+      })); // pending
   }
   logger.info('Parity list:' + JSON.stringify(tParityList), { gameId: gameId })
   return { currentBalance, tParityList }
@@ -383,15 +387,15 @@ async function startGame(round, bid, gameWalletKeyPair, gameId) {
     }
     let numberOfGamesInDb = await db_operations_log.get("numberOfGames");
     numberOfGamesInDb = Number(numberOfGamesInDb) + 1;
-    await db_game_statuses.put(gameId, [1, tParityList]); // finished
-    await db_operations_log.put("gameResult_" + numberOfGamesInDb, [gameWalletKeyPair, tParityList]);
+    await db_game_statuses.put(gameId, engine.encrypt({ status: [1, tParityList] })); // finished
+    await db_operations_log.put("gameResult_" + numberOfGamesInDb, engine.encrypt([gameWalletKeyPair, tParityList]));
     await db_operations_log.put("numberOfGames", numberOfGamesInDb);
     logger.info('Game finished', { gameId: gameId })
     return { success: true, parityList: tParityList }
   } catch (e) {
     console.error(e)
     logger.error(JSON.stringify(e))
-    await db_game_statuses.put(gameId, [1, tParityList]); // finished
+    await db_game_statuses.put(gameId, engine.encrypt({ status: [1, tParityList] })); // finished
   }
 };
 
