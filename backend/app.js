@@ -1,5 +1,5 @@
 const dotenv = require("dotenv")
-const envFile = process.env.NODE_ENV ? `.env.${process.env.NODE_ENV}` : '.env'
+const envFile = process.env.NODE_ENV ? `.env.${process.env.NODE_ENV}` : '.env.development'
 dotenv.config({ path: envFile })
 const { Level } = require('level');
 const cors = require('cors');
