@@ -12,7 +12,7 @@ const CilUtils = require('cil-utils');
 const { getId, getRandomNumber, number2Hash, hash2Number, initCilUtils, randomDelay, dbHas } = require('./helpers.js')
 const express = require('express');
 const app = express();
-const port = process.env.SERVER_PORT
+const port = process.env.SERVER_PORT || 3000
 app.use(cors());
 
 const db = new Level(process.env.REFUNDS_DB_PATH, { valueEncoding: 'json' })

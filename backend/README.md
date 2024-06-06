@@ -22,6 +22,9 @@ You need to set up variables in .env file:
 | ----------------------- | ------------------------------------------------------------ |
 | REFUNDS_DB_PATH         | path where leveldb instance with refunds will be stored      |
 | OPERATIONS_LOG_DB_PATH  | path where leveldb instance with played games will be stored |
+| GAME_STATUSES_DB_PATH   | path where leveldb instance with statuses of games is stored |
+| GAME_WALLETS_DB_PATH    | path where leveldb instance with game wallets will be stored |
+| TRANSIT_WALLETS_DB_PATH | path where leveldb instance with transit wallets   be stored |
 | CIL_UTILS_API_URL       | credentials for Cil Utils                                    |
 | CIL_UTILS_RPC_PORT      | credentials for Cil Utils                                    |
 | CIL_UTILS_RPC_ADDRESS   | credentials for Cil Utils                                    |
@@ -35,6 +38,7 @@ You need to set up variables in .env file:
 | CORS_ORIGIN             | URL of frontend                                              |
 | MIN_BID                 | Minimum allowed bid                                          |
 | MAX_BID                 | Maximum allowed bid                                          |
+| SERVER_PORT             | Port for running server                                      |
 
 ## Endpoints
 
