@@ -93,17 +93,18 @@ app.get('/play-game', async (req, res) => {
 
 app.get('/game-status', async (req, res) => {
   let gameId = req.query.gameid;
-  logger.info('Checking game status: ' + req.query.gameid, { gameId: gameId })
   let gameCheck = null
   let value = await db_game_statuses.get(gameId)
   if (value) {
     if (value[0]) {
       gameCheck = { status: value[0], caption: "Game finished", parityList: value[1] }
+      logger.info('Checking game status: return Game Finished' + req.query.gameid, { gameId: gameId })
     } else {
       gameCheck = { status: value[0], caption: "Game in progress", parityList: value[1] }
     }
   } else {
     gameCheck = { status: -1, caption: "Game doesn't exist", parityList: null }
+    logger.warn('Checking game status: return Game Doesnt exist' + req.query.gameid, { gameId: gameId })
   }
   return res.status(200).json(gameCheck)
 })
