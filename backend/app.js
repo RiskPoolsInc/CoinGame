@@ -1,4 +1,6 @@
-require('dotenv').config()
+const dotenv = require("dotenv")
+const envFile = process.env.NODE_ENV ? `.env.${process.env.NODE_ENV}` : '.env'
+dotenv.config({ path: envFile })
 const { Level } = require('level');
 const cors = require('cors');
 const winston = require('winston');
@@ -10,7 +12,7 @@ const CilUtils = require('cil-utils');
 const { getId, getRandomNumber, number2Hash, hash2Number, initCilUtils, randomDelay, dbHas } = require('./helpers.js')
 const express = require('express');
 const app = express();
-const port = 3000
+const port = process.env.SERVER_PORT
 app.use(cors());
 
 const db = new Level(process.env.REFUNDS_DB_PATH, { valueEncoding: 'json' })
