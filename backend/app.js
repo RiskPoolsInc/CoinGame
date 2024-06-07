@@ -390,7 +390,12 @@ async function startGame(round, bid, gameWalletKeyPair, gameId, uid) {
       logger.info('From transit wallet funds were sent: 2% to project wallet, 78.4% to profit wallet, 19.6% to pool wallet', { gameId: gameId })
     }
     await db_game_statuses.put(gameId, engine.encrypt({ status: [1, tParityList] })); // finished
-    await db_game_logs.put(gameId, engine.encrypt({ tParityList, uid, gameWalletKeyPair, transitWalletKeyPair })); // finished
+    await db_game_logs.put(gameId, engine.encrypt({
+      parityList: tParityList,
+      uid: uid,
+      gameWalletKeyPair: gameWalletKeyPair,
+      transitWalletKeyPair: transitWalletKeyPair
+    })); // finished
     logger.info('Game finished', { gameId: gameId })
     return { success: true, parityList: tParityList }
   } catch (e) {
