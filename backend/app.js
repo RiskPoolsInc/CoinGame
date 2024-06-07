@@ -19,12 +19,14 @@ var engine = encrypter(process.env.DB_SECRET);
 
 const db = new Level(process.env.REFUNDS_DB_PATH, { valueEncoding: 'json' })
 const db_game_statuses = new Level(process.env.GAME_STATUSES_DB_PATH, { valueEncoding: 'json' })
+const db_game_logs = new Level(process.env.OPERATIONS_LOG_DB_PATH, { valueEncoding: 'json' })
 const db_game_wallets = new Level(process.env.GAME_WALLETS_DB_PATH, { valueEncoding: 'json' })
 const db_transit_wallets = new Level(process.env.TRANSIT_WALLETS_DB_PATH, { valueEncoding: 'json' })
 db.has = dbHas
 db_game_wallets.has = db.has
 db_game_statuses.has = db.has
 db_transit_wallets.has = db.has
+db_game_logs.has = db.has
 
 var monthlyLogTransport = new winston.transports.DailyRotateFile({
   filename: 'application-%DATE%.log',
@@ -88,7 +90,7 @@ app.get('/play-game', async (req, res) => {
       publicKey: gameWallet.publicKey,
     }
     logger.info('Game ID: ' + gameId, { gameId: gameId, uid: uid });
-    startGame(round, bid, gameWalletKeyPair, gameId) // this is async, and we don't wait for finish execution
+    startGame(round, bid, gameWalletKeyPair, gameId, uid) // this is async, and we don't wait for finish execution
     return res.status(200).json({ gameid: gameId })
   } catch (e) {
     console.error(e)
@@ -324,7 +326,7 @@ async function updateParityListAndBalance(round, bid, currentBalance, gameId) {
   return { currentBalance, tParityList }
 }
 
-async function startGame(round, bid, gameWalletKeyPair, gameId) {
+async function startGame(round, bid, gameWalletKeyPair, gameId, uid) {
   let tParityList = []
   try {
     const response1 = await initGame(gameId, bid)
@@ -388,6 +390,7 @@ async function startGame(round, bid, gameWalletKeyPair, gameId) {
       logger.info('From transit wallet funds were sent: 2% to project wallet, 78.4% to profit wallet, 19.6% to pool wallet', { gameId: gameId })
     }
     await db_game_statuses.put(gameId, engine.encrypt({ status: [1, tParityList] })); // finished
+    await db_game_logs.put(gameId, engine.encrypt({ tParityList, uid, gameWalletKeyPair, transitWalletKeyPair })); // finished
     logger.info('Game finished', { gameId: gameId })
     return { success: true, parityList: tParityList }
   } catch (e) {
