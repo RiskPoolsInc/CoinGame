@@ -38,6 +38,8 @@ You need to set up variables in .env file:
 | CORS_ORIGIN             | URL of frontend                                              |
 | MIN_BID                 | Minimum allowed bid                                          |
 | MAX_BID                 | Maximum allowed bid                                          |
+| MIN_ROUND               | Minimum allowed rounds number                                |
+| MAX_ROUND               | Maximum allowed  rounds number                               |
 | SERVER_PORT             | Port for running server                                      |
 | DB_SECRET               | Secret for base64 encryption                                 |
 

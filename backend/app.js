@@ -79,6 +79,10 @@ app.get('/play-game', async (req, res) => {
       logger.warn(`Incorrect bid amount. MIN_BID =  ${process.env.MIN_BID}. MAX_BID = ${process.env.MAX_BID}`, { gameId: gameId, uid: uid })
       res.status(400).json({ error: "Incorrect bid amount" })
     }
+    if (round < Number(process.env.MIN_ROUND) || (round > Number(process.env.MAX_ROUND))) {
+      logger.warn(`Incorrect rounds amount. MIN_ROUND =  ${process.env.MIN_ROUND}. MAX_ROUND = ${process.env.MAX_ROUND}`, { gameId: gameId, uid: uid })
+      res.status(400).json({ error: "Incorrect rounds amount" })
+    }
     gameWallet = engine.decrypt(await db_game_wallets.get(uid))
     gameWalletKeyPair = {
       address: gameWallet.address,
