@@ -18,12 +18,10 @@ var encrypter = require('object-encrypter');
 var engine = encrypter(process.env.DB_SECRET);
 
 const db = new Level(process.env.REFUNDS_DB_PATH, { valueEncoding: 'json' })
-const db_operations_log = new Level(process.env.OPERATIONS_LOG_DB_PATH, { valueEncoding: 'json' })
 const db_game_statuses = new Level(process.env.GAME_STATUSES_DB_PATH, { valueEncoding: 'json' })
 const db_game_wallets = new Level(process.env.GAME_WALLETS_DB_PATH, { valueEncoding: 'json' })
 const db_transit_wallets = new Level(process.env.TRANSIT_WALLETS_DB_PATH, { valueEncoding: 'json' })
 db.has = dbHas
-db_operations_log.has = db.has
 db_game_wallets.has = db.has
 db_game_statuses.has = db.has
 db_transit_wallets.has = db.has
@@ -389,11 +387,7 @@ async function startGame(round, bid, gameWalletKeyPair, gameId) {
       await transitWalletCilUtils.waitTxDoneExplorer(txFunds.getHash());
       logger.info('From transit wallet funds were sent: 2% to project wallet, 78.4% to profit wallet, 19.6% to pool wallet', { gameId: gameId })
     }
-    let numberOfGamesInDb = await db_operations_log.get("numberOfGames");
-    numberOfGamesInDb = Number(numberOfGamesInDb) + 1;
     await db_game_statuses.put(gameId, engine.encrypt({ status: [1, tParityList] })); // finished
-    await db_operations_log.put("gameResult_" + numberOfGamesInDb, engine.encrypt([gameWalletKeyPair, tParityList]));
-    await db_operations_log.put("numberOfGames", numberOfGamesInDb);
     logger.info('Game finished', { gameId: gameId })
     return { success: true, parityList: tParityList }
   } catch (e) {
@@ -410,9 +404,6 @@ process.on('uncaughtException', err => {
 
 app.listen(port, async () => {
   initCilUtils();
-  const value = await db_operations_log.get("numberOfGames", (err) => {
-    db_operations_log.put("numberOfGames", 1)
-  })
 
   console.log(`RiskPool backend listening on port ${port}`);
   setInterval(performRefunds, 1000 * 60 * 60 * 24);
