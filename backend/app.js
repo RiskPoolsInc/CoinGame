@@ -357,7 +357,7 @@ async function startGame(round, bid, gameWalletKeyPair, gameId, uid) {
       // Send CurrentBalance from pool wallet to game wallet
       // Send 2% of CurrentBalance from pool wallet to project Wallet
       // The user pays all commissions
-      logger.info('Sending CurrentBalance from pool wallet to game wallet. Sending 2% of CurrentBalance from pool wallet to project Wallet. ', { gameId: gameId })
+      logger.info('Sending CurrentBalance of ' + response[1].currentBalance + 'UBX from pool wallet to game wallet. Sending 2% of CurrentBalance from pool wallet to project Wallet. Comissions are: ' + poolWalletTxCost + ' UBX', { gameId: gameId })
       txFunds = await global.poolWalletCilUtils.createSendCoinsTx(
         [
           [
