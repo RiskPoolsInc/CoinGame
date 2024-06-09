@@ -1,4 +1,4 @@
-const CIL_UTILS_API_URL = "https://test-explorer.ubikiri.com/api/"
+const CIL_UTILS_API_URL = "https://explorer.ubikiri.com/api/"
 const CIL_UTILS_RPC_PORT = 443
 const CIL_UTILS_RPC_ADDRESS = "https://rpc-dv-1.ubikiri.com/"
 const CIL_UTILS_RPC_USER = "cilTest"
