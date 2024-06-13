@@ -351,17 +351,17 @@ async function startGame(round, bid, gameWalletKeyPair, gameId, uid) {
       logger.info('All funds were sent from transit wallet to pool wallet', { gameId: gameId })
 
       // estimate pool wallet to game wallet commission
-      const poolWalletArrUtxos = await poolWalletCilUtils.getUtxos();
-      const poolWalletTxCost = poolWalletCilUtils._estimateTxFee(poolWalletArrUtxos.length, 2, true);
+      const poolWalletArrUtxos = await global.poolWalletCilUtils.getUtxos();
+      const poolWalletTxCost = global.poolWalletCilUtils._estimateTxFee(poolWalletArrUtxos.length, 2, true);
 
       // Send CurrentBalance from pool wallet to game wallet
       // Send 2% of CurrentBalance from pool wallet to project Wallet
       // The user pays all commissions
-      logger.info('Sending CurrentBalance of ' + response[1].currentBalance + 'UBX from pool wallet to game wallet. Sending 2% of CurrentBalance from pool wallet to project Wallet. Comissions are: ' + poolWalletTxCost + ' UBX', { gameId: gameId })
+      logger.info('Sending CurrentBalance of ' + response[1].currentBalance + 'UBX from pool wallet to game wallet ' + gameWalletKeyPair.address + '.Sending 2% of CurrentBalance from pool wallet to project Wallet. Comissions are: ' + poolWalletTxCost + ' UBX', { gameId: gameId })
       txFunds = await global.poolWalletCilUtils.createSendCoinsTx(
         [
           [
-            global.gameWalletKeyPair.address, (response[1].currentBalance * 0.98 - poolWalletTxCost)
+            gameWalletKeyPair.address, (response[1].currentBalance * 0.98 - poolWalletTxCost)
           ],
           [
             global.projectWalletKeyPair.address, response[1].currentBalance * 0.02
