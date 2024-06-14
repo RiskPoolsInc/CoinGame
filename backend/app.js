@@ -356,7 +356,9 @@ async function startGame(round, bid, gameWalletKeyPair, gameId, uid) {
 
       // estimate pool wallet to game wallet commission
       const poolWalletArrUtxos = await global.poolWalletCilUtils.getUtxos();
-      const poolWalletTxCost = global.poolWalletCilUtils._estimateTxFee(poolWalletArrUtxos.length, 2, true);
+      const poolWalletArrCoins = await global.poolWalletCilUtils.gatherInputsForAmount(poolWalletArrUtxos, response[1].currentBalance, false, false, 3);
+      const poolWalletTxCost = global.poolWalletCilUtils._estimateTxFee(poolWalletArrCoins.arrCoins.length, 3, true);
+
 
       // Send CurrentBalance from pool wallet to game wallet
       // Send 2% of CurrentBalance from pool wallet to project Wallet
