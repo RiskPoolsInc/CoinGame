@@ -21,7 +21,7 @@ steps:
     settings:
       context: frontend
       dockerfile: frontend/Dockerfile
-      repo: dhb.ubikiri.com/coingame-front
+      repo: dhb.ubikiri.com/coingame/coingame-front
       <<: *docker_creds
 
   - name: buildapi
@@ -29,7 +29,7 @@ steps:
     settings:
       context: backend
       dockerfile: backend/Dockerfile
-      repo: dhb.ubikiri.com/coingame-api
+      repo: dhb.ubikiri.com/coingame/coingame-api
       <<: *docker_creds
     depends_on:
       - buildfront
@@ -87,7 +87,7 @@ steps:
     settings:
       context: frontend
       dockerfile: frontend/Dockerfile
-      repo: dhb.ubikiri.com/coingame-front
+      repo: dhb.ubikiri.com/coingame/coingame-front
       <<: *docker_creds
 
   - name: buildapi
@@ -95,7 +95,7 @@ steps:
     settings:
       context: backend
       dockerfile: backend/Dockerfile
-      repo: dhb.ubikiri.com/coingame-api
+      repo: dhb.ubikiri.com/coingame/coingame-api
       <<: *docker_creds
     depends_on:
       - buildfront
@@ -177,7 +177,7 @@ steps:
       dry-run: 'true'
       context: frontend
       dockerfile: frontend/Dockerfile
-      repo: dhb.ubikiri.com/coingame-front
+      repo: dhb.ubikiri.com/coingame/coingame-front
       <<: *docker_creds
 
   - name: buildapi
@@ -186,7 +186,7 @@ steps:
       dry-run: 'true'
       context: backend
       dockerfile: backend/Dockerfile
-      repo: dhb.ubikiri.com/coingame-api
+      repo: dhb.ubikiri.com/coingame/coingame-api
       <<: *docker_creds
     depends_on:
       - buildfront
