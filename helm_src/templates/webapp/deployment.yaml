@@ -21,7 +21,7 @@ spec:
         {{- toYaml . | nindent 8 }}
     {{- end }}
       containers:
-        - image: "{{ .Values.global.registry }}/{{ .Values.webapp.image }}:{{ .Values.webapp.tag }}"
+        - image: "{{ .Values.global.registry }}/{{ .Values.global.project_slug }}/{{ .Values.webapp.image }}:{{ .Values.webapp.tag }}"
           name: {{ .Values.webapp.name }}    
           {{- if .Values.webapp.ports }}
           ports: {{- toYaml .Values.webapp.ports | nindent 12 }}
