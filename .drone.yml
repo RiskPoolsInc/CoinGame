@@ -4,7 +4,7 @@ name: buildrelease
 
 globals:
   - &docker_creds
-    registry: dhb.ubikiri.com
+    registry: dhb2.ubikiri.com
     username:
       from_secret: docker_login
     password:
@@ -21,7 +21,7 @@ steps:
     settings:
       context: frontend
       dockerfile: frontend/Dockerfile
-      repo: dhb.ubikiri.com/coingame/coingame-front
+      repo: dhb2.ubikiri.com/coingame/coingame-front
       <<: *docker_creds
 
   - name: buildapi
@@ -29,7 +29,7 @@ steps:
     settings:
       context: backend
       dockerfile: backend/Dockerfile
-      repo: dhb.ubikiri.com/coingame/coingame-api
+      repo: dhb2.ubikiri.com/coingame/coingame-api
       <<: *docker_creds
     depends_on:
       - buildfront
@@ -70,7 +70,7 @@ name: builddev
 
 globals:
   - &docker_creds
-    registry: dhb.ubikiri.com
+    registry: dhb2.ubikiri.com
     username:
       from_secret: docker_login
     password:
@@ -87,7 +87,7 @@ steps:
     settings:
       context: frontend
       dockerfile: frontend/Dockerfile
-      repo: dhb.ubikiri.com/coingame/coingame-front
+      repo: dhb2.ubikiri.com/coingame/coingame-front
       <<: *docker_creds
 
   - name: buildapi
@@ -95,7 +95,7 @@ steps:
     settings:
       context: backend
       dockerfile: backend/Dockerfile
-      repo: dhb.ubikiri.com/coingame/coingame-api
+      repo: dhb2.ubikiri.com/coingame/coingame-api
       <<: *docker_creds
     depends_on:
       - buildfront
@@ -161,7 +161,7 @@ name: pulltodev
 
 globals:
   - &docker_creds
-    registry: dhb.ubikiri.com
+    registry: dhb2.ubikiri.com
     username:
       from_secret: docker_login
     password:
@@ -177,7 +177,7 @@ steps:
       dry-run: 'true'
       context: frontend
       dockerfile: frontend/Dockerfile
-      repo: dhb.ubikiri.com/coingame/coingame-front
+      repo: dhb2.ubikiri.com/coingame/coingame-front
       <<: *docker_creds
 
   - name: buildapi
@@ -186,7 +186,7 @@ steps:
       dry-run: 'true'
       context: backend
       dockerfile: backend/Dockerfile
-      repo: dhb.ubikiri.com/coingame/coingame-api
+      repo: dhb2.ubikiri.com/coingame/coingame-api
       <<: *docker_creds
     depends_on:
       - buildfront
