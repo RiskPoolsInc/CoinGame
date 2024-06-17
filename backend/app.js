@@ -163,9 +163,12 @@ app.get('/get-balance', async (req, res) => {
 app.get('/refund-funds', async (req, res) => {
   try {
     let uid = req.query.uid
+    let gameWallet = {}
     logger.info('Performing refunds for: ' + uid, { uid: uid })
     if (await db_game_wallets.get(uid)) {
       gameWallet = engine.decrypt(await db_game_wallets.get(uid))
+    } else {
+      return res.status(400).json({ "error": "Incorrect user" })
     }
     gameWalletCilUtils = new CilUtils({
       privateKey: gameWallet.privateKey,
