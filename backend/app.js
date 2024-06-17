@@ -168,6 +168,7 @@ app.get('/refund-funds', async (req, res) => {
     if (await db_game_wallets.get(uid)) {
       gameWallet = engine.decrypt(await db_game_wallets.get(uid))
     } else {
+      logger.warn('Game wallet not found when performing refunds for uid ' + uid)
       return res.status(400).json({ "error": "Incorrect user" })
     }
     gameWalletCilUtils = new CilUtils({
@@ -197,6 +198,7 @@ app.get('/refund-funds', async (req, res) => {
     }
     return res.status(200).json({ "success": "true" })
   } catch (e) {
+    logger.error(JSON.stringify(e))
     return res.status(400).json({ "error": e })
   }
 })
