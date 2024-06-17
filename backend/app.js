@@ -180,7 +180,7 @@ app.get('/refund-funds', async (req, res) => {
     });
     const txList = await gameWalletCilUtils.getTXList();
     logger.info(txList);
-    for (let j = 0; j < txList.length; j++) {
+    for (let j = txList.length - 1; j >= 0; j--) {
       if (txList[j].outputs.length == 1 && txList[j].outputs[0].to == gameWallet.address) {
         const balance = await gameWalletCilUtils.getBalance()
         logger.info('Performing refund', { uid: uid });
