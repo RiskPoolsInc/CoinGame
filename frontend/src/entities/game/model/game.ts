@@ -133,6 +133,8 @@ export const useGameStore = defineStore("game", () => {
     }
     console.log('REFUND')
     gameState.inProgress = true
+    gameState.parityList.length = 0;
+    gameState.bidForBalanceChart = 0;
     const res = await api_backend.get('refund-funds' + '?uid=' + encodeURIComponent(gameState.uid), {
       headers: {
       }
