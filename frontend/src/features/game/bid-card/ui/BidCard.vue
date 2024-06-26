@@ -3,7 +3,6 @@ import VInput from "@/shared/ui/base-components/v-input/ui/VInput.vue";
 import VButton from "@/shared/ui/base-components/v-button/ui/VButton.vue";
 import {useGameStore} from "@/entities/game/model/game";
 import {computed, ref, watch} from "vue";
-import {MAX_BID, MIN_BID} from '../../../../../config'
 import {useGame} from "@/shared/composables/useGame";
 
 const { gameState, startGame } = useGameStore();
@@ -23,8 +22,8 @@ const { gameState, startGame } = useGameStore();
 
   const statusPlayButton = computed(() => {
     return !(
-      Number(gameState.bid) >= MIN_BID &&
-      Number(gameState.bid) <= MAX_BID &&
+      Number(gameState.bid) >= Number(process.env.VUE_APP_MIN_BID) &&
+      Number(gameState.bid) <= Number(process.env.VUE_APP_MAX_BID) &&
       gameState.round >= 3 &&
       gameState.round <= 10 &&
       gameState.wallet &&
@@ -40,6 +39,10 @@ const { gameState, startGame } = useGameStore();
 
     confirm.value = true;
   };
+
+  const rules = computed(() => {
+    return [() => (Number(gameState.bid) >= Number(process.env.VUE_APP_MIN_BID) && Number(gameState.bid) <= Number(process.env.VUE_APP_MAX_BID)) || bidNotice.value]
+  })
 </script>
 
 <template>
@@ -47,7 +50,7 @@ const { gameState, startGame } = useGameStore();
     <div class="row justify-center">
       <div class="col-lg-4 col-md-4 col-sm-5 col-xs-10">
         <VInput class="bid-card__input" v-model="gameState.bid" label="Your bid, UBX"
-                :rules="[() => (Number(gameState.bid) >= MIN_BID && Number(gameState.bid) <= MAX_BID) || bidNotice]" />
+                v-bind="{rules}" />
       </div>
     </div>
 
