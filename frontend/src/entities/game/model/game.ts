@@ -1,12 +1,11 @@
 // eslint-disable-next-line
 // @ts-ignore
-import { CIL_UTILS_API_URL, CIL_UTILS_RPC_PORT, CIL_UTILS_RPC_ADDRESS, CIL_UTILS_RPC_USER, CIL_UTILS_RPC_PASS, BACKEND_URL } from '../../../../config'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const crypto = require('crypto-web');
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const CilUtils = require('cil-utils');
 import axios from "axios";
-const api_backend = axios.create({ baseURL: BACKEND_URL })
+const api_backend = axios.create({ baseURL: process.env.VUE_APP_BACKEND_URL })
 
 import { defineStore } from "pinia";
 import { reactive } from "vue";
