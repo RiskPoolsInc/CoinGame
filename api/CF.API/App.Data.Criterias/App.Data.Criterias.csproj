@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Base\App.Core.Enums\App.Core.Enums.csproj"/>
+        <ProjectReference Include="..\Base\App.Core.Requests\App.Core.Requests.csproj" />
+        <ProjectReference Include="..\Base\App.Core.ViewModels\App.Core.ViewModels.csproj"/>
+        <ProjectReference Include="..\Base\App.Data.Criterias.Core\App.Data.Criterias.Core.csproj"/>
+        <ProjectReference Include="..\App.Data.Entities\App.Data.Entities.csproj"/>
+        <ProjectReference Include="..\Base\App.Interfaces.RequestsParams\App.Interfaces.RequestsParams.csproj"/>
+    </ItemGroup>
+
+</Project>
