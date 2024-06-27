@@ -40,7 +40,7 @@ namespace CF.WebApi
             public const string SendDeposit = "SendDeposit";
             public const string ConfirmExecution = "ConfirmExecution";
             public const string CancelExecution = "CancelExecution";
-            public const string Complete = "Complete";
+            public const string Complete = "Completed";
             public const string Cancel = "Cancel";
 
             public static class Notes

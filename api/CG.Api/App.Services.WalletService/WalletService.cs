@@ -89,7 +89,7 @@ public class WalletService {
         var path = GetPath(WalletServiceEnpointTypes.GenerateTransaction);
 
         var cmd = new SendGenerateTransactionCommand {
-            WalletFrom = from,
+            FromWallet = from,
             PrivateKey = privateKey,
             WalletsTo = new TransactionReceiverView[] {
                 new() {
@@ -114,14 +114,15 @@ public class WalletService {
         return result as GenerateTransactionView;
     }
 
-    public async Task<object> GenerateTransactionReward(string hashTo) {
+    public async Task<GenerateTransactionView> GenerateTransactionReward(string toWallet) {
         var path = GetPath(WalletServiceEnpointTypes.GenerateTransaction);
         var walletFromAddress = GetWalletAddress(ServiceWalletTypes.Reward);
         var walletFromPrivateKey = GetWalletPrivateKey(ServiceWalletTypes.Reward);
 
-        var cmd = new SendTransactionRefundCommand() {
-            WalletFrom = walletFromAddress,
-            PrivateKey = walletFromPrivateKey
+        var cmd = new SendTransactionRewardCommand() {
+            FromWallet = walletFromAddress,
+            PrivateKey = walletFromPrivateKey,
+            ToWallet = toWallet
         };
 
         var result = await Post<GenerateTransactionView>(path, cmd);

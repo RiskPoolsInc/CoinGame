@@ -28,7 +28,6 @@
 
     <ItemGroup>
         <ProjectReference Include="..\App.Core.Commands\App.Core.Commands.csproj" />
-        <ProjectReference Include="..\App.Data.Sql.PbzDbContext\App.Data.Sql.PbzDbContext.csproj" />
         <ProjectReference Include="..\App.Services.Base\App.Services.Base.csproj" />
         <ProjectReference Include="..\App.Services.Telegram\App.Services.Telegram.csproj" />
         <ProjectReference Include="..\App.Services.UbikiriApiService\App.Services.UbikiriApiService.csproj" />

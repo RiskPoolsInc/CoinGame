@@ -10,7 +10,7 @@ public class Game : AuditableEntity {
     public Guid WalletId { get; set; }
     public virtual Wallet Wallet { get; set; }
 
-    public int? StateId { get; set; } //[Created, InProgress, Complete]
+    public int StateId { get; set; } //[Created, InProgress, Completed]
     public virtual GameState State { get; set; }
 
     public int? ResultId { get; set; } //[Undefined, Win, Lose]

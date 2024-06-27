@@ -22,7 +22,7 @@ public class Transaction : AuditableEntity {
     public virtual int TypeId { get; set; } //[Deposit, GameReward, Refund, Service]
     public virtual TransactionType Type { get; set; }
 
-    public virtual int StateId { get; set; } //[NotCreated, Complete, InProgress]
+    public virtual int StateId { get; set; } //[NotCreated, Completed, InProgress]
     public virtual TransactionState State { get; set; }
 
     public bool ExistInBlockChain { get; set; }
