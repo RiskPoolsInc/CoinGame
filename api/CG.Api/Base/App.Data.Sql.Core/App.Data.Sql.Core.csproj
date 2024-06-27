@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <LangVersion>default</LangVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\App.Data.Entities\App.Data.Entities.csproj" />
+        <ProjectReference Include="..\App.Core.Configurations\App.Core.Configurations.csproj" />
+        <ProjectReference Include="..\App.Interfaces.Core.Configurations\App.Interfaces.Core.Configurations.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Autofac" Version="6.4.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.27" />
+        <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.27" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="3.1.27" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.26" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="3.1.18" />
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.NetTopologySuite" Version="3.1.18" />
+    </ItemGroup>
+
+</Project>

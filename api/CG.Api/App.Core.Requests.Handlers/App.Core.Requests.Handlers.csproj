@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\App.Interfaces.ExternalServices\App.Interfaces.ExternalServices.csproj" />
+        <ProjectReference Include="..\App.Interfaces.Handlers\App.Interfaces.Handlers.csproj" />
+        <ProjectReference Include="..\Base\App.Caching\App.Caching.csproj" />
+        <ProjectReference Include="..\Base\App.Common\App.Common.csproj" />
+        <ProjectReference Include="..\Base\App.Core.Configurations\App.Core.Configurations.csproj" />
+        <ProjectReference Include="..\Base\App.Core.Exceptions\App.Core.Exceptions.csproj" />
+        <ProjectReference Include="..\Base\App.Core.Requests\App.Core.Requests.csproj" />
+        <ProjectReference Include="..\Base\App.Core.ViewModels\App.Core.ViewModels.csproj" />
+        <ProjectReference Include="..\Base\App.Interfaces.Core\App.Interfaces.Core.csproj" />
+        <ProjectReference Include="..\Base\App.Interfaces.Data.Storage\App.Interfaces.Data.Storage.csproj" />
+        <ProjectReference Include="..\Base\App.Interfaces.Security\App.Interfaces.Security.csproj" />
+        <ProjectReference Include="..\App.Data.Criterias\App.Data.Criterias.csproj" />
+        <ProjectReference Include="..\App.Interfaces.Repositories\App.Interfaces.Repositories.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Autofac" Version="6.4.0" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="3.1.27" />
+        <PackageReference Include="Z.Expressions.Eval" Version="4.0.86" />
+    </ItemGroup>
+
+</Project>

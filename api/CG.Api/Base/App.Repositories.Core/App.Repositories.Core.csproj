@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <LangVersion>default</LangVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\App.Common\App.Common.csproj"/>
+        <ProjectReference Include="..\App.Core.Logging\App.Core.Logging.csproj"/>
+        <ProjectReference Include="..\App.Data.Sql.Core\App.Data.Sql.Core.csproj"/>
+        <ProjectReference Include="..\App.Interfaces.Data.Entities\App.Interfaces.Data.Entities.csproj"/>
+        <ProjectReference Include="..\App.Interfaces.Repositories.Core\App.Interfaces.Repositories.Core.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="EntityFramework" Version="6.4.4"/>
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.1"/>
+        <PackageReference Include="Z.EntityFramework.Plus.EFCore" Version="3.14.3"/>
+    </ItemGroup>
+
+</Project>
