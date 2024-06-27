@@ -10,7 +10,6 @@ public class UbikiriApiModule : Module {
     protected override void Load(ContainerBuilder builder) {
         base.Load(builder);
 
-        builder.Register(ctx =>
-                             ctx.Resolve<IConfiguration>().GetSection(UbikiriSettings.SECTION_NAME).Get<UbikiriSettings>());
+        builder.Register(ctx => ctx.Resolve<IConfiguration>().GetSection(UbikiriSettings.SECTION_NAME).Get<UbikiriSettings>());
     }
 }

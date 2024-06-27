@@ -1,10 +1,8 @@
 using App.Data.Entities.Payments;
-using App.Data.Sql;
-using App.Data.Sql.Core.Interfaces;
 
 namespace App.Repositories.Transactions;
 
-public class TransactionUserRewardRepository:AuditableRepository<TransactionUserReward> {
-    public TransactionUserRewardRepository(AppDbContext context) : base(context) {
+public class TransactionUserRewardRepository : AuditableRepository<TransactionUserReward> {
+    public TransactionUserRewardRepository(IAppDbContext context) : base(context) {
     }
 }

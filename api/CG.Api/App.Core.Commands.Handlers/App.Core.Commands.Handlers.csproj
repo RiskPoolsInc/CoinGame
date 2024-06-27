@@ -21,6 +21,7 @@
         <ProjectReference Include="..\App.Services.ExternalSystemRequests\App.Services.ExternalSystemRequests.csproj" />
         <ProjectReference Include="..\App.Services.Telegram\App.Services.Telegram.csproj" />
         <ProjectReference Include="..\App.Services.UbikiriApiService\App.Services.UbikiriApiService.csproj" />
+        <ProjectReference Include="..\App.Services.WalletService\App.Services.WalletService.csproj" />
         <ProjectReference Include="..\Base\App.Core.Configurations\App.Core.Configurations.csproj" />
         <ProjectReference Include="..\Base\App.Interfaces.Core\App.Interfaces.Core.csproj" />
         <ProjectReference Include="..\Base\App.Interfaces.Data.Sql\App.Interfaces.Data.Sql.csproj" />

@@ -1,4 +1,5 @@
 using App.Core.ViewModels.Dictionaries;
+using App.Core.ViewModels.Transactions;
 using App.Core.ViewModels.Wallets;
 
 namespace App.Core.ViewModels.Games;

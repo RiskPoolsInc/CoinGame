@@ -104,7 +104,7 @@ public class WalletService {
         return result as GenerateTransactionView;
     }
 
-    public async Task<object> GenerateTransactionRefund(string from, string privateKey) {
+    public async Task<GenerateTransactionView> GenerateTransactionRefund(string from, string privateKey) {
         var path = GetPath(WalletServiceEnpointTypes.RefundCoins);
 
         var result = await Post<GenerateTransactionView>(path, new {

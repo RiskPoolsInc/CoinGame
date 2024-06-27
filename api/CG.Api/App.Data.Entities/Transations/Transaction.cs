@@ -6,8 +6,8 @@ using App.Data.Entities.Wallets;
 
 namespace App.Data.Entities.Payments;
 
-public abstract class Transaction : AuditableEntity {
-    public Guid GameId { get; set; }
+public class Transaction : AuditableEntity {
+    public Guid? GameId { get; set; }
     public virtual Game Game { get; set; }
 
     public Guid? WalletFromId { get; set; }
@@ -19,7 +19,7 @@ public abstract class Transaction : AuditableEntity {
     public decimal Sum { get; set; }
     public decimal Fee { get; set; }
 
-    public abstract int TypeId { get; } //[Deposit, GameReward, Refund, Service]
+    public virtual int TypeId { get; set; } //[Deposit, GameReward, Refund, Service]
     public virtual TransactionType Type { get; set; }
 
     public virtual int StateId { get; set; } //[NotCreated, Complete, InProgress]

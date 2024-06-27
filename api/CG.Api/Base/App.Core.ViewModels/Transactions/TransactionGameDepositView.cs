@@ -1,9 +1,12 @@
-using App.Core.ViewModels.Dictionaries;
+﻿using App.Core.ViewModels.Dictionaries;
+using App.Core.ViewModels.Games;
+using App.Core.ViewModels.Wallets;
 
 namespace App.Core.ViewModels.Transactions;
 
-public class TransactionUserRefundView : BaseView {
-    public Guid WalletFromId { get; set; }
+public class TransactionGameDepositView : BaseView {
+    public GameView Game { get; set; }
+    public WalletView WalletFrom { get; set; }
     public string TransactionHash { get; set; }
     public decimal Sum { get; set; }
     public decimal Fee { get; set; }

@@ -1,5 +1,6 @@
 ﻿using App.Common.Helpers;
 using App.Core.Commands.Wallets;
+using App.Core.Enums;
 using App.Core.ViewModels.External;
 using App.Core.ViewModels.Wallets;
 using App.Data.Entities.Wallets;
@@ -25,6 +26,7 @@ public class CreateWalletHandler : IRequestHandler<CreateWalletCommand, WalletVi
         var generatedWallet = await _dispatcher.Send(generateWalletCommand);
 
         var wallet = _mapper.Map<Wallet>(generatedWallet);
+        wallet.TypeId = (int)WalletTypes.Game;
         _walletRepository.Add(wallet);
         await _walletRepository.SaveAsync(cancellationToken);
 

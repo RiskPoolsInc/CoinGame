@@ -14,7 +14,7 @@ public class TransactionConfiguration : EntityTypeConfiguration<Transaction> {
                .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasDiscriminator(a => a.TypeId)
-               .HasValue<TransactionCreateGame>(1)
+               .HasValue<TransactionGameDeposit>(1)
                .HasValue<TransactionUserReward>(2)
                .HasValue<TransactionUserRefund>(3)
                .HasValue<TransactionService>(4)

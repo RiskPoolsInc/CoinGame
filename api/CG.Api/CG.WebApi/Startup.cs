@@ -25,6 +25,7 @@ using App.Services.BlockChainExplorer.Modules;
 using App.Services.Telegram.Modules;
 using App.Services.UbikiriApiService.Modules;
 using App.Services.WalletService;
+using App.Services.WalletService.Modules;
 using App.Web.Core.Converters;
 using App.Web.Core.Filters;
 using App.Web.Core.ModelBinders;
@@ -50,17 +51,13 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 using CommandToEntityProfile = App.Data.Mapping.CommandToEntityProfile;
 using ExternalViewToCommandProfile = App.Data.Mapping.ExternalViewToCommandProfile;
 
-
-
 namespace CF.WebApi;
 
-public class Startup
-{
+public class Startup {
     private readonly bool _isDevelop;
-    private readonly string[] DefaultRoutes = {"/"};
+    private readonly string[] DefaultRoutes = { "/" };
 
-    public Startup(IConfiguration configuration, IHostEnvironment hostEnvironment)
-    {
+    public Startup(IConfiguration configuration, IHostEnvironment hostEnvironment) {
         Configuration = configuration;
 #if DEBUG
         _isDevelop = true;
@@ -69,36 +66,33 @@ public class Startup
 
     public IConfiguration Configuration { get; }
 
-
-    public void ConfigureContainer(ContainerBuilder builder)
-    {
+    public void ConfigureContainer(ContainerBuilder builder) {
         builder.RegisterModule<SimpleFactoryModule>();
 
-        builder.RegisterModule(new AutoMapperModule(cfg =>
-        {
+        builder.RegisterModule(new AutoMapperModule(cfg => {
             cfg.AddProfile<CommandToEntityProfile>();
             cfg.AddProfile<CommandToEntityProfile>();
-            
+
             cfg.AddProfile<EntityToViewProfile>();
             cfg.AddProfile<RequestToFilterProfile>();
-            
+
             cfg.AddProfile<CommandToAdminProfile>();
             cfg.AddProfile<CommandToModelProfile>();
-            
+
             cfg.AddProfile<ExternalViewToCommandProfile>();
         }));
         builder.RegisterModule<AppDbContextModule>();
-        
+
         builder.RegisterModule<MigrationModule>();
         builder.RegisterModule<ConfigurationModule>();
-        
+
         builder.RegisterModule<RepositoryModule>();
-        
+
         builder.RegisterModule<StorageModule>();
-        
+
         builder.RegisterModule<RequestHandlersModule>();
         builder.RegisterModule<CommandHandlersModule>();
-        
+
         builder.RegisterModule<PreRequestHandlersModule>();
         builder.RegisterModule<ValidationModule>();
         builder.RegisterModule<DispatcherModule>();
@@ -112,16 +106,15 @@ public class Startup
         builder.RegisterModule<ExternalSystemsApiKeysModule>();
         builder.RegisterModule<AppSettingsModule>();
         builder.RegisterModule<BlockChainExplorerModule>();
-        
-        builder.RegisterType<WalletService>().SingleInstance();
+
+        builder.RegisterModule<WalletServiceModule>();
+
         builder.RegisterModule<MigrateAfterBuildModule<RunMigrateAfterBuild, string[]>>();
     }
 
-
     // This method gets called by the runtime. Use this method to add services to the container.
     // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
-    public void ConfigureServices(IServiceCollection services)
-    {
+    public void ConfigureServices(IServiceCollection services) {
         // ConfigureCompression(services);
         // // Adds Microsoft Identity platform (AAD v2.0) support to protect this API
         // services.AddMicrosoftIdentityWebApiAuthentication(Configuration);
@@ -138,53 +131,45 @@ public class Startup
 
         services.AddApplicationInsightsTelemetry();
 
-        services.AddCors(o => o.AddPolicy("CoreCorsPolicy", options =>
-        {
+        services.AddCors(o => o.AddPolicy("CoreCorsPolicy", options => {
             options.AllowAnyOrigin()
-                .AllowAnyHeader()
-                .AllowAnyMethod();
+                   .AllowAnyHeader()
+                   .AllowAnyMethod();
         }));
 
-        services.AddVersionedApiExplorer(options =>
-        {
+        services.AddVersionedApiExplorer(options => {
             options.GroupNameFormat = "'v'VVV";
             options.SubstituteApiVersionInUrl = true;
         });
 
-        services.AddApiVersioning(options =>
-        {
+        services.AddApiVersioning(options => {
             options.UseApiBehavior = false;
             options.ReportApiVersions = true;
             options.AssumeDefaultVersionWhenUnspecified = true;
             options.DefaultApiVersion = new ApiVersion(1, 0);
         });
 
-        services.AddControllers(options =>
-            {
-                options.RespectBrowserAcceptHeader = true;
-                options.Filters.Add(typeof(HandleErrorFilter));
-                options.Filters.Add(new ValidationModelFilter());
-                options.ModelBinderProviders.Insert(0, new ModelBinderProvider());
-            })
-            .AddNewtonsoftJson(options =>
-            {
-                options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-                options.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
-                options.SerializerSettings.DateFormatHandling = DateFormatHandling.IsoDateFormat;
-                options.SerializerSettings.Converters.Insert(0, new TrimmingConverter());
-            })
-            .AddJsonOptions(options =>
-            {
-                options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
-                options.JsonSerializerOptions.PropertyNamingPolicy = null;
-            });
+        services.AddControllers(options => {
+                     options.RespectBrowserAcceptHeader = true;
+                     options.Filters.Add(typeof(HandleErrorFilter));
+                     options.Filters.Add(new ValidationModelFilter());
+                     options.ModelBinderProviders.Insert(0, new ModelBinderProvider());
+                 })
+                .AddNewtonsoftJson(options => {
+                     options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+                     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                     options.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
+                     options.SerializerSettings.DateFormatHandling = DateFormatHandling.IsoDateFormat;
+                     options.SerializerSettings.Converters.Insert(0, new TrimmingConverter());
+                 })
+                .AddJsonOptions(options => {
+                     options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+                     options.JsonSerializerOptions.PropertyNamingPolicy = null;
+                 });
 
-        services.AddSwaggerGen(options =>
-        {
+        services.AddSwaggerGen(options => {
             options.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme,
-                new OpenApiSecurityScheme
-                {
+                new OpenApiSecurityScheme {
                     In = ParameterLocation.Header,
                     Description = "Please insert JWT",
                     Name = "Authorization",
@@ -192,13 +177,10 @@ public class Startup
                     Scheme = JwtBearerDefaults.AuthenticationScheme
                 });
 
-            options.AddSecurityRequirement(new OpenApiSecurityRequirement
-            {
+            options.AddSecurityRequirement(new OpenApiSecurityRequirement {
                 {
-                    new OpenApiSecurityScheme
-                    {
-                        Reference = new OpenApiReference
-                        {
+                    new OpenApiSecurityScheme {
+                        Reference = new OpenApiReference {
                             Type = ReferenceType.SecurityScheme,
                             Id = JwtBearerDefaults.AuthenticationScheme
                         },
@@ -210,6 +192,7 @@ public class Startup
                 }
             });
             options.OperationFilter<CancellationTokenFilter>();
+
             // options.ResolveConflictingActions(apiDescriptions => apiDescriptions.First()); //This line
             // set the comments path for the Swagger JSON and UI.
             var basePath = AppContext.BaseDirectory;
@@ -220,17 +203,16 @@ public class Startup
         });
 
         services.AddControllersWithViews()
-            .AddJsonOptions(options =>
-                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+                .AddJsonOptions(options =>
+                     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
         ConfigureCompression(services);
         ConfigureAuthentication(services, configurationFactory.Create<OAuthConfig>());
     }
 
-    public void ConfigureAuthentication(IServiceCollection services, OAuthConfig authConfig)
-    {
+    public void ConfigureAuthentication(IServiceCollection services, OAuthConfig authConfig) {
         var signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(authConfig.ClientSecret));
-        var tokenValidationParameters = new TokenValidationParameters
-        {
+
+        var tokenValidationParameters = new TokenValidationParameters {
             ValidateIssuer = true,
             ValidIssuer = authConfig.Issuer,
             ValidateAudience = true,
@@ -239,37 +221,29 @@ public class Startup
             IssuerSigningKey = signingKey
         };
 
-        services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddJwtBearer(options =>
-            {
-                options.RequireHttpsMetadata = !_isDevelop;
-                options.IncludeErrorDetails = true;
-                options.SaveToken = true;
-                options.TokenValidationParameters = tokenValidationParameters;
-            });
+        services.AddAuthentication(options => {
+                     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                 })
+                .AddJwtBearer(options => {
+                     options.RequireHttpsMetadata = !_isDevelop;
+                     options.IncludeErrorDetails = true;
+                     options.SaveToken = true;
+                     options.TokenValidationParameters = tokenValidationParameters;
+                 });
         services.AddHttpConfig();
     }
 
-
-    public void ConfigureCompression(IServiceCollection services)
-    {
+    public void ConfigureCompression(IServiceCollection services) {
         services.AddResponseCompression(options => { options.Providers.Add<GzipCompressionProvider>(); });
 
         services.Configure<GzipCompressionProviderOptions>(options => { options.Level = CompressionLevel.Fastest; });
     }
 
-
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    public void Configure(IApplicationBuilder app, IHostEnvironment env, IApiVersionDescriptionProvider provider)
-    {
-        app.Use(async (context, next) =>
-        {
-            if (DefaultRoutes.Contains(context.Request.Path.Value.ToLowerInvariant()))
-            {
+    public void Configure(IApplicationBuilder app, IHostEnvironment env, IApiVersionDescriptionProvider provider) {
+        app.Use(async (context, next) => {
+            if (DefaultRoutes.Contains(context.Request.Path.Value.ToLowerInvariant())) {
                 context.Response.Redirect("/api/index.html");
                 return;
             }
@@ -284,22 +258,18 @@ public class Startup
         app.UseAuthorization();
         app.UseEndpoints(c => c.MapControllers());
 
-        app.UseSwagger(c =>
-        {
-            c.PreSerializeFilters.Add((swaggerDoc, httpReq) =>
-            {
-                swaggerDoc.Servers = new List<OpenApiServer>
-                {
-                    new()
-                    {
+        app.UseSwagger(c => {
+            c.PreSerializeFilters.Add((swaggerDoc, httpReq) => {
+                swaggerDoc.Servers = new List<OpenApiServer> {
+                    new() {
                         Url = $"{httpReq.Scheme}://{httpReq.Host.Value}/"
                     }
                 };
             });
         });
         app.UseDeveloperExceptionPage();
-        app.UseSwaggerUI(c =>
-        {
+
+        app.UseSwaggerUI(c => {
             foreach (var description in provider.ApiVersionDescriptions)
                 c.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName.ToUpperInvariant());
 
