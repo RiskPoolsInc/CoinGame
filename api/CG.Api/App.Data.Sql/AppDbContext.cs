@@ -44,14 +44,6 @@ public class AppDbContext : BaseDbContext, IAppDbContext {
     public DbSet<UserType> UserTypes { get; set; }
     public DbSet<UserLogType> UserLogType { get; set; }
     public DbSet<AuditEventType> AuditEventTypes { get; set; }
-    public DbSet<FollowType> FollowTypes { get; set; }
-    public DbSet<TransactionType> TransactionTypes { get; set; }
-    public DbSet<AttachmentType> AttachmentTypes { get; set; }
-    public DbSet<ObjectValueType> ObjectValueTypes { get; set; }
-    
-    public DbSet<GameResult> GameResults { get; set; }
-    public DbSet<GameState> GameStates { get; set; }
-    public DbSet<TransactionReceiverType> TransactionReceiverTypes { get; set; }
-    
+
     #endregion
 }

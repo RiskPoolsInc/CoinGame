@@ -9,20 +9,6 @@ namespace App.Data.Sql.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "AttachmentTypes",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(nullable: false),
-                    Code = table.Column<string>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AttachmentTypes", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AuditEventTypes",
                 columns: table => new
                 {
@@ -37,7 +23,7 @@ namespace App.Data.Sql.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "FollowTypes",
+                name: "FollowType",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -47,11 +33,11 @@ namespace App.Data.Sql.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_FollowTypes", x => x.Id);
+                    table.PrimaryKey("PK_FollowType", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "GameResults",
+                name: "GameResult",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -61,7 +47,7 @@ namespace App.Data.Sql.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_GameResults", x => x.Id);
+                    table.PrimaryKey("PK_GameResult", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -79,7 +65,7 @@ namespace App.Data.Sql.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "GameStates",
+                name: "GameState",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -89,7 +75,7 @@ namespace App.Data.Sql.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_GameStates", x => x.Id);
+                    table.PrimaryKey("PK_GameState", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -107,7 +93,7 @@ namespace App.Data.Sql.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ObjectValueTypes",
+                name: "TransactionReceiverType",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -117,21 +103,7 @@ namespace App.Data.Sql.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ObjectValueTypes", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "TransactionReceiverTypes",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(nullable: false),
-                    Code = table.Column<string>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TransactionReceiverTypes", x => x.Id);
+                    table.PrimaryKey("PK_TransactionReceiverType", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -149,7 +121,7 @@ namespace App.Data.Sql.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "TransactionTypes",
+                name: "TransactionType",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -159,7 +131,7 @@ namespace App.Data.Sql.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TransactionTypes", x => x.Id);
+                    table.PrimaryKey("PK_TransactionType", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -281,9 +253,9 @@ namespace App.Data.Sql.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Follows_FollowTypes_TypeId",
+                        name: "FK_Follows_FollowType_TypeId",
                         column: x => x.TypeId,
-                        principalTable: "FollowTypes",
+                        principalTable: "FollowType",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -349,15 +321,15 @@ namespace App.Data.Sql.Migrations
                 {
                     table.PrimaryKey("PK_Games", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Games_GameResults_ResultId",
+                        name: "FK_Games_GameResult_ResultId",
                         column: x => x.ResultId,
-                        principalTable: "GameResults",
+                        principalTable: "GameResult",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Games_GameStates_StateId",
+                        name: "FK_Games_GameState_StateId",
                         column: x => x.StateId,
-                        principalTable: "GameStates",
+                        principalTable: "GameState",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -431,9 +403,9 @@ namespace App.Data.Sql.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Transactions_TransactionTypes_TypeId",
+                        name: "FK_Transactions_TransactionType_TypeId",
                         column: x => x.TypeId,
-                        principalTable: "TransactionTypes",
+                        principalTable: "TransactionType",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -460,9 +432,9 @@ namespace App.Data.Sql.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_TransactionReceivers_TransactionReceiverTypes_TypeId",
+                        name: "FK_TransactionReceivers_TransactionReceiverType_TypeId",
                         column: x => x.TypeId,
-                        principalTable: "TransactionReceiverTypes",
+                        principalTable: "TransactionReceiverType",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -653,9 +625,6 @@ namespace App.Data.Sql.Migrations
                 table: "Transactions");
 
             migrationBuilder.DropTable(
-                name: "AttachmentTypes");
-
-            migrationBuilder.DropTable(
                 name: "AuditLogs");
 
             migrationBuilder.DropTable(
@@ -671,16 +640,13 @@ namespace App.Data.Sql.Migrations
                 name: "ObjectTypes");
 
             migrationBuilder.DropTable(
-                name: "ObjectValueTypes");
-
-            migrationBuilder.DropTable(
                 name: "TransactionReceivers");
 
             migrationBuilder.DropTable(
                 name: "UserLogType");
 
             migrationBuilder.DropTable(
-                name: "FollowTypes");
+                name: "FollowType");
 
             migrationBuilder.DropTable(
                 name: "GameRoundResult");
@@ -692,7 +658,7 @@ namespace App.Data.Sql.Migrations
                 name: "AuditEventTypes");
 
             migrationBuilder.DropTable(
-                name: "TransactionReceiverTypes");
+                name: "TransactionReceiverType");
 
             migrationBuilder.DropTable(
                 name: "UserTypes");
@@ -701,10 +667,10 @@ namespace App.Data.Sql.Migrations
                 name: "Games");
 
             migrationBuilder.DropTable(
-                name: "GameResults");
+                name: "GameResult");
 
             migrationBuilder.DropTable(
-                name: "GameStates");
+                name: "GameState");
 
             migrationBuilder.DropTable(
                 name: "Wallets");
@@ -719,7 +685,7 @@ namespace App.Data.Sql.Migrations
                 name: "TransactionState");
 
             migrationBuilder.DropTable(
-                name: "TransactionTypes");
+                name: "TransactionType");
         }
     }
 }

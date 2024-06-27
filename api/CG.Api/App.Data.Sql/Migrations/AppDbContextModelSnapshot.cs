@@ -54,26 +54,6 @@ namespace App.Data.Sql.Migrations
                     b.ToTable("AuditLogs");
                 });
 
-            modelBuilder.Entity("App.Data.Entities.Dictionaries.AttachmentType", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("AttachmentTypes");
-                });
-
             modelBuilder.Entity("App.Data.Entities.Dictionaries.AuditEventType", b =>
                 {
                     b.Property<int>("Id")
@@ -111,7 +91,7 @@ namespace App.Data.Sql.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("FollowTypes");
+                    b.ToTable("FollowType");
                 });
 
             modelBuilder.Entity("App.Data.Entities.Dictionaries.GameResult", b =>
@@ -131,7 +111,7 @@ namespace App.Data.Sql.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("GameResults");
+                    b.ToTable("GameResult");
                 });
 
             modelBuilder.Entity("App.Data.Entities.Dictionaries.GameRoundResult", b =>
@@ -171,7 +151,7 @@ namespace App.Data.Sql.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("GameStates");
+                    b.ToTable("GameState");
                 });
 
             modelBuilder.Entity("App.Data.Entities.Dictionaries.ObjectType", b =>
@@ -194,26 +174,6 @@ namespace App.Data.Sql.Migrations
                     b.ToTable("ObjectTypes");
                 });
 
-            modelBuilder.Entity("App.Data.Entities.Dictionaries.ObjectValueType", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ObjectValueTypes");
-                });
-
             modelBuilder.Entity("App.Data.Entities.Dictionaries.TransactionReceiverType", b =>
                 {
                     b.Property<int>("Id")
@@ -231,7 +191,7 @@ namespace App.Data.Sql.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TransactionReceiverTypes");
+                    b.ToTable("TransactionReceiverType");
                 });
 
             modelBuilder.Entity("App.Data.Entities.Dictionaries.TransactionState", b =>
@@ -271,7 +231,7 @@ namespace App.Data.Sql.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TransactionTypes");
+                    b.ToTable("TransactionType");
                 });
 
             modelBuilder.Entity("App.Data.Entities.Dictionaries.UserLogType", b =>

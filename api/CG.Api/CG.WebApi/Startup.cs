@@ -168,14 +168,14 @@ public class Startup {
                  });
 
         services.AddSwaggerGen(options => {
-            options.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme,
-                new OpenApiSecurityScheme {
-                    In = ParameterLocation.Header,
-                    Description = "Please insert JWT",
-                    Name = "Authorization",
-                    Type = SecuritySchemeType.ApiKey,
-                    Scheme = JwtBearerDefaults.AuthenticationScheme
-                });
+            // options.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme,
+            //     new OpenApiSecurityScheme {
+            //         In = ParameterLocation.Header,
+            //         Description = "Please insert JWT",
+            //         Name = "Authorization",
+            //         Type = SecuritySchemeType.ApiKey,
+            //         Scheme = JwtBearerDefaults.AuthenticationScheme
+            //     });
 
             options.AddSecurityRequirement(new OpenApiSecurityRequirement {
                 {
@@ -206,7 +206,7 @@ public class Startup {
                 .AddJsonOptions(options =>
                      options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
         ConfigureCompression(services);
-        ConfigureAuthentication(services, configurationFactory.Create<OAuthConfig>());
+        // ConfigureAuthentication(services, configurationFactory.Create<OAuthConfig>());
     }
 
     public void ConfigureAuthentication(IServiceCollection services, OAuthConfig authConfig) {
