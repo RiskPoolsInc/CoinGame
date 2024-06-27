@@ -1,5 +1,5 @@
 namespace App.Interfaces.Repositories.Dictionaries;
 
-public interface IGameResultRepository: IDictionaryRepository<GameResult> {
+public interface IGameResultRepository: IDictionaryRepository<GameResultType> {
     
 }

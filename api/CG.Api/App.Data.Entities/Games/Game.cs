@@ -10,10 +10,10 @@ public class Game : AuditableEntity {
     public virtual Wallet Wallet { get; set; }
 
     public int StateId { get; set; } //[Created, InProgress, Completed]
-    public virtual GameState State { get; set; }
+    public virtual GameStateType State { get; set; }
 
     public int? ResultId { get; set; } //[Undefined, Win, Lose]
-    public virtual GameResult Result { get; set; }
+    public virtual GameResultType Result { get; set; }
 
     public int RoundQuantity { get; set; }
     public decimal RoundSum { get; set; }

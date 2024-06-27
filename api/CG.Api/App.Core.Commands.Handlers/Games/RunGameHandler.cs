@@ -36,19 +36,19 @@ public class RunGameHandler : IRequestHandler<RunGameCommand, GameView> {
     }
 
     public async Task<GameView> Handle(RunGameCommand request, CancellationToken cancellationToken) {
-        var currentGameId = await _gameRepository.Where(a => a.WalletId == request.WalletId && a.StateId == (int)GameStates.Created)
+        var currentGameId = await _gameRepository.Where(a => a.WalletId == request.WalletId && a.StateId == (int)GameStateTypes.Created)
                                                  .Select(a => a.Id)
                                                  .SingleAsync(cancellationToken);
 
         var currentGame = await _gameRepository.FindAsync(currentGameId, cancellationToken);
 
-        if (currentGame.StateId == (int)GameStates.Completed)
+        if (currentGame.StateId == (int)GameStateTypes.Completed)
             throw new Exception("Game was completed");
 
-        if (currentGame.StateId == (int)GameStates.InProgress)
+        if (currentGame.StateId == (int)GameStateTypes.InProgress)
             throw new Exception("Game in Progress");
 
-        currentGame.StateId = (int)GameStates.InProgress;
+        currentGame.StateId = (int)GameStateTypes.InProgress;
         await _gameRepository.SaveAsync(cancellationToken);
         var gameResult = 0;
         var gameLose = false;
@@ -57,16 +57,16 @@ public class RunGameHandler : IRequestHandler<RunGameCommand, GameView> {
             await RandomDelay();
             var nextNumber = NextNumber();
             var isEven = (nextNumber % 2) == 0;
-            var roundResult = isEven ? GameRoundResults.Win : GameRoundResults.Lose;
-            var roundResultIsWin = roundResult == GameRoundResults.Win;
+            var roundResult = isEven ? GameRoundResultTypes.Win : GameRoundResultTypes.Lose;
+            var roundResultIsWin = roundResult == GameRoundResultTypes.Win;
             await _dispatcher.Send(new CreateGameRoundCommand(currentGameId, nextNumber, roundResult));
 
             gameResult += roundResultIsWin ? 1 : -1;
 
             if (gameResult < 0) {
                 currentGame = await _gameRepository.FindAsync(currentGameId, cancellationToken);
-                currentGame.StateId = (int)GameStates.Completed;
-                currentGame.ResultId = (int)GameResults.Lose;
+                currentGame.StateId = (int)GameStateTypes.Completed;
+                currentGame.ResultId = (int)GameResultTypes.Lose;
                 await _gameRepository.SaveAsync(cancellationToken);
 
                 var transactionService = new GameServiceTransactionComand() {
@@ -80,8 +80,8 @@ public class RunGameHandler : IRequestHandler<RunGameCommand, GameView> {
 
         if (!gameLose) {
             currentGame = await _gameRepository.FindAsync(currentGameId, cancellationToken);
-            currentGame.StateId = (int)GameStates.Completed;
-            currentGame.ResultId = (int)GameResults.Win;
+            currentGame.StateId = (int)GameStateTypes.Completed;
+            currentGame.ResultId = (int)GameResultTypes.Win;
             await _gameRepository.SaveAsync(cancellationToken);
 
             var transactionService = new CreateTransactionRewardCommand(currentGameId);

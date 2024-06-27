@@ -3,15 +3,17 @@ using System;
 using App.Data.Sql;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace App.Data.Sql.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240627191944_InsertGameDictionaries")]
+    partial class InsertGameDictionaries
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -91,10 +93,10 @@ namespace App.Data.Sql.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("FollowTypes");
+                    b.ToTable("FollowType");
                 });
 
-            modelBuilder.Entity("App.Data.Entities.Dictionaries.GameResultType", b =>
+            modelBuilder.Entity("App.Data.Entities.Dictionaries.GameResult", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -111,10 +113,10 @@ namespace App.Data.Sql.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("GameResultTypes");
+                    b.ToTable("GameResult");
                 });
 
-            modelBuilder.Entity("App.Data.Entities.Dictionaries.GameRoundResultType", b =>
+            modelBuilder.Entity("App.Data.Entities.Dictionaries.GameRoundResult", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -131,10 +133,10 @@ namespace App.Data.Sql.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("GameRoundResultTypes");
+                    b.ToTable("GameRoundResult");
                 });
 
-            modelBuilder.Entity("App.Data.Entities.Dictionaries.GameStateType", b =>
+            modelBuilder.Entity("App.Data.Entities.Dictionaries.GameState", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -151,7 +153,7 @@ namespace App.Data.Sql.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("GameStateTypes");
+                    b.ToTable("GameState");
                 });
 
             modelBuilder.Entity("App.Data.Entities.Dictionaries.ObjectType", b =>
@@ -191,10 +193,10 @@ namespace App.Data.Sql.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TransactionReceiverTypes");
+                    b.ToTable("TransactionReceiverType");
                 });
 
-            modelBuilder.Entity("App.Data.Entities.Dictionaries.TransactionStateType", b =>
+            modelBuilder.Entity("App.Data.Entities.Dictionaries.TransactionState", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -211,7 +213,7 @@ namespace App.Data.Sql.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TransactionStateTypes");
+                    b.ToTable("TransactionState");
                 });
 
             modelBuilder.Entity("App.Data.Entities.Dictionaries.TransactionType", b =>
@@ -231,7 +233,7 @@ namespace App.Data.Sql.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TransactionTypes");
+                    b.ToTable("TransactionType");
                 });
 
             modelBuilder.Entity("App.Data.Entities.Dictionaries.UserLogType", b =>
@@ -291,7 +293,7 @@ namespace App.Data.Sql.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("WalletTypes");
+                    b.ToTable("WalletType");
                 });
 
             modelBuilder.Entity("App.Data.Entities.GameRounds.GameRound", b =>
@@ -681,7 +683,7 @@ namespace App.Data.Sql.Migrations
                         .WithMany("GameRounds")
                         .HasForeignKey("GameId1");
 
-                    b.HasOne("App.Data.Entities.Dictionaries.GameRoundResultType", "Result")
+                    b.HasOne("App.Data.Entities.Dictionaries.GameRoundResult", "Result")
                         .WithMany()
                         .HasForeignKey("ResultId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -690,12 +692,12 @@ namespace App.Data.Sql.Migrations
 
             modelBuilder.Entity("App.Data.Entities.Games.Game", b =>
                 {
-                    b.HasOne("App.Data.Entities.Dictionaries.GameResultType", "Result")
+                    b.HasOne("App.Data.Entities.Dictionaries.GameResult", "Result")
                         .WithMany()
                         .HasForeignKey("ResultId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("App.Data.Entities.Dictionaries.GameStateType", "State")
+                    b.HasOne("App.Data.Entities.Dictionaries.GameState", "State")
                         .WithMany()
                         .HasForeignKey("StateId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -765,7 +767,7 @@ namespace App.Data.Sql.Migrations
                         .WithMany()
                         .HasForeignKey("GameId");
 
-                    b.HasOne("App.Data.Entities.Dictionaries.TransactionStateType", "State")
+                    b.HasOne("App.Data.Entities.Dictionaries.TransactionState", "State")
                         .WithMany()
                         .HasForeignKey("StateId")
                         .OnDelete(DeleteBehavior.Restrict)

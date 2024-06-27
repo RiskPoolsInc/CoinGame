@@ -3,15 +3,17 @@ using System;
 using App.Data.Sql;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace App.Data.Sql.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240627192322_UpdatedDictionatyTypesNames")]
+    partial class UpdatedDictionatyTypesNames
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -91,7 +93,7 @@ namespace App.Data.Sql.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("FollowTypes");
+                    b.ToTable("FollowType");
                 });
 
             modelBuilder.Entity("App.Data.Entities.Dictionaries.GameResultType", b =>
@@ -111,7 +113,7 @@ namespace App.Data.Sql.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("GameResultTypes");
+                    b.ToTable("GameResultType");
                 });
 
             modelBuilder.Entity("App.Data.Entities.Dictionaries.GameRoundResultType", b =>
@@ -131,7 +133,7 @@ namespace App.Data.Sql.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("GameRoundResultTypes");
+                    b.ToTable("GameRoundResultType");
                 });
 
             modelBuilder.Entity("App.Data.Entities.Dictionaries.GameStateType", b =>
@@ -151,7 +153,7 @@ namespace App.Data.Sql.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("GameStateTypes");
+                    b.ToTable("GameStateType");
                 });
 
             modelBuilder.Entity("App.Data.Entities.Dictionaries.ObjectType", b =>
@@ -191,7 +193,7 @@ namespace App.Data.Sql.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TransactionReceiverTypes");
+                    b.ToTable("TransactionReceiverType");
                 });
 
             modelBuilder.Entity("App.Data.Entities.Dictionaries.TransactionStateType", b =>
@@ -211,7 +213,7 @@ namespace App.Data.Sql.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TransactionStateTypes");
+                    b.ToTable("TransactionStateType");
                 });
 
             modelBuilder.Entity("App.Data.Entities.Dictionaries.TransactionType", b =>
@@ -231,7 +233,7 @@ namespace App.Data.Sql.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TransactionTypes");
+                    b.ToTable("TransactionType");
                 });
 
             modelBuilder.Entity("App.Data.Entities.Dictionaries.UserLogType", b =>
@@ -291,7 +293,7 @@ namespace App.Data.Sql.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("WalletTypes");
+                    b.ToTable("WalletType");
                 });
 
             modelBuilder.Entity("App.Data.Entities.GameRounds.GameRound", b =>

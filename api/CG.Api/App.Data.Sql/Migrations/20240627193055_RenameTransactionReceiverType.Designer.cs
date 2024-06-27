@@ -3,15 +3,17 @@ using System;
 using App.Data.Sql;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace App.Data.Sql.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240627193055_RenameTransactionReceiverType")]
+    partial class RenameTransactionReceiverType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -91,7 +93,7 @@ namespace App.Data.Sql.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("FollowTypes");
+                    b.ToTable("FollowType");
                 });
 
             modelBuilder.Entity("App.Data.Entities.Dictionaries.GameResultType", b =>
@@ -151,7 +153,7 @@ namespace App.Data.Sql.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("GameStateTypes");
+                    b.ToTable("GameStateType");
                 });
 
             modelBuilder.Entity("App.Data.Entities.Dictionaries.ObjectType", b =>

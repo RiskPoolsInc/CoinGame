@@ -21,9 +21,9 @@ public class CreateGameHandler : IRequestHandler<CreateGameCommand, TransactionG
     public async Task<TransactionGameDepositView> Handle(CreateGameCommand request, CancellationToken cancellationToken) {
         var game = new Game {
             WalletId = request.WalletId,
-            StateId = (int)GameStates.Created,
+            StateId = (int)GameStateTypes.Created,
             State = null,
-            ResultId = (int)GameResults.Undefined,
+            ResultId = (int)GameResultTypes.Undefined,
             RoundQuantity = request.Rounds,
             RoundSum = request.Rate
         };

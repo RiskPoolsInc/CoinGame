@@ -40,7 +40,7 @@ public class CreateTransactionRewardHandler : IRequestHandler<CreateTransactionR
             TransactionHash = generatedTransaction.Hash,
             Sum = generatedTransaction.Sum,
             Fee = generatedTransaction.Fee,
-            StateId = (int)TransactionStates.Created,
+            StateId = (int)TransactionStateTypes.Created,
             ExistInBlockChain = false,
         };
 

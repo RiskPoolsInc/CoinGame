@@ -11,7 +11,7 @@ public class CreateGameRoundCommand : IRequest<GameRoundView> {
     public CreateGameRoundCommand() {
     }
 
-    public CreateGameRoundCommand(Guid gameId, int generatedNumber, GameRoundResults result) {
+    public CreateGameRoundCommand(Guid gameId, int generatedNumber, GameRoundResultTypes result) {
         GameId = gameId;
         GeneratedNumber = generatedNumber;
         Result = (int)result;

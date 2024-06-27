@@ -1,6 +1,6 @@
 namespace App.Core.Enums;
 
-public enum GameRoundResults {
+public enum GameRoundResultTypes {
     Win = 1,
     Lose = 2
 }

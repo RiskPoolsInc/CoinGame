@@ -10,5 +10,5 @@ public class GameRound : AuditableEntity {
     public int Number { get; set; }
     public string GeneratedValue { get; set; }
     public int ResultId { get; set; }
-    public virtual GameRoundResult Result { get; set; }
+    public virtual GameRoundResultType Result { get; set; }
 }

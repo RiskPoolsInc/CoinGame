@@ -34,7 +34,7 @@ public class GameDepositTransactionHandler : IRequestHandler<GameDepositTransact
             TransactionHash = generatedTransaction.Hash,
             Sum = generatedTransaction.Sum,
             Fee = generatedTransaction.Fee,
-            StateId = (int)TransactionStates.Created,
+            StateId = (int)TransactionStateTypes.Created,
             ExistInBlockChain = false,
         };
         _gameDepositRepository.Add(transaction);

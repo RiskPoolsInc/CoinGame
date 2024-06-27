@@ -2,5 +2,5 @@ using App.Data.Entities.Core;
 
 namespace App.Data.Entities.Dictionaries;
 
-public class TransactionState : DictionaryEntity {
+public class GameResultType : DictionaryEntity {
 }

@@ -23,7 +23,7 @@ public abstract class Transaction : AuditableEntity {
     public virtual TransactionType Type { get; set; }
 
     public virtual int StateId { get; set; } //[NotCreated, Completed, InProgress]
-    public virtual TransactionState State { get; set; }
+    public virtual TransactionStateType State { get; set; }
 
     public bool ExistInBlockChain { get; set; }
 }
