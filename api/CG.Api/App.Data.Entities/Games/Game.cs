@@ -1,7 +1,6 @@
 using App.Data.Entities.Core;
 using App.Data.Entities.Dictionaries;
 using App.Data.Entities.GameRounds;
-using App.Data.Entities.Payments;
 using App.Data.Entities.Wallets;
 
 namespace App.Data.Entities.Games;

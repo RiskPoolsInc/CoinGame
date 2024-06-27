@@ -2,14 +2,11 @@ using App.Common.Helpers;
 using App.Core.Commands.Wallets;
 using App.Core.Enums;
 using App.Core.ViewModels.Transactions;
-using App.Data.Entities.Payments;
-using App.Interfaces.ExternalServices;
+using App.Data.Entities.Transactions;
 using App.Interfaces.Repositories.Games;
 using App.Interfaces.Repositories.Transactions;
 using App.Interfaces.Repositories.Wallets;
 using App.Services.WalletService;
-
-using Microsoft.EntityFrameworkCore;
 
 namespace App.Core.Commands.Handlers.Wallets;
 

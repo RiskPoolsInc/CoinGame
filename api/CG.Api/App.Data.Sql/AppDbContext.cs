@@ -1,11 +1,10 @@
 ﻿using App.Data.Entities;
-using App.Data.Entities.Attachments;
 using App.Data.Entities.Dictionaries;
 using App.Data.Entities.GameRounds;
 using App.Data.Entities.Games;
 using App.Data.Entities.Notifications;
-using App.Data.Entities.Payments;
 using App.Data.Entities.TransactionReceiver;
+using App.Data.Entities.Transactions;
 using App.Data.Entities.UserProfiles;
 using App.Data.Entities.Wallets;
 using App.Data.Sql.Core;
@@ -29,7 +28,6 @@ public class AppDbContext : BaseDbContext, IAppDbContext {
 
     public DbSet<UserProfile> UserProfiles { get; set; }
     public DbSet<Wallet> Wallets { get; set; }
-    public DbSet<Attachment> Attachments { get; set; }
     public DbSet<Notification> Notifications { get; set; }
     public DbSet<AuditLog> AuditLogs { get; set; }
     public DbSet<Follow> Follows { get; set; }

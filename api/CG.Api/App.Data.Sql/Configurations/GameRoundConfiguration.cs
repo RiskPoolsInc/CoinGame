@@ -1,7 +1,4 @@
-﻿using App.Core.ViewModels.Games;
-using App.Data.Entities.GameRounds;
-using App.Data.Entities.Games;
-using App.Data.Entities.Payments;
+﻿using App.Data.Entities.GameRounds;
 using App.Data.Sql.Core.Configuration;
 
 using Microsoft.EntityFrameworkCore;

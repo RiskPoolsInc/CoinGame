@@ -1,6 +1,4 @@
-using App.Core.ViewModels.External;
 using App.Core.ViewModels.Transactions;
-using App.Data.Entities.Payments;
 
 namespace App.Core.Commands.Transactions;
 

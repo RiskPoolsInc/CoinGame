@@ -1,4 +1,3 @@
-using App.Data.Entities.Payments;
 using App.Data.Sql;
 
 namespace App.Repositories.Transactions;

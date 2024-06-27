@@ -1,6 +1,7 @@
 ﻿using System.Linq.Expressions;
+
 using App.Data.Criterias.Core;
-using App.Data.Entities.Payments;
+using App.Data.Entities.Transactions;
 
 namespace App.Data.Criterias.Payments;
 

@@ -1,4 +1,4 @@
-﻿using App.Data.Entities.Payments;
+﻿using App.Data.Entities.Transactions;
 using App.Data.Sql.Core.Configuration;
 
 using Microsoft.EntityFrameworkCore;

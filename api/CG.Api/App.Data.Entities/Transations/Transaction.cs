@@ -4,9 +4,9 @@ using App.Data.Entities.Games;
 using App.Data.Entities.UserProfiles;
 using App.Data.Entities.Wallets;
 
-namespace App.Data.Entities.Payments;
+namespace App.Data.Entities.Transactions;
 
-public class Transaction : AuditableEntity {
+public abstract class Transaction : AuditableEntity {
     public Guid? GameId { get; set; }
     public virtual Game Game { get; set; }
 

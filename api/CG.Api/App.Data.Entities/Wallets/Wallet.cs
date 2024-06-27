@@ -1,8 +1,7 @@
 ﻿using App.Data.Entities.Core;
 using App.Data.Entities.Dictionaries;
 using App.Data.Entities.Games;
-using App.Data.Entities.Payments;
-using App.Data.Entities.UserProfiles;
+using App.Data.Entities.Transactions;
 
 namespace App.Data.Entities.Wallets;
 

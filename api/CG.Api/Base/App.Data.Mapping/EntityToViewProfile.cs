@@ -16,8 +16,8 @@ using App.Data.Entities.Dictionaries;
 using App.Data.Entities.GameRounds;
 using App.Data.Entities.Games;
 using App.Data.Entities.Notifications;
-using App.Data.Entities.Payments;
 using App.Data.Entities.TransactionReceiver;
+using App.Data.Entities.Transactions;
 using App.Data.Entities.UserProfiles;
 using App.Data.Entities.Wallets;
 
