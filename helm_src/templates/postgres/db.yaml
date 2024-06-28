@@ -1,0 +1,47 @@
+apiVersion: "acid.zalan.do/v1"
+kind: postgresql
+{{ with .Values.postgres }}
+metadata:
+  name: {{.team }}-{{.cluster}}
+spec:   ## https://opensource.zalando.com/postgres-operator/docs/reference/cluster_manifest.html
+  enableLogicalBackup: {{ .enableLogicalBackup }}
+  logicalBackupSchedule: {{ .logicalBackupSchedule }}
+  enableConnectionPooler: {{ .enableConnectionPooler }}
+{{ if .connectionPooler }}
+  connectionPooler:
+{{ toYaml .connectionPooler | indent 4 }}
+{{ end }}
+
+{{ if .resources }}
+  resources:
+{{ toYaml .resources | indent 4 }}
+{{ end }}
+
+{{ if .tls }}
+  tls:
+{{ toYaml .tls | indent 4 }}
+{{ end }}
+
+
+  teamId: {{ .team | quote }}
+  volume:
+    size: {{ .size }}
+  numberOfInstances: {{ .numberOfInstances }}
+  users:
+    # database owner
+    {{ .username }}:
+    - superuser
+    - createdb
+
+  #databases: name->owner
+  databases:
+{{ toYaml .databases | indent 4 }}
+  postgresql:
+    version: {{ .version | quote }}
+
+{{ if .configParameters }}
+    parameters:
+{{ toYaml .configParameters | indent 6 }}
+{{ end }}
+
+{{ end }}

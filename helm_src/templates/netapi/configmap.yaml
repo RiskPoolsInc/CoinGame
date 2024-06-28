@@ -1,0 +1,10 @@
+apiVersion: v1
+data:
+  ConnectionStrings__DefaultConnection: {{ quote .Values.data.netapi.db }}
+  ConnectionStrings__AppDbContext: {{ quote .Values.data.netapi.db }}
+  WalletServiceOptions__Host: {{ quote .Values.data.netapi.walletServiceOptions.host }}
+kind: ConfigMap
+metadata:
+  labels:
+    com.ubix.network: {{ .Values.netapi.name }}-config-map
+  name: {{ .Values.netapi.name }}-config-map

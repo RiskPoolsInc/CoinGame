@@ -1,0 +1,27 @@
+{{ if not .Values.ingress.existingTLSSecret }}
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: netapi.{{.Values.ingress.hostname }}
+spec:
+  commonName: netapi.{{.Values.ingress.hostname }}
+  dnsNames:
+    - netapi.{{.Values.ingress.hostname }}
+  duration: 2160h0m0s
+  issuerRef:
+    kind: Issuer
+    name: letsencrypt-netapi-coingame
+  privateKey:
+    algorithm: RSA
+    encoding: PKCS1
+    size: 2048
+  renewBefore: 120h0m0s
+  secretName: coingame-netapi-ingress-tls-cert
+  subject:
+    organizations:
+      - {{ .Values.certificate.organization }}
+  usages:
+    - server auth
+    - client auth
+status: {}
+{{ end }}

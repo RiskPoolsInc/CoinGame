@@ -1,0 +1,27 @@
+apiVersion: v1
+items:
+  - apiVersion: networking.k8s.io/v1
+    kind: Ingress
+    metadata:
+      annotations:
+        cert-manager.io/issuer: letsencrypt-netapi-coingame
+      name: coingame-netapi-direct
+    spec:
+      #      ingressClassName: nginx
+      rules:
+        - host: netapi.{{.Values.ingress.hostname }}
+          http:
+            paths:
+              - backend:
+                  service:
+                    name: {{ .Values.netapi.name }}
+                    port:
+                      number: 80
+                path: /
+                pathType: ImplementationSpecific
+      tls:
+        - hosts:
+            - netapi.{{.Values.ingress.hostname }}
+          secretName: netapi-coingame-ingress-tls-cert
+kind: List
+metadata: {}

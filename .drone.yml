@@ -100,6 +100,17 @@ steps:
     depends_on:
       - buildfront
 
+  - name: buildnetapi
+    image: plugins/docker
+    settings:
+      context: api/CG.Api
+      dockerfile: api/CG.Api/CG.WebApi/Dockerfile
+      repo: dhb2.ubikiri.com/coingame/coingame-netapi
+      <<: *docker_creds
+    depends_on:
+      - buildfront
+      - buildapi
+
   - name: deploy # deploy to kubernetes using a Helm chart - we need to copy helm dir without values.yaml to repo
     image: pelotech/drone-helm3
     settings:
@@ -118,11 +129,12 @@ steps:
       values:
         - "webapp.tag=drone-${DRONE_COMMIT_SHA:0:8}"
         - "webapi.tag=drone-${DRONE_COMMIT_SHA:0:8}"
+        - "netapi.tag=drone-${DRONE_COMMIT_SHA:0:8}"
       cleanup_failed_upgrade: true
     depends_on:
       - buildfront
       - buildapi
-
+      - buildnetapi
 
   - name: notification
     image: appleboy/drone-telegram
@@ -145,6 +157,7 @@ steps:
     depends_on:
       - buildfront
       - buildapi
+      - buildnetapi
       - deploy
 
 trigger:
@@ -191,6 +204,18 @@ steps:
     depends_on:
       - buildfront
 
+  - name: buildnetapi
+    image: plugins/docker
+    settings:
+      dry-run: 'true'
+      context: api/CG.Api
+      dockerfile: api/CG.Api/CG.WebApi/Dockerfile
+      repo: dhb2.ubikiri.com/coingame/coingame-netapi
+      <<: *docker_creds
+    depends_on:
+      - buildfront
+      - buildapi
+
   - name: notification
     image: appleboy/drone-telegram
     settings:
@@ -212,7 +237,7 @@ steps:
     depends_on:
       - buildfront
       - buildapi
-
+      - buildnetapi
 
 trigger:
   branch:

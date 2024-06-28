@@ -1,0 +1,221 @@
+global:
+  registry: dhb2.ubikiri.com
+  project_slug: coingame
+  pullPolicy: IfNotPresent
+  imagePullSecrets:
+    - name: dhb
+
+#set here to dev for replacement docker startup paramaters for web-acc
+environment: dev
+cloudflare: false
+
+
+ingress:
+  hostname: "coingame.dev20021.ubikiri.com"
+  ## If set to "false", cert will be automatically generated via let'sEncrypt
+  existingTLSSecret: false
+  tlsSecret:
+    tls.crt: fake
+    tls.key: fake
+
+
+certificate:
+  organization: "silentnotary"
+  email: "aexander@silentnotary.com"
+
+
+webapp:
+  name: coingame-front
+  image: coingame-front
+  tag: drone-26410809
+  debug: false
+  replicaCount: 1
+  updateStrategyType: RollingUpdate
+  service:
+    type: ClusterIP
+    ports:
+      - name: "http"
+        port: 2000
+        targetPort: 2000
+
+webapi:
+  name: coingame-api
+  image: coingame-api
+  tag: drone-26410809
+  debug: false
+  replicaCount: 1
+  updateStrategyType: RollingUpdate
+  service:
+    type: ClusterIP
+    ports:
+      - name: "http"
+        port: 3000
+        targetPort: 3000
+  volumeMounts:
+    - mountPath: /app/refunds/
+      name: vol1
+  volumes:
+    - name: vol1
+      persistentVolumeClaim:
+        claimName: coingame-refunds
+
+netapi:
+  name: coingame-netapi
+  image: coingame-netapi
+  tag: drone-26410809
+  debug: false
+  replicaCount: 1
+  updateStrategyType: RollingUpdate
+  service:
+    ## Service type.
+    ##
+    type: ClusterIP
+    ## Service ports.
+    ##
+    ports:
+      - name: "http"
+        port: 80
+        targetPort: 80
+      - name: "https"
+        port: 443
+        targetPort: 443
+
+
+
+## Pod Service Account
+## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/
+##
+serviceAccount:
+  enabled: false
+  ## Name of an already existing service account. Setting this value disables the automatic service account creation.
+  # name:
+
+## Kubernetes Cluster Domain
+##
+clusterDomain: cluster.local
+
+postgres:
+  ## Обязательно задавать пароли и использовать его при обновлении
+  ## Если не указывать пароли  явно, они сгенерируется слуйчайным образом, и не подойдут к уже существующей  на диске БД
+  username: dev
+  password: qwerty
+  postgresPassword: toor
+  team: coingame
+  cluster: postgres
+  ## Можно отключить, но только для самой БД. Для Pooler на данный момент отключить нельзя
+  workaroundSSLDisable: true
+  ## При наличии символа "-", в имени БД, развертывание выполнится с ошибкой и бд не будет создана
+  ## dbname: ownerusername
+  databases:
+    coingame: dev
+  size: 1Gi
+  numberOfInstances: 1
+  version: "15" # Supported values: "11 -15"
+  ## Выделение ресурсов для контейнера с postgres
+  ## https://github.com/zalando/postgres-operator/blob/d3183604a78120126345fcafa9621a2b8b0f24ff/manifests/complete-postgres-manifest.yaml#L92
+  ## https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+  resources:
+    requests:
+      cpu: 100m
+      memory: 500Mi
+    limits:
+      cpu: 1000m
+      memory: 4000Mi
+
+  ## Update strategy for PostgreSQL statefulset
+  ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#update-strategies
+  ## default - RollingUpdate
+  #updateStrategyType: RollingUpdate
+
+  ## Pooler работает только с TLS
+  enableConnectionPooler: true
+  connectionPooler: ## https://opensource.zalando.com/postgres-operator/docs/reference/cluster_manifest.html#connection-pooler
+    numberOfInstances: 1
+  ## DBA Section
+  #  configParameters:  ## Dictionary of Postgres parameter names and values to apply to the resulting cluster. Optional.
+  #    shared_buffers: "32MB"
+  ## Можно использовать кастоммные сертификаты
+  ## https://github.com/zalando/postgres-operator/blob/master/manifests/complete-postgres-manifest.yaml#L174
+  ## https://opensource.zalando.com/postgres-operator/docs/reference/cluster_manifest.html#custom-tls-certificates
+  #  tls:
+  #    secretName: ""  # should correspond to a Kubernetes Secret resource to load
+  #    certificateFile: "tls.crt"
+  #    privateKeyFile: "tls.key"
+  #    caFile: ""  # optionally configure Postgres with a CA certificate
+  #    caSecretName: "" # optionally the ca.crt can come from this secret instead.
+  ## Параметры для сохранения физического  бэкапа задаются при установке оператора postgres
+  enableLogicalBackup: false
+  logicalBackupSchedule: "30 00 * * *"
+  ## Физический бэкап
+  backup:
+    schedule: "40 * * * *"
+    retain: 7                    # retain -  сколько дней хранить резервные копии
+    s3:
+      endpoint: "https://storage.yandexcloud.net"
+      region: "ru-central1"
+      ## Перезаписать путь хранения  физических бэкапов
+      ## ИСПОЛЬЗОВАТЬ С ОСТОРОЖНОСТЬЮ! Стандартный механизм обеспечивает уникальность путей
+      ## Можно смешать информацию о бэкапах, если восстановить клон ДБ, при работающем оригинале
+      ## в тот-же namespace. Секрет с переменными окружения создается на весь namesapce
+      ##    bucket: "s3://postgres-physical-backups"
+      ##  bucket: "s3://%(bucket)s.storage.yandexcloud.net" пишем свой бакет без сторадж.яндекс.нет
+      bucket: "s3://sndev"
+      accessKey: ""
+      secretKey: ""
+  restore:
+    enable: false                                            ## Примеры как получить name  и UID
+    sourceClusterName: "silentnotary-postgres"                    ## kubectl get pg ubikiri-postgres -o jsonpath={.metadata.uid} --namespace ubidev
+    sourceClusterUID: "a22fbd44-5d6f-4260-b653-562439c4bfe8" ## kubectl get pg ubikiri-postgres -o jsonpath={.metadata.name} --namespace ubidev
+    recoveryTimePoint: "2021-10-01T20:36:03Z"                ## Format: "2021-10-01T20:36:03Z"
+    s3:
+      endpoint: "https://storage.yandexcloud.net"
+      region: "ru-central1"
+      bucket: "s3://sndev"
+      accessKey: ""
+      secretKey: ""
+      forcePathStyle: true
+
+data:
+  netapi:
+    db: "Host=coingame-postgres;Port=5432;Database=coingame;Username=dev;Password=qwerty;Integrated Security=true;Pooling=true;"
+    walletServiceOptions:
+      host: "http://webapi:3000"
+  refunds:
+    db:
+      path: "refunds"
+  operations:
+    log:
+      db:
+        path: "operations_log"
+  cil:
+    utils:
+      api:
+        url: "https://test-explorer.ubikiri.com/api/"
+      rpc:
+        port: "443"
+        address: "https://rpc-dv-1.ubikiri.com/"
+        user: "cilTest"
+        pass: "d49c1d2735536baa4de1cc6"
+  pool:
+    wallet:
+      address: "a317162377777dea68f05c88c8ff52362842a6df"
+      private:
+        key: "21df7a111c3452a3da0b4e051d9b1b3b68dc234e4f8c91c3bf30cb8f118eb7fa"
+      public:
+        key: "02c5db6110bab7653b17b0ef1412a2dd543a7d71a8e5c881c4bae7beb8343fc5d7"
+  project:
+    wallet:
+      address: "8830e66a239bbd6682fb154df8b5bfc0e88088d1"
+  profit:
+    wallet:
+      address: "db6403750d902a40df2b90f7d781412094e3dc73"
+  cors:
+    origin: "https://coingame.dev20021.ubikiri.com"
+  min:
+    bid: "10000"
+  max:
+    bid: "10000000"
+
+
+
+
