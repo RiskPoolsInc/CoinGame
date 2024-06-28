@@ -117,10 +117,10 @@ postgres:
   resources:
     requests:
       cpu: 100m
-      memory: 100Mi
+      memory: 500Mi
     limits:
-      cpu: 2000m
-      memory: 8000Mi
+      cpu: 1000m
+      memory: 4000Mi
 
   ## Update strategy for PostgreSQL statefulset
   ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#update-strategies
@@ -128,9 +128,9 @@ postgres:
   #updateStrategyType: RollingUpdate
 
   ## Pooler работает только с TLS
-  enableConnectionPooler: false
+  enableConnectionPooler: true
   connectionPooler: ## https://opensource.zalando.com/postgres-operator/docs/reference/cluster_manifest.html#connection-pooler
-    numberOfInstances: 2
+    numberOfInstances: 1
   ## DBA Section
   #  configParameters:  ## Dictionary of Postgres parameter names and values to apply to the resulting cluster. Optional.
   #    shared_buffers: "32MB"
@@ -177,7 +177,7 @@ postgres:
 
 data:
   netapi:
-    db: "Host=coingame-postgres;Port=5432;Database=coingame;Username=dev;Password=qwerty;"
+    db: "Host=coingame-postgres;Port=5432;Database=coingame;Username=dev;Password=qwerty;Integrated Security=true;Pooling=true;"
     walletServiceOptions:
       host: "http://webapi:3000"
   refunds:
