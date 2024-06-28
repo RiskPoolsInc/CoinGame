@@ -1,0 +1,25 @@
+name: coingame
+services:
+  congame.api:
+    container_name: congameapi
+    build:
+      context: ../
+      dockerfile: CG.WebApi/Dockerfile
+    ports:
+      - 7001:7001
+    #    restart: always
+    environment:
+      ASPNETCORE_URLS: http://+:7001
+      ConnectionStrings__AppDbContext: "Host=host.docker.internal;Port=6001;Database=CoinGame_Dev;Username=postgres;Password=Qwerty123;"
+    depends_on:
+      - coingame_db
+  coingame_db:
+    container_name: coingame_db
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: Qwerty123
+      POSTGRES_USER: postgres
+      POSTGRES_DB: CoinGame_Dev
+#    restart: always
+    ports:
+      - "6001:5432"
