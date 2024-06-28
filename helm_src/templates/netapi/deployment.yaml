@@ -28,6 +28,11 @@ spec:
             - name: ASPNETCORE_ENVIRONMENT
               value: Development
             {{- end }}
+            - name: ConnectionStrings__DefaultConnection
+              valueFrom:
+                configMapKeyRef:
+                  key: ConnectionStrings__DefaultConnection
+                  name: {{ .Values.netapi.name }}-config-map
             - name: ConnectionStrings__AppDbContext
               valueFrom:
                 configMapKeyRef:

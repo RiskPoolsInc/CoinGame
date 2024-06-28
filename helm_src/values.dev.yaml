@@ -27,7 +27,7 @@ certificate:
 webapp:
   name: coingame-front
   image: coingame-front
-  tag: drone-0c6c71e0
+  tag: drone-26410809
   debug: false
   replicaCount: 1
   updateStrategyType: RollingUpdate
@@ -41,7 +41,7 @@ webapp:
 webapi:
   name: coingame-api
   image: coingame-api
-  tag: drone-0c6c71e0
+  tag: drone-26410809
   debug: false
   replicaCount: 1
   updateStrategyType: RollingUpdate
@@ -62,7 +62,7 @@ webapi:
 netapi:
   name: coingame-netapi
   image: coingame-netapi
-  tag: drone-0c6c71e0
+  tag: drone-26410809
   debug: false
   replicaCount: 1
   updateStrategyType: RollingUpdate
