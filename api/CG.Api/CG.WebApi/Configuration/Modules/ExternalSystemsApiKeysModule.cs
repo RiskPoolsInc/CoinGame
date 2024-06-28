@@ -1,6 +1,6 @@
 ﻿using Autofac;
 
-namespace CF.WebApi.Configuration.Modules;
+namespace CG.WebApi.Configuration.Modules;
 
 public class ExternalSystemsApiKeysModule : Module
 {

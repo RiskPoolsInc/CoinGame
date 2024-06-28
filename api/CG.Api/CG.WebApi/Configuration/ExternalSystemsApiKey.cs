@@ -1,4 +1,4 @@
-﻿namespace CF.WebApi.Configuration;
+﻿namespace CG.WebApi.Configuration;
 
 public class ExternalSystemsApiKey
 {

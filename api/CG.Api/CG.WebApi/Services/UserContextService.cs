@@ -1,11 +1,11 @@
 ﻿using System.Security.Claims;
 
-using CF.WebApi.Configuration;
+using CG.WebApi.Configuration;
 
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
-namespace CF.WebApi.Services; 
+namespace CG.WebApi.Services; 
 
 /// <summary>
 ///     Service for received user info from context.

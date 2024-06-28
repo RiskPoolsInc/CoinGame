@@ -1,4 +1,4 @@
-namespace CF.WebApi; 
+namespace CG.WebApi; 
 
 public class WeatherForecast {
     public DateTime Date { get; set; }

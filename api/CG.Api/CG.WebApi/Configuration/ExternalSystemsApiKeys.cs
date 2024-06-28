@@ -1,6 +1,6 @@
 ﻿using App.Core.Configurations.Annotaions;
 
-namespace CF.WebApi.Configuration;
+namespace CG.WebApi.Configuration;
 
 [ConfigurationName("ExternalSystemsApiKeys")]
 public class ExternalSystemsApiKeys

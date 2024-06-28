@@ -1,4 +1,4 @@
-﻿namespace CF.WebApi.Configuration; 
+﻿namespace CG.WebApi.Configuration; 
 
 /// <summary>
 ///     Service for received user info from context.

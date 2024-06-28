@@ -1,4 +1,4 @@
-﻿namespace CF.WebApi.Models; 
+﻿namespace CG.WebApi.Models; 
 
 public class TaskEntityExternal {
     public Guid Id { get; set; }

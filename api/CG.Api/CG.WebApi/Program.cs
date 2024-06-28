@@ -1,6 +1,6 @@
 using Autofac.Extensions.DependencyInjection;
 
-namespace CF.WebApi; 
+namespace CG.WebApi; 
 
 public class Program {
     public static void Main(string[] args) {

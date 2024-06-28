@@ -5,7 +5,7 @@ using App.Web.Core;
 using App.Web.Core.Errors;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CF.WebApi.Controllers
+namespace CG.WebApi.Controllers
 {
     [ApiController, ApiVersion("1.0"), Route("api/v{version:apiVersion}/database"), Produces(SupportedMimeTypes.Json)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]

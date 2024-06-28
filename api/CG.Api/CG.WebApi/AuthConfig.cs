@@ -1,12 +1,12 @@
 ﻿using System.Text;
 
-using CF.WebApi.Configuration;
-using CF.WebApi.Services;
+using CG.WebApi.Configuration;
+using CG.WebApi.Services;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
-namespace CF.WebApi; 
+namespace CG.WebApi; 
 
 public static class AuthConfig {
     public static IServiceCollection AddAuthentication(this IServiceCollection services,

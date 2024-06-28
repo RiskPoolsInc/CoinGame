@@ -1,4 +1,4 @@
-﻿namespace CF.WebApi.Configuration; 
+﻿namespace CG.WebApi.Configuration; 
 
 /// <summary>
 ///     Identity options contract
