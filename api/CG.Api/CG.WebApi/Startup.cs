@@ -216,7 +216,8 @@ public class Startup
             .AddJsonOptions(options =>
                 options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
         ConfigureCompression(services);
-        ConfigureAuthentication(services, configurationFactory.Create<OAuthConfig>());
+        services.AddHttpConfig();
+        // ConfigureAuthentication(services, configurationFactory.Create<OAuthConfig>());
     }
 
     public void ConfigureAuthentication(IServiceCollection services, OAuthConfig authConfig)

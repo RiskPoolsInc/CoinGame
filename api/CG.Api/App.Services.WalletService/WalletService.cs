@@ -91,7 +91,7 @@ public class WalletService {
         var cmd = new SendGenerateTransactionCommand {
             FromWallet = from,
             PrivateKey = privateKey,
-            WalletsTo = new TransactionReceiverView[] {
+            ToWallets = new TransactionReceiverView[] {
                 new() {
                     Hash = GetWalletAddress(ServiceWalletTypes.GameDeposit),
                     Sum = sum
@@ -108,7 +108,7 @@ public class WalletService {
         var path = GetPath(WalletServiceEnpointTypes.RefundCoins);
 
         var result = await Post<GenerateTransactionView>(path, new {
-            WalletFrom = from,
+            FromWallet = from,
             PrivateKey = privateKey
         });
         return result as GenerateTransactionView;
