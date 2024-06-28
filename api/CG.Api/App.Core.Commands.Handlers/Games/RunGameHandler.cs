@@ -14,6 +14,7 @@ using App.Interfaces.Core;
 using App.Interfaces.Repositories.Games;
 using App.Interfaces.Repositories.Transactions;
 using App.Interfaces.Repositories.Wallets;
+using App.Services.WalletService;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -23,15 +24,21 @@ public class RunGameHandler : IRequestHandler<RunGameCommand, GameView> {
     private readonly IWalletRepository _walletRepository;
     private readonly IGameRepository _gameRepository;
     private readonly IGameRoundRepository _gameRoundRepository;
+    private readonly ITransactionGameDepositRepository _gameDepositRepository;
+    private readonly WalletService _walletService;
     private readonly IDispatcher _dispatcher;
 
-    public RunGameHandler(IWalletRepository    walletRepository,
-                          IGameRepository      gameRepository,
-                          IGameRoundRepository gameRoundRepository,
-                          IDispatcher          dispatcher) {
+    public RunGameHandler(IWalletRepository                 walletRepository,
+                          IGameRepository                   gameRepository,
+                          IGameRoundRepository              gameRoundRepository,
+                          ITransactionGameDepositRepository gameDepositRepository,
+                          WalletService                     walletService,
+                          IDispatcher                       dispatcher) {
         _walletRepository = walletRepository;
         _gameRepository = gameRepository;
         _gameRoundRepository = gameRoundRepository;
+        _gameDepositRepository = gameDepositRepository;
+        _walletService = walletService;
         _dispatcher = dispatcher;
     }
 
@@ -42,11 +49,17 @@ public class RunGameHandler : IRequestHandler<RunGameCommand, GameView> {
 
         var currentGame = await _gameRepository.FindAsync(currentGameId, cancellationToken);
 
+
         if (currentGame.StateId == (int)GameStateTypes.Completed)
             throw new Exception("Game was completed");
 
         if (currentGame.StateId == (int)GameStateTypes.InProgress)
             throw new Exception("Game in Progress");
+
+        var depositTransaction = await _dispatcher.Send(new CheckGameDepositTransactionCommand(currentGameId), cancellationToken);
+
+        if (depositTransaction.State.Id != (int)TransactionStateTypes.Completed)
+            throw new Exception("Transaction to start game in progress");
 
         currentGame.StateId = (int)GameStateTypes.InProgress;
         await _gameRepository.SaveAsync(cancellationToken);

@@ -32,6 +32,10 @@ public class RefundCoinsHandler : IRequestHandler<RefundCoinsCommand, Transactio
         if (await _gameRepository.AnyAsync(a => a.WalletId == request.WalletId && a.StateId != (int)GameStateTypes.Completed,
                 cancellationToken))
             throw new Exception("Any game not completed");
+
+        if (await _walletRepository.AnyAsync(a => a.Id == request.WalletId && a.RefundId != null, cancellationToken))
+            throw new Exception("Refund was requested");
+
         var generatedTransactionRefund = await _walletService.GenerateTransactionRefund(wallet.Hash, wallet.PrivateKey);
 
         var transaction = new TransactionUserRefund() {

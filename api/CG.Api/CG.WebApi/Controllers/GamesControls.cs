@@ -1,5 +1,6 @@
 ﻿using App.Core.Commands.Database;
 using App.Core.Commands.Games;
+using App.Core.Commands.Transactions;
 using App.Core.Requests.Database;
 using App.Core.Requests.Games;
 using App.Interfaces.Core;
@@ -46,7 +47,7 @@ namespace CF.WebApi.Controllers {
                                                              CancellationToken                  cancellationToken) {
             return Ok(await _dispatcher.Send(request, cancellationToken));
         }
-        
+
         /// <summary>
         /// Create new Game
         /// </summary>
@@ -59,7 +60,7 @@ namespace CF.WebApi.Controllers {
         public async Task<IActionResult> CreateGameAsync([FromHeader] CreateGameCommand request, CancellationToken cancellationToken) {
             return Ok(await _dispatcher.Send(request, cancellationToken));
         }
-        
+
         /// <summary>
         /// Run current Game
         /// </summary>
@@ -70,6 +71,20 @@ namespace CF.WebApi.Controllers {
         /// <response code="500">Unexpected server error</response>
         [HttpPut("run")]
         public async Task<IActionResult> RunGameAsync([FromHeader] RunGameCommand request, CancellationToken cancellationToken) {
+            return Ok(await _dispatcher.Send(request, cancellationToken));
+        }
+
+        /// <summary>
+        /// Check game deposit transaction
+        /// </summary>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>Returns the user game</returns>
+        /// <response code="200">The user games</response>
+        /// <response code="403">Access Denied</response>
+        /// <response code="500">Unexpected server error</response>
+        [HttpGet("deposit/check")]
+        public async Task<IActionResult> CheckGameDepositTransactionAsync([FromHeader] CheckGameDepositTransactionCommand request,
+                                                                          CancellationToken cancellationToken) {
             return Ok(await _dispatcher.Send(request, cancellationToken));
         }
     }
