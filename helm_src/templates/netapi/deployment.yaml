@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    com.ubix.network: {{ .Values.netapi.name }}
+  name: {{ .Values.netapi.name }}
+spec:
+  replicas: {{ .Values.netapi.replicaCount }}
+  selector:
+    matchLabels:
+      com.ubix.network: {{ .Values.netapi.name }}
+  strategy:
+    type: {{ .Values.netapi.updateStrategyType }}
+  template:
+    metadata:
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/netapi/configmap.yaml") . | sha256sum }}
+      labels:
+        com.ubix.network: {{ .Values.netapi.name }}
+    spec:
+    {{- with .Values.global.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      containers:
+        - env:
+            {{- if eq .Values.environment "dev" }}
+            - name: ASPNETCORE_ENVIRONMENT
+              value: Development
+            {{- end }}
+            - name: ConnectionStrings__AppDbContext
+              valueFrom:
+                configMapKeyRef:
+                  key: ConnectionStrings__AppDbContext
+                  name: {{ .Values.netapi.name }}-config-map
+            - name: WalletServiceOptions__Host
+              valueFrom:
+                configMapKeyRef:
+                  key: WalletServiceOptions__Host
+                  name: {{ .Values.netapi.name }}-config-map
+          image: "{{ .Values.global.registry }}/{{ .Values.netapi.image }}:{{ .Values.netapi.tag }}"
+          name: {{ .Values.netapi.name }}
+          {{- if .Values.netapi.ports }}
+          ports: {{- toYaml .Values.netapi.ports | nindent 12 }}
+          {{- end }}
+          {{- if .Values.netapi.resources }}
+          resources: {{- toYaml .Values.netapi.resources | nindent 12 }}
+          {{- end }}
+          {{- if .Values.netapi.volumeMounts }}
+          volumeMounts: {{- toYaml .Values.netapi.volumeMounts | nindent 12 }}
+          {{- end }}
+          imagePullPolicy: {{ .Values.global.pullPolicy | quote }}
+      {{- if .Values.netapi.volumes }}
+      volumes: {{- toYaml .Values.netapi.volumes | nindent 8 }}
+      {{- end }}
+      restartPolicy: Always
+

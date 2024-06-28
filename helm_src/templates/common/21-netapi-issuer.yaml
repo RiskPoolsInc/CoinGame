@@ -1,0 +1,17 @@
+{{ if not .Values.ingress.existingTLSSecret }}
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: letsencrypt-netapi-coingame
+spec:
+  acme:
+    preferredChain: ""
+    email:  {{ .Values.certificate.email}}
+    privateKeySecretRef:
+      name: coingame-netapi-issuer-account-key
+    server: https://acme-v02.api.letsencrypt.org/directory
+    solvers:
+      - http01:
+          ingress:
+            class: nginx
+{{ end }}
