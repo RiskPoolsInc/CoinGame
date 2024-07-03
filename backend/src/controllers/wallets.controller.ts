@@ -13,6 +13,15 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
     }
 };
 
+/*const balance = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+
+    } catch (e) {
+        console.error(JSON.stringify(e))
+        next(e);
+    }
+}*/
+
 export default {
   create,
 };
