@@ -36,11 +36,6 @@ export const useGameStore = defineStore("game", () => {
     gameState.bid = bid;
   };
 
-  const restoreWallet = async () => {
-    if (cookies.get('uid')) {
-      generateWallet(true);
-    }
-  }
 
   const updateBalance = async () => {
     let nBalance = 0;
@@ -58,34 +53,13 @@ export const useGameStore = defineStore("game", () => {
     gameState.balance = Number(nBalance);
   }
 
-  const generateWallet = async (restoreWallet = false) => {
-    if (restoreWallet) {
-      gameState.uid = cookies.get('uid');
-    } else {
-      gameState.uid = (Math.random().toString(36) + '00000000000000000').slice(2, 16 + 2)
+  const generateWallet = async () => {
+    try {
+      const res = await api_backend.put('wallet/create')
+      console.log(res)
+    } catch (e) {
+      console.error(e)
     }
-    console.log(gameState.uid)
-    cookies.set('uid', gameState.uid);
-    const res = await api_backend.get('create-game-wallet' + '?uid=' + encodeURIComponent(gameState.uid), {
-      headers: {
-      }
-    })
-      .then((response) => {
-        console.log(response.data);
-        gameState.gameWalletAddress = response.data.address
-      })
-      .catch((error) => {
-        console.log(error)
-      })
-
-    if (gameState.gameWalletAddress.length > 0) {
-      gameState.wallet = 'Ux' + gameState.gameWalletAddress;
-    }
-
-    updateBalance();
-    setInterval(() => {
-      updateBalance();
-    }, 10000)
   };
 
   const copyWallet = async () => {
@@ -203,7 +177,6 @@ export const useGameStore = defineStore("game", () => {
     gameState,
     setBid,
     generalReset,
-    restoreWallet,
     refundFunds,
     number2Hash,
     hash2Number,
