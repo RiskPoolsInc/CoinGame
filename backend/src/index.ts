@@ -1,6 +1,7 @@
 import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
 import cors from "cors";
+import bodyParser from 'body-parser';
 import walletsRoute from "./routes/wallets.route";
 import transactionsRoute from "./routes/transactions.route";
 import swaggerSetup from "./swagger";
@@ -12,6 +13,7 @@ const port = process.env.PORT || 3000;
 
 swaggerSetup(app)
 app.use(cors());
+app.use(bodyParser.json({ limit: '500kb' }));
 app.get("/", (req: Request, res: Response) => {
   res.send("Express + TypeScript Server");
 });
