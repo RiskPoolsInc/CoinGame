@@ -1,5 +1,6 @@
 import {NextFunction, Request, Response} from "express";
 import CryptoWeb from 'crypto-web'
+import initWalletInstance from "../utils/initWalletInstance";
 const create = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const kpOwner = CryptoWeb.createKeyPair();
@@ -13,15 +14,23 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
     }
 };
 
-/*const balance = async (req: Request, res: Response, next: NextFunction) => {
+const balance = async (req: Request, res: Response, next: NextFunction) => {
     try {
+        const address = req.query.address
+        const wallet = await initWalletInstance()
+        const balance = await wallet.getBalance(address)
+        res.status(200).json({
+            address,
+            balance
+        });
 
     } catch (e) {
         console.error(JSON.stringify(e))
         next(e);
     }
-}*/
+}
 
 export default {
   create,
+  balance
 };
