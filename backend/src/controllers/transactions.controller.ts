@@ -37,10 +37,10 @@ const create =  async (req: Request, res: Response, next: NextFunction) => {
             ],
             Number(process.env.CONCILIUM_ID) || 0
         );
-        return {
+        res.status(200).json({
             hash: transaction.getHash(),
             sum
-        }
+        });
     } catch (e) {
         const err = e as Error
         if (err.message.includes('Not enough coins')) {
