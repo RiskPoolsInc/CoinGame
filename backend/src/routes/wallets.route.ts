@@ -21,6 +21,30 @@ const router = express.Router();
  *                     type: string
  */
 router.put("/create", walletsController.create);
-//router.get("/create", walletsController.balance);
+/**
+ * @swagger
+ * /wallet/balance:
+ *   get:
+ *     summary: Get balance
+ *     parameters:
+ *       - in: query
+ *         name: address
+ *         schema:
+ *           type: string
+ *         required: true
+ *     responses:
+ *       200:
+ *         description: Success
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                   address:
+ *                     type: string
+ *                   balance:
+ *                     type: number
+ */
+router.get("/balance", walletsController.balance);
 
 export default router;
