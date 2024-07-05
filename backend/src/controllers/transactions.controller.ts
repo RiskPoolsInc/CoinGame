@@ -24,7 +24,7 @@ const completed =  async (req: Request, res: Response, next: NextFunction) => {
     }
 }
 
-const create =  async (req: Request, res: Response, next: NextFunction) => {
+const send =  async (req: Request, res: Response, next: NextFunction) => {
     const {signerPrivateKey, toAddress, sum} = req.body
     try {
         const instance = await initCilInstance(signerPrivateKey);
@@ -37,6 +37,7 @@ const create =  async (req: Request, res: Response, next: NextFunction) => {
             ],
             Number(process.env.CONCILIUM_ID) || 0
         );
+        await instance.sendTx(transaction)
         res.status(200).json({
             hash: transaction.getHash(),
             sum
@@ -53,5 +54,5 @@ const create =  async (req: Request, res: Response, next: NextFunction) => {
 
 export default {
     completed,
-    create
+    send
 }

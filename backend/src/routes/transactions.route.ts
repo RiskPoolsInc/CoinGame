@@ -30,9 +30,9 @@ const router = express.Router();
 router.get("/completed", transactionsController.completed);
 /**
  * @swagger
- * /transactions/create:
+ * /transactions/send:
  *   post:
- *     summary: Create transaction
+ *     summary: Create and transaction
  *     requestBody:
  *       required: true
  *       content:
@@ -64,6 +64,6 @@ router.get("/completed", transactionsController.completed);
  *                   type: string
  */
 
-router.post("/create", transactionsController.create);
+router.post("/send", transactionsController.send);
 
 export default router;
