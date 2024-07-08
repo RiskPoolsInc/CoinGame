@@ -47,4 +47,44 @@ router.put("/create", walletsController.create);
  */
 router.get("/balance", walletsController.balance);
 
+/**
+ * @swagger
+ * /wallet/refund:
+ *   post:
+     *     summary: Refund
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - fromAddress
+ *               - signerPrivateKey
+ *             properties:
+ *               fromAddress:
+ *                 type: string
+ *               signerPrivateKey:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Success
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 hash:
+ *                   type: string
+ *                 sum:
+ *                   type: number
+ *                 fromAddress:
+ *                   type: string
+ *                 toAddress:
+ *                   type: string
+ *                 fee:
+ *                   type: number
+ */
+router.post("/refund", walletsController.refund);
+
 export default router;
