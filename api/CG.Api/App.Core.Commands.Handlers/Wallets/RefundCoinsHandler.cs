@@ -14,12 +14,12 @@ public class RefundCoinsHandler : IRequestHandler<RefundCoinsCommand, Transactio
     private readonly ITransactionRefundRepository _refundRepository;
     private readonly IWalletRepository _walletRepository;
     private readonly IGameRepository _gameRepository;
-    private readonly WalletService _walletService;
+    private readonly IWalletService _walletService;
 
     public RefundCoinsHandler(ITransactionRefundRepository refundRepository,
                               IWalletRepository            walletRepository,
                               IGameRepository              gameRepository,
-                              WalletService                walletService) {
+                              IWalletService               walletService) {
         _refundRepository = refundRepository;
         _walletRepository = walletRepository;
         _gameRepository = gameRepository;

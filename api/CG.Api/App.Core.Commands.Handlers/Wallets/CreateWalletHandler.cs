@@ -6,6 +6,7 @@ using App.Core.ViewModels.Wallets;
 using App.Data.Entities.Wallets;
 using App.Interfaces.Core;
 using App.Interfaces.Repositories.Wallets;
+using App.Services.WalletService;
 
 namespace App.Core.Commands.Handlers.Wallets;
 
@@ -28,6 +29,7 @@ public class CreateWalletHandler : IRequestHandler<CreateWalletCommand, WalletVi
         var wallet = _mapper.Map<Wallet>(generatedWallet);
         wallet.TypeId = (int)WalletTypes.Game;
         _walletRepository.Add(wallet);
+        wallet.PrivateKey = WalletService.EncryptPrivateKey(generatedWallet.PrivateKey, wallet.Id.ToString("N"));
         await _walletRepository.SaveAsync(cancellationToken);
 
         var model = await _walletRepository.Get(wallet.Id).SingleAsync<Wallet, WalletView>(cancellationToken);

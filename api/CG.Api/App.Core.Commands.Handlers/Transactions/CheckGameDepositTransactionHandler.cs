@@ -11,10 +11,10 @@ using Microsoft.EntityFrameworkCore;
 namespace App.Core.Commands.Handlers.Transactions;
 
 public class CheckGameDepositTransactionHandler : IRequestHandler<CheckGameDepositTransactionCommand, TransactionGameDepositView> {
-    private readonly WalletService _walletService;
+    private readonly IWalletService _walletService;
     private readonly ITransactionGameDepositRepository _gameDepositRepository;
 
-    public CheckGameDepositTransactionHandler(WalletService                     walletService,
+    public CheckGameDepositTransactionHandler(IWalletService                    walletService,
                                               ITransactionGameDepositRepository gameDepositRepository) {
         _walletService = walletService;
         _gameDepositRepository = gameDepositRepository;

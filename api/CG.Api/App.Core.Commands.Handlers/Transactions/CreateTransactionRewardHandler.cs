@@ -13,12 +13,12 @@ using Microsoft.EntityFrameworkCore;
 namespace App.Core.Commands.Handlers.Transactions;
 
 public class CreateTransactionRewardHandler : IRequestHandler<CreateTransactionRewardCommand, TransactionRewardView> {
-    private readonly WalletService _walletService;
+    private readonly IWalletService _walletService;
     private readonly IWalletRepository _walletRepository;
     private readonly IGameRepository _gameRepository;
     private readonly ITransactionRewardRepository _transactionRewardRepository;
 
-    public CreateTransactionRewardHandler(WalletService                walletService,
+    public CreateTransactionRewardHandler(IWalletService               walletService,
                                           IWalletRepository            walletRepository,
                                           IGameRepository              gameRepository,
                                           ITransactionRewardRepository transactionRewardRepository) {

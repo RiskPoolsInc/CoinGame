@@ -5,9 +5,9 @@ using App.Services.WalletService;
 namespace App.Core.Commands.Handlers.Wallets;
 
 public class GenerateWalletHandler : IRequestHandler<GenerateWalletCommand, GeneratedWalletView> {
-    private readonly WalletService _walletService;
+    private readonly IWalletService _walletService;
 
-    public GenerateWalletHandler(WalletService walletService) {
+    public GenerateWalletHandler(IWalletService walletService) {
         _walletService = walletService;
     }
 
