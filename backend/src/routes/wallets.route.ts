@@ -59,11 +59,8 @@ router.get("/balance", walletsController.balance);
  *           schema:
  *             type: object
  *             required:
- *               - fromAddress
  *               - signerPrivateKey
  *             properties:
- *               fromAddress:
- *                 type: string
  *               signerPrivateKey:
  *                 type: string
  *     responses:

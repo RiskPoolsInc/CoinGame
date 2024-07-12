@@ -8,6 +8,9 @@ export default async (privateKey?: string) => {
         rpcAddress: process.env.CIL_UTILS_RPC_ADDRESS,
         rpcUser: process.env.CIL_UTILS_RPC_USER,
         rpcPass: process.env.CIL_UTILS_RPC_PASS,
+        ...(process.env.INVOKE_FEE && {
+            nFeeInvoke: +process.env.INVOKE_FEE,
+        }),
     });
     await utils.asyncLoaded();
 

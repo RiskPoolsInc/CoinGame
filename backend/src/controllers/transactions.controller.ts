@@ -1,5 +1,6 @@
 import {NextFunction, Request, Response} from "express";
 import initCilInstance from "../utils/initCilInstance";
+import {errorResponseMap} from "../consts";
 
 const completed =  async (req: Request, res: Response, next: NextFunction) => {
     const hash = req.query.hash
@@ -25,28 +26,34 @@ const completed =  async (req: Request, res: Response, next: NextFunction) => {
 }
 
 const send =  async (req: Request, res: Response, next: NextFunction) => {
-    const {signerPrivateKey, toAddress, sum} = req.body
+    const {signerPrivateKey, receivers} = req.body
     try {
+        const sum = receivers
+            .map((receiver: Receiver) => receiver[1])
+            .reduce((accumulator: number, currentValue: number) => accumulator + currentValue ,0);
+
         const instance = await initCilInstance(signerPrivateKey);
         const transaction = await instance.createSendCoinsTx(
-            [
-                [
-                    instance.stripAddressPrefix(toAddress),
-                    Number(sum)
-                ]
-            ],
+            receivers.map((receiver: Receiver) => ([
+                instance.stripAddressPrefix(receiver[0]),
+                receiver[1]
+            ])),
             Number(process.env.CONCILIUM_ID) || 0
         );
         await instance.sendTx(transaction)
+
         res.status(200).json({
             hash: transaction.getHash(),
             sum
         });
     } catch (e) {
-        const err = e as Error
-        if (err.message.includes('Not enough coins')) {
-            res.status(402).json(err.message);
-            return
+        console.log(e)
+        const err = e as ResponseError
+        for (const [message, statusCode] of Object.entries(errorResponseMap)) {
+            if (err.message.includes(message)) {
+                res.status(statusCode).json(err.message);
+                return;
+            }
         }
         next(e);
     }
