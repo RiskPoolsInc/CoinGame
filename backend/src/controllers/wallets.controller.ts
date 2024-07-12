@@ -58,7 +58,7 @@ const refund = async (req: Request, res: Response, next: NextFunction) => {
         await instance.sendTx(transaction)
         res.status(200).json({
             hash: transaction.getHash(),
-            sum: targetTransaction.value,
+            sum: transaction.value,
             fromAddress: signerAddress,
             toAddress: originAddress,
             fee
