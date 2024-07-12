@@ -32,18 +32,20 @@ const balance = async (req: Request, res: Response, next: NextFunction) => {
 
 const refund = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const {fromAddress, signerPrivateKey} = req.body
+        const {signerPrivateKey} = req.body
+        const signerAddress = CryptoWeb.keyPairFromPrivate(signerPrivateKey).address
         const instance = await initCilInstance(signerPrivateKey)
-        const lastTransactions = await instance.queryApi('Address', fromAddress)
+        const lastTransactions = await instance.queryApi('Address', signerAddress)
         const count = lastTransactions.recordsCount
         const lastPage = Math.floor(count/10)
-        const { txInfoDTOs } = await instance.queryApi('Address', fromAddress, {page: lastPage})
+        const { txInfoDTOs } = await instance.queryApi('Address', signerAddress, {page: lastPage})
         const targetTransaction = txInfoDTOs.pop()
+        const originAddress = targetTransaction.inputs[0].from
         const transaction = await instance.createSendCoinsTx(
             [
                 [
-                    instance.stripAddressPrefix(fromAddress),
-                    Number(targetTransaction.value)
+                    instance.stripAddressPrefix(originAddress),
+                    -1
                 ]
             ],
             Number(process.env.CONCILIUM_ID) || 0
@@ -57,12 +59,17 @@ const refund = async (req: Request, res: Response, next: NextFunction) => {
         res.status(200).json({
             hash: transaction.getHash(),
             sum: targetTransaction.value,
-            fromAddress: CryptoWeb.keyPairFromPrivate(signerPrivateKey).address,
-            toAddress: fromAddress,
+            fromAddress: signerAddress,
+            toAddress: originAddress,
             fee
         });
     } catch (e) {
         console.error(JSON.stringify(e))
+        const err = e as ResponseError;
+        if (err.message.includes('Not enough coins')) {
+            res.status(402).json(err.message);
+            return
+        }
         next(e);
     }
 }

@@ -41,15 +41,18 @@ router.get("/completed", transactionsController.completed);
  *             type: object
  *             required:
  *               - signerPrivateKey
- *               - toAddress
- *               - sum
+ *               - receivers
  *             properties:
  *               signerPrivateKey:
  *                 type: string
- *               toAddress:
- *                 type: string
- *               sum:
- *                 type: string
+ *               receivers:
+ *                 type: array
+ *                 items:
+ *                   type: array
+ *                   items:
+ *                     oneOf:
+ *                       - type: string
+ *                       - type: integer
  *     responses:
  *       200:
  *         description: Success

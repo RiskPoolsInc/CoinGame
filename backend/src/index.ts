@@ -1,4 +1,4 @@
-import express, { Express, Request, Response } from "express";
+import express, {Express, Request, Response, NextFunction} from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import bodyParser from 'body-parser';
@@ -14,12 +14,12 @@ const port = process.env.PORT || 3000;
 swaggerSetup(app)
 app.use(cors());
 app.use(bodyParser.json({ limit: '500kb' }));
+
 app.get("/", (req: Request, res: Response) => {
   res.send("Express + TypeScript Server");
 });
 app.use("/wallet", walletsRoute);
 app.use("/transactions", transactionsRoute);
-
 
 
 app.listen(port, () => {
