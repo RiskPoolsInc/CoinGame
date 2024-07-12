@@ -1,6 +1,7 @@
 import {NextFunction, Request, Response} from "express";
 import CryptoWeb from 'crypto-web'
 import initCilInstance from "../utils/initCilInstance";
+import {errorResponseMap} from "../consts";
 const create = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const kpOwner = CryptoWeb.createKeyPair();
@@ -64,11 +65,12 @@ const refund = async (req: Request, res: Response, next: NextFunction) => {
             fee
         });
     } catch (e) {
-        console.error(JSON.stringify(e))
-        const err = e as ResponseError;
-        if (err.message.includes('Not enough coins')) {
-            res.status(402).json(err.message);
-            return
+        const err = e as ResponseError
+        for (const [message, statusCode] of Object.entries(errorResponseMap)) {
+            if (err.message.includes(message)) {
+                res.status(statusCode).json(err.message);
+                return;
+            }
         }
         next(e);
     }

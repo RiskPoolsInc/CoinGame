@@ -1,5 +1,6 @@
 import {NextFunction, Request, Response} from "express";
 import initCilInstance from "../utils/initCilInstance";
+import {errorResponseMap} from "../consts";
 
 const completed =  async (req: Request, res: Response, next: NextFunction) => {
     const hash = req.query.hash
@@ -30,9 +31,6 @@ const send =  async (req: Request, res: Response, next: NextFunction) => {
         const sum = receivers
             .map((receiver: Receiver) => receiver[1])
             .reduce((accumulator: number, currentValue: number) => accumulator + currentValue ,0);
-        if (sum <= 0) {
-            res.status(402).json('Not enough coins');
-        }
 
         const instance = await initCilInstance(signerPrivateKey);
         const transaction = await instance.createSendCoinsTx(
@@ -49,10 +47,13 @@ const send =  async (req: Request, res: Response, next: NextFunction) => {
             sum
         });
     } catch (e) {
+        console.log(e)
         const err = e as ResponseError
-        if (err.message.includes('Not enough coins')) {
-            res.status(402).json(err.message);
-            return
+        for (const [message, statusCode] of Object.entries(errorResponseMap)) {
+            if (err.message.includes(message)) {
+                res.status(statusCode).json(err.message);
+                return;
+            }
         }
         next(e);
     }
