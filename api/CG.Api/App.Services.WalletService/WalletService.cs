@@ -13,6 +13,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 using Newtonsoft.Json;
 
+using JsonSerializer = System.Text.Json.JsonSerializer;
+
 namespace App.Services.WalletService;
 
 public class WalletService : IWalletService {
@@ -66,7 +68,7 @@ public class WalletService : IWalletService {
         var path = GetPath(WalletServiceEnpointTypes.GetBalance);
 
         var result = await Get<BalanceView>(path, new Dictionary<string, string>(new[] {
-            new KeyValuePair<string, string>("Wallet", address)
+            new KeyValuePair<string, string>("address", address)
         }));
         return result as BalanceView;
     }
@@ -75,7 +77,7 @@ public class WalletService : IWalletService {
         var path = GetPath(WalletServiceEnpointTypes.TransactionIsCompleted);
 
         var result = await Get<TransactionIsCompletedView>(path, new Dictionary<string, string>(new[] {
-            new KeyValuePair<string, string>("TransactionHash", hash)
+            new KeyValuePair<string, string>("hash", hash)
         }));
         return result as TransactionIsCompletedView;
     }
@@ -86,9 +88,8 @@ public class WalletService : IWalletService {
         var serviceWallet = GetWallet(ServiceWalletTypes.GameDeposit);
 
         var result = await Post<GenerateTransactionView>(path, new {
-            WalletFrom = gameDepositWallet.Value,
-            PrivateKey = gameDepositWallet.PrivateKey,
-            WalletTo = serviceWallet.Value
+            signerPrivateKey = gameDepositWallet.PrivateKey,
+            toAddress = serviceWallet.Value
         });
         return result as GenerateTransactionView;
     }
@@ -96,19 +97,24 @@ public class WalletService : IWalletService {
     public async Task<GenerateTransactionView> GenerateTransactionGameDeposit(string from, string privateKey, decimal sum) {
         var path = GetPath(WalletServiceEnpointTypes.GenerateTransaction);
 
-        var cmd = new SendGenerateTransactionCommand {
-            FromWallet = from,
-            PrivateKey = privateKey,
-            ToWallets = new TransactionReceiverView[] {
-                new() {
-                    Hash = GetWalletAddress(ServiceWalletTypes.GameDeposit),
-                    Sum = sum
-                }
+        // var cmd = new SendGenerateTransactionCommand {
+        //     SignerPrivateKey = from,
+        //     Receivers = new TransactionReceiverView[] {
+        //         new() {
+        //             Address = GetWalletAddress(ServiceWalletTypes.GameDeposit),
+        //             Sum = sum
+        //         }
+        //     }
+        // };
+
+        var cmd = new {
+            signerPrivateKey = privateKey,
+            receivers = new object[] {
+                GetWalletAddress(ServiceWalletTypes.GameDeposit), sum
             }
         };
 
-        var result = await Post<GenerateTransactionView>(path, new SendGenerateTransactionCommand() {
-        });
+        var result = await Post<GenerateTransactionView>(path, cmd);
         return result as GenerateTransactionView;
     }
 
@@ -116,21 +122,21 @@ public class WalletService : IWalletService {
         var path = GetPath(WalletServiceEnpointTypes.RefundCoins);
 
         var result = await Post<GenerateTransactionView>(path, new {
-            FromWallet = from,
-            PrivateKey = privateKey
+            signerPrivateKey = privateKey
         });
         return result as GenerateTransactionView;
     }
 
-    public async Task<GenerateTransactionView> GenerateTransactionReward(string toWallet) {
+    public async Task<GenerateTransactionView> GenerateTransactionReward(string toWallet, decimal sum) {
         var path = GetPath(WalletServiceEnpointTypes.GenerateTransaction);
         var walletFromAddress = GetWalletAddress(ServiceWalletTypes.Reward);
         var walletFromPrivateKey = GetWalletPrivateKey(ServiceWalletTypes.Reward);
 
-        var cmd = new SendTransactionRewardCommand() {
-            FromWallet = walletFromAddress,
-            PrivateKey = walletFromPrivateKey,
-            ToWallet = toWallet
+        var cmd = new {
+            signerPrivateKey = walletFromPrivateKey,
+            receivers = new string[] {
+                toWallet, sum.ToString()
+            }
         };
 
         var result = await Post<GenerateTransactionView>(path, cmd);
@@ -144,6 +150,7 @@ public class WalletService : IWalletService {
     private async Task<object> Post<T>(string endpointPath, object requestValue, CancellationToken cancellationToken = default) {
         using var client = new HttpClient(new HttpClientHandler());
         client.DefaultRequestHeaders.Add("AuthorizationToken", _walletServiceOptions.PrivateKey);
+        var json = JsonSerializer.Serialize(requestValue);
         var result = await SendPostJson(client, endpointPath, requestValue, cancellationToken);
 
         if (result.IsSuccessStatusCode)
@@ -201,7 +208,7 @@ public class WalletService : IWalletService {
             foreach (var key in queryProperties.Keys) {
                 var urlComponent = HttpUtility.UrlEncode(queryProperties[key]);
                 url += $"{key}={urlComponent}&";
-                url = rgx.Replace(url, pattern);
+                url = rgx.Replace(url, "");
             }
         }
 

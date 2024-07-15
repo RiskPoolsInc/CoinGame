@@ -29,10 +29,10 @@ public class CreateTransactionRewardHandler : IRequestHandler<CreateTransactionR
     }
 
     public async Task<TransactionRewardView> Handle(CreateTransactionRewardCommand request, CancellationToken cancellationToken) {
-        var gameWallet = await _gameRepository.Get(request.GameId).SingleAsync();
-        var wallet = await _walletRepository.Get(gameWallet.WalletId).SingleAsync();
+        var game = await _gameRepository.Get(request.GameId).SingleAsync();
+        var wallet = await _walletRepository.Get(game.WalletId).SingleAsync();
 
-        var generatedTransaction = await _walletService.GenerateTransactionReward(wallet.Hash);
+        var generatedTransaction = await _walletService.GenerateTransactionReward(wallet.Hash, game.RoundSum);
 
         var transaction = new TransactionUserReward {
             GameId = request.GameId,

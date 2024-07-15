@@ -1,15 +1,12 @@
 FROM node:18 as builder
 WORKDIR /app
+EXPOSE 3000
 
 COPY ./package*.json /app/
 
 RUN npm install
 
 COPY ./ /app/
-
-
-# Expose port
-EXPOSE 3000
 
 # Start
 CMD ["npm", "run", "start" ]

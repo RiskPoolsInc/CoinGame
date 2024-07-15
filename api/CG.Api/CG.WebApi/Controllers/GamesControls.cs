@@ -30,7 +30,7 @@ namespace CG.WebApi.Controllers {
         /// <response code="403">Access Denied</response>
         /// <response code="500">Unexpected server error</response>
         [HttpGet]
-        public async Task<IActionResult> GetGamesAsync([FromHeader] GetGamesRequest request, CancellationToken cancellationToken) {
+        public async Task<IActionResult> GetGamesAsync([FromBody] GetGamesRequest request, CancellationToken cancellationToken) {
             return Ok(await _dispatcher.Send(request, cancellationToken));
         }
 
@@ -43,7 +43,7 @@ namespace CG.WebApi.Controllers {
         /// <response code="403">Access Denied</response>
         /// <response code="500">Unexpected server error</response>
         [HttpGet("current")]
-        public async Task<IActionResult> GetCurrentGameAsync([FromHeader] GetCurrentGameRequest request,
+        public async Task<IActionResult> GetCurrentGameAsync([FromBody] GetCurrentGameRequest request,
                                                              CancellationToken                  cancellationToken) {
             return Ok(await _dispatcher.Send(request, cancellationToken));
         }
@@ -57,7 +57,7 @@ namespace CG.WebApi.Controllers {
         /// <response code="403">Access Denied</response>
         /// <response code="500">Unexpected server error</response>
         [HttpPut("new")]
-        public async Task<IActionResult> CreateGameAsync([FromHeader] CreateGameCommand request, CancellationToken cancellationToken) {
+        public async Task<IActionResult> CreateGameAsync([FromBody] CreateGameCommand request, CancellationToken cancellationToken) {
             return Ok(await _dispatcher.Send(request, cancellationToken));
         }
 
@@ -70,7 +70,7 @@ namespace CG.WebApi.Controllers {
         /// <response code="403">Access Denied</response>
         /// <response code="500">Unexpected server error</response>
         [HttpPut("run")]
-        public async Task<IActionResult> RunGameAsync([FromHeader] RunGameCommand request, CancellationToken cancellationToken) {
+        public async Task<IActionResult> RunGameAsync([FromBody] RunGameCommand request, CancellationToken cancellationToken) {
             return Ok(await _dispatcher.Send(request, cancellationToken));
         }
 
@@ -83,7 +83,7 @@ namespace CG.WebApi.Controllers {
         /// <response code="403">Access Denied</response>
         /// <response code="500">Unexpected server error</response>
         [HttpGet("deposit/check")]
-        public async Task<IActionResult> CheckGameDepositTransactionAsync([FromHeader] CheckGameDepositTransactionCommand request,
+        public async Task<IActionResult> CheckGameDepositTransactionAsync([FromBody] CheckGameDepositTransactionCommand request,
                                                                           CancellationToken cancellationToken) {
             return Ok(await _dispatcher.Send(request, cancellationToken));
         }

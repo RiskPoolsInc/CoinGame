@@ -7,7 +7,7 @@ public interface IWalletService {
     Task<BalanceView> GetBalance(string                                 address);
     Task<TransactionIsCompletedView> CheckTransactionIsCompleted(string hash);
     Task<GenerateTransactionView> GenerateTransactionService();
-    Task<GenerateTransactionView> GenerateTransactionGameDeposit(string from, string privateKey, decimal sum);
-    Task<GenerateTransactionView> GenerateTransactionRefund(string      from, string privateKey);
-    Task<GenerateTransactionView> GenerateTransactionReward(string      toWallet);
+    Task<GenerateTransactionView> GenerateTransactionGameDeposit(string from,       string  privateKey, decimal sum);
+    Task<GenerateTransactionView> GenerateTransactionRefund(string      from,       string  privateKey);
+    Task<GenerateTransactionView> GenerateTransactionReward(string      toWallet, decimal sum);
 }
