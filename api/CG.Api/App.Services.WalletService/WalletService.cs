@@ -82,16 +82,36 @@ public class WalletService : IWalletService {
         return result as TransactionIsCompletedView;
     }
 
-    public async Task<GenerateTransactionView> GenerateTransactionService() {
+    public async Task<GenerateTransactionView> GenerateTransactionService(decimal sum) {
         var path = GetPath(WalletServiceEnpointTypes.GenerateTransaction);
         var gameDepositWallet = GetWallet(ServiceWalletTypes.GameDeposit);
-        var serviceWallet = GetWallet(ServiceWalletTypes.GameDeposit);
+        var serviceWallet = GetWallet(ServiceWalletTypes.Service);
 
-        var result = await Post<GenerateTransactionView>(path, new {
-            signerPrivateKey = gameDepositWallet.PrivateKey,
-            toAddress = serviceWallet.Value
-        });
+        if (gameDepositWallet.Value == serviceWallet.Value)
+            return null;
+
+        var result = await Post<GenerateTransactionView>(path,
+            PrepareTransactionRequestBody(gameDepositWallet.PrivateKey,
+                new (string address, decimal sum)[] {
+                    (gameDepositWallet.PrivateKey, sum)
+                }));
         return result as GenerateTransactionView;
+    }
+
+    private object PrepareTransactionRequestBody(string signerPrivateKey, (string address, decimal sum)[] receivers) {
+        var receiversArray = new object[][receivers.Length];
+
+        for (var i = 0; i < receiversArray.Length; i++) {
+            receiversArray[i] = new object[] {
+                receivers[i].address, receivers[i].sum
+            };
+        }
+
+        var request = new {
+            signerPrivateKey = signerPrivateKey,
+            receivers = receiversArray
+        };
+        return receivers;
     }
 
     public async Task<GenerateTransactionView> GenerateTransactionGameDeposit(string from, string privateKey, decimal sum) {
@@ -134,15 +154,16 @@ public class WalletService : IWalletService {
         var walletFromAddress = GetWalletAddress(ServiceWalletTypes.Reward);
         var walletFromPrivateKey = GetWalletPrivateKey(ServiceWalletTypes.Reward);
 
-        var cmd = new {
-            signerPrivateKey = walletFromPrivateKey,
-            receivers = new object[] {
-                toWallet, sum
-            }
-        };
+        var cmd = PrepareTransactionRequestBody(walletFromPrivateKey, new (string address, decimal sum)[] {
+            (toWallet, sum)
+        });
 
         var result = await Post<GenerateTransactionView>(path, cmd);
         return result as GenerateTransactionView;
+    }
+
+    public bool NeedServiceTransaction() {
+        return GetWalletAddress(ServiceWalletTypes.Service) != GetWalletAddress(ServiceWalletTypes.GameDeposit);
     }
 
     #endregion
