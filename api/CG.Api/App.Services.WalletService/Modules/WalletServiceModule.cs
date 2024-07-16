@@ -9,6 +9,7 @@ namespace App.Services.WalletService.Modules;
 public class WalletServiceModule : Module {
     protected override void Load(ContainerBuilder builder) {
         base.Load(builder);
+        builder.RegisterType<WalletService>().As<IWalletService>();
 
         builder.Register(ctx => ctx.Resolve<IConfiguration>()
                                    .GetSection(SystemSettingsOptions.SECTION_NAME)

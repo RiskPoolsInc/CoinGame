@@ -24,6 +24,7 @@ using App.Services.Base.Captcha;
 using App.Services.BlockChainExplorer.Modules;
 using App.Services.Telegram.Modules;
 using App.Services.UbikiriApiService.Modules;
+using App.Services.WalletService.Modules;
 using App.Web.Core.Converters;
 using App.Web.Core.Filters;
 using App.Web.Core.ModelBinders;
@@ -106,6 +107,7 @@ public class Startup
         builder.RegisterModule<MemoryCacheModule>();
         builder.RegisterModule<AppSettingsModule>();
         builder.RegisterModule<BlockChainExplorerModule>();
+        builder.RegisterModule<WalletServiceModule>();
         
         builder.RegisterModule<MigrateAfterBuildModule<RunMigrateAfterBuild, string[]>>();
     }

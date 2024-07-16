@@ -25,14 +25,14 @@ public class RunGameHandler : IRequestHandler<RunGameCommand, GameView> {
     private readonly IGameRepository _gameRepository;
     private readonly IGameRoundRepository _gameRoundRepository;
     private readonly ITransactionGameDepositRepository _gameDepositRepository;
-    private readonly WalletService _walletService;
+    private readonly IWalletService _walletService;
     private readonly IDispatcher _dispatcher;
 
     public RunGameHandler(IWalletRepository                 walletRepository,
                           IGameRepository                   gameRepository,
                           IGameRoundRepository              gameRoundRepository,
                           ITransactionGameDepositRepository gameDepositRepository,
-                          WalletService                     walletService,
+                          IWalletService                    walletService,
                           IDispatcher                       dispatcher) {
         _walletRepository = walletRepository;
         _gameRepository = gameRepository;

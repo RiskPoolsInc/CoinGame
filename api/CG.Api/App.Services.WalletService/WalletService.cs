@@ -1,21 +1,21 @@
 ﻿using System.Net;
-using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Security.Cryptography;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
 
-using App.Common.Helpers;
 using App.Core.Commands.Transactions;
-using App.Core.Configurations;
-using App.Core.Exceptions;
 using App.Core.ViewModels.External;
 using App.Services.Telegram.Options;
+
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 using Newtonsoft.Json;
 
 namespace App.Services.WalletService;
 
-public class WalletService {
+public class WalletService : IWalletService {
     private readonly SystemSettingsOptions _systemSettingsOptions;
     private readonly WalletServiceOptions _walletServiceOptions;
     private readonly string _privateKey;
@@ -37,20 +37,28 @@ public class WalletService {
 
     #region EndpointPath
 
-    private string BasePath => $"{_walletServiceOptions.Host}/{_privateKey}";
+    private string BasePath => $"{_walletServiceOptions.Host}";
 
     private WalletServiceEnpoint ServiceEndpoint(WalletServiceEnpointTypes typeId) =>
-        _walletServiceOptions.Enpoints.Single(a => a.Type == (int)typeId);
+        _walletServiceOptions.Endpoints.Single(a => a.Type == (int)typeId);
 
-    private string GetPath(WalletServiceEnpointTypes type) => $"{BasePath}/{ServiceEndpoint(type)}";
+    private string GetPath(WalletServiceEnpointTypes type) => $"{BasePath}/{ServiceEndpoint(type).Value}";
 
     #endregion
 
     #region Public Methods
 
+    public static string EncryptPrivateKey(string privateKey, string key) {
+        return privateKey;
+    }
+
+    public static string DecrypPrivateKey(string privateKey, string key) {
+        return privateKey;
+    }
+
     public async Task<GeneratedWalletView> GenerateWallet() {
         var path = GetPath(WalletServiceEnpointTypes.GenerateWallet);
-        var result = await Get<GeneratedWalletView>(path);
+        var result = await Put<GeneratedWalletView>(path);
         return result as GeneratedWalletView;
     }
 
@@ -146,6 +154,16 @@ public class WalletService {
         throw new HttpRequestException(result.Content);
     }
 
+    private async Task<object> Put<T>(string            endpointPath, Dictionary<string, string>? queryProperties = null,
+                                      CancellationToken cancellationToken = default) {
+        using var client = new HttpClient(new HttpClientHandler());
+        client.DefaultRequestHeaders.Add("AuthorizationToken", _walletServiceOptions.PrivateKey);
+
+        var response = await SendPutRequest<T>(client, endpointPath, queryProperties, null,
+            cancellationToken);
+        return response;
+    }
+
     private async Task<object> Get<T>(string            endpointPath, Dictionary<string, string>? queryProperties = null,
                                       CancellationToken cancellationToken = default) {
         using var client = new HttpClient(new HttpClientHandler());
@@ -155,23 +173,47 @@ public class WalletService {
         return response;
     }
 
+    private async Task<object> SendPutRequest<T>(HttpClient                  client,
+                                                 string                      endPoint,
+                                                 Dictionary<string, string>? queryProperties   = null,
+                                                 HttpContent?                httpContent       = null,
+                                                 CancellationToken           cancellationToken = default) {
+        using (client) {
+            var uri = AddQueryProperties(endPoint, queryProperties);
+            var response = await client.PutAsync(uri, httpContent, cancellationToken);
+            var content = await response.Content.ReadAsStringAsync(cancellationToken);
+
+            if (response.IsSuccessStatusCode)
+                return !string.IsNullOrWhiteSpace(content)
+                    ? JsonConvert.DeserializeObject(content, typeof(T))
+                    : response.Content;
+
+            throw new HttpRequestException(content);
+        }
+    }
+
+    private Uri AddQueryProperties(string url, Dictionary<string, string>? queryProperties = null) {
+        if (queryProperties?.Count > 0) {
+            url += "?";
+            var pattern = "[?&]$";
+            var rgx = new Regex(pattern);
+
+            foreach (var key in queryProperties.Keys) {
+                var urlComponent = HttpUtility.UrlEncode(queryProperties[key]);
+                url += $"{key}={urlComponent}&";
+                url = rgx.Replace(url, pattern);
+            }
+        }
+
+        return new Uri(url);
+    }
+
     private async Task<object> SendGetRequest<T>(HttpClient                  client,
                                                  string                      endPoint,
                                                  Dictionary<string, string>? queryProperties   = null,
                                                  CancellationToken           cancellationToken = default) {
         using (client) {
-            var url = endPoint + "?";
-            var pattern = "[?&]$";
-            var rgx = new Regex(pattern);
-
-            if (queryProperties?.Count > 0)
-                foreach (var key in queryProperties.Keys) {
-                    var urlComponent = HttpUtility.UrlEncode(queryProperties[key]);
-                    url += $"{key}={urlComponent}&";
-                }
-
-            url = rgx.Replace(url, pattern);
-            var uri = new Uri(url);
+            var uri = AddQueryProperties(endPoint, queryProperties);
 
             var response = await client.GetAsync(uri, cancellationToken);
             var content = await response.Content.ReadAsStringAsync(cancellationToken);
