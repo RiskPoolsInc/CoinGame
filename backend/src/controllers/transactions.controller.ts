@@ -29,14 +29,14 @@ const send =  async (req: Request, res: Response, next: NextFunction) => {
     const {signerPrivateKey, receivers} = req.body
     try {
         const sum = receivers
-            .map((receiver: Receiver) => receiver[1])
+            .map((receiver: Receiver) => receiver.sum)
             .reduce((accumulator: number, currentValue: number) => accumulator + currentValue ,0);
 
         const instance = await initCilInstance(signerPrivateKey);
         const transaction = await instance.createSendCoinsTx(
             receivers.map((receiver: Receiver) => ([
-                instance.stripAddressPrefix(receiver[0]),
-                receiver[1]
+                instance.stripAddressPrefix(receiver.address),
+                receiver.sum
             ])),
             Number(process.env.CONCILIUM_ID) || 0
         );

@@ -1,1 +1,1 @@
-declare type Receiver = [string, number]
+declare type Receiver = { address: string, sum: number }
