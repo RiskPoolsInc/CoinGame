@@ -28,13 +28,21 @@ public class CreateGameHandler : IRequestHandler<CreateGameCommand, TransactionG
             RoundSum = request.Rate
         };
         _gameRepository.Add(game);
-        _gameRepository.SaveAsync(cancellationToken);
+        await _gameRepository.SaveAsync(cancellationToken);
 
-        var transaction = await _dispatcher.Send(new GameDepositTransactionCommand() {
-            WalletId = game.WalletId,
-            Sum = game.RoundSum,
-            GameId = game.Id
-        }, cancellationToken);
-        return transaction;
+        try {
+            var transaction = await _dispatcher.Send(new GameDepositTransactionCommand() {
+                WalletId = game.WalletId,
+                Sum = game.RoundSum,
+                GameId = game.Id
+            }, cancellationToken);
+            return transaction;
+        }
+        catch (Exception e) {
+            _gameRepository.Delete(game.Id);
+            await _gameRepository.SaveAsync(cancellationToken);
+
+            throw;
+        }
     }
 }

@@ -30,7 +30,7 @@ public class GameDepositTransactionHandler : IRequestHandler<GameDepositTransact
         var transaction = new TransactionGameDeposit {
             GameId = request.GameId,
             WalletFromId = request.WalletId,
-            WalletHashFrom = generatedTransaction.WalletFrom,
+            WalletHashFrom = wallet.Hash,
             TransactionHash = generatedTransaction.Hash,
             Sum = generatedTransaction.Sum,
             Fee = generatedTransaction.Fee,

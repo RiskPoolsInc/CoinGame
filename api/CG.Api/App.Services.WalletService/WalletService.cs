@@ -110,7 +110,9 @@ public class WalletService : IWalletService {
         var cmd = new {
             signerPrivateKey = privateKey,
             receivers = new object[] {
-                GetWalletAddress(ServiceWalletTypes.GameDeposit), sum
+                new object[] {
+                    GetWalletAddress(ServiceWalletTypes.GameDeposit), sum
+                }
             }
         };
 
@@ -134,8 +136,8 @@ public class WalletService : IWalletService {
 
         var cmd = new {
             signerPrivateKey = walletFromPrivateKey,
-            receivers = new string[] {
-                toWallet, sum.ToString()
+            receivers = new object[] {
+                toWallet, sum
             }
         };
 
