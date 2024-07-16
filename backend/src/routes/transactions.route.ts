@@ -48,11 +48,12 @@ router.get("/completed", transactionsController.completed);
  *               receivers:
  *                 type: array
  *                 items:
- *                   type: array
- *                   items:
- *                     oneOf:
- *                       - type: string
- *                       - type: integer
+ *                   type: object
+ *                   properties:
+ *                    address:
+ *                     type: string
+ *                    sum:
+ *                      type: number
  *     responses:
  *       200:
  *         description: Success
