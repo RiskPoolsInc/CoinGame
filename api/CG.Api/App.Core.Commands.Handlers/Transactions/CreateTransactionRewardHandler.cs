@@ -1,7 +1,9 @@
 using App.Common.Helpers;
 using App.Core.Commands.Transactions;
 using App.Core.Enums;
+using App.Core.ViewModels.Games;
 using App.Core.ViewModels.Transactions;
+using App.Data.Entities.Games;
 using App.Data.Entities.Transactions;
 using App.Interfaces.Repositories.Games;
 using App.Interfaces.Repositories.Transactions;
@@ -29,15 +31,15 @@ public class CreateTransactionRewardHandler : IRequestHandler<CreateTransactionR
     }
 
     public async Task<TransactionRewardView> Handle(CreateTransactionRewardCommand request, CancellationToken cancellationToken) {
-        var game = await _gameRepository.Get(request.GameId).Include(s => s.GameRounds).SingleAsync();
-        var wallet = await _walletRepository.Get(game.WalletId).SingleAsync();
-        var rounds = game.GameRounds.OrderBy(a => a.Number).ToList();
+        var game = await _gameRepository.Get(request.GameId).SingleAsync<Game,GameView>(default);
+        var wallet = await _walletRepository.Get(game.Wallet.Id).SingleAsync();
+        var rounds = game.Rounds.OrderBy(a => a.Number).ToList();
         var gameReward = 0m;
 
         for (var i = 0; i < rounds.Count; i++) {
             var round = rounds[i];
 
-            if (round.ResultId == (int)GameRoundResultTypes.Win)
+            if (round.GameRoundResult.Id == (int)GameRoundResultTypes.Win)
                 gameReward += game.RoundSum;
             else
                 gameReward -= game.RoundSum;

@@ -1,15 +1,10 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
-using System.Security.Cryptography;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
 
-using App.Core.Commands.Transactions;
 using App.Core.ViewModels.External;
 using App.Services.Telegram.Options;
-
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 using Newtonsoft.Json;
 
@@ -99,11 +94,12 @@ public class WalletService : IWalletService {
     }
 
     private object PrepareTransactionRequestBody(string signerPrivateKey, (string address, decimal sum)[] receivers) {
-        var receiversArray = new object[][receivers.Length];
+        var receiversArray = new object[receivers.Length];
 
         for (var i = 0; i < receiversArray.Length; i++) {
-            receiversArray[i] = new object[] {
-                receivers[i].address, receivers[i].sum
+            receiversArray[i] = new {
+                address = receivers[i].address,
+                sum = receivers[i].sum
             };
         }
 
@@ -111,30 +107,15 @@ public class WalletService : IWalletService {
             signerPrivateKey = signerPrivateKey,
             receivers = receiversArray
         };
-        return receivers;
+        return request;
     }
 
     public async Task<GenerateTransactionView> GenerateTransactionGameDeposit(string from, string privateKey, decimal sum) {
         var path = GetPath(WalletServiceEnpointTypes.GenerateTransaction);
 
-        // var cmd = new SendGenerateTransactionCommand {
-        //     SignerPrivateKey = from,
-        //     Receivers = new TransactionReceiverView[] {
-        //         new() {
-        //             Address = GetWalletAddress(ServiceWalletTypes.GameDeposit),
-        //             Sum = sum
-        //         }
-        //     }
-        // };
-
-        var cmd = new {
-            signerPrivateKey = privateKey,
-            receivers = new object[] {
-                new object[] {
-                    GetWalletAddress(ServiceWalletTypes.GameDeposit), sum
-                }
-            }
-        };
+        var cmd = PrepareTransactionRequestBody(privateKey, new (string address, decimal sum)[] {
+            (GetWalletAddress(ServiceWalletTypes.GameDeposit), sum)
+        });
 
         var result = await Post<GenerateTransactionView>(path, cmd);
         return result as GenerateTransactionView;

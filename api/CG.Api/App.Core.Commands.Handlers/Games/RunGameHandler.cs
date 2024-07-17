@@ -80,6 +80,7 @@ public class RunGameHandler : IRequestHandler<RunGameCommand, GameView> {
                 currentGame = await _gameRepository.FindAsync(currentGameId, cancellationToken);
                 currentGame.StateId = (int)GameStateTypes.Completed;
                 currentGame.ResultId = (int)GameResultTypes.Lose;
+                gameLose = true;
                 await _gameRepository.SaveAsync(cancellationToken);
 
                 var transactionService = new GameServiceTransactionComand() {
@@ -106,7 +107,7 @@ public class RunGameHandler : IRequestHandler<RunGameCommand, GameView> {
 
     private async Task RandomDelay() {
         var random = new Random();
-        var next = random.Next(100, 4500);
+        var next = random.Next(4600, 4900);
         await Task.Delay(next);
     }
 
