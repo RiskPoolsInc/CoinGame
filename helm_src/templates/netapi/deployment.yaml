@@ -38,11 +38,6 @@ spec:
                 configMapKeyRef:
                   key: ConnectionStrings__AppDbContext
                   name: {{ .Values.netapi.name }}-config-map
-            - name: WalletServiceOptions__Host
-              valueFrom:
-                configMapKeyRef:
-                  key: WalletServiceOptions__Host
-                  name: {{ .Values.netapi.name }}-config-map
           image: "{{ .Values.global.registry }}/{{ .Values.global.project_slug }}/{{ .Values.netapi.image }}:{{ .Values.netapi.tag }}"
           name: {{ .Values.netapi.name }}
           {{- if .Values.netapi.ports }}
