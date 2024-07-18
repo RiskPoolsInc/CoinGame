@@ -26,8 +26,8 @@ namespace CG.WebApi.Controllers {
         /// <response code="403">Access Denied</response>
         /// <response code="500">Unexpected server error</response>
         [HttpPut("create")]
-        public async Task<IActionResult> CreateWalletAsync(CreateWalletCommand request, CancellationToken cancellationToken) {
-            return Ok(await _dispatcher.Send(request, cancellationToken));
+        public async Task<IActionResult> CreateWalletAsync(CancellationToken cancellationToken) {
+            return Ok(await _dispatcher.Send(new CreateWalletCommand(), cancellationToken));
         }
 
         /// <summary>
@@ -39,8 +39,8 @@ namespace CG.WebApi.Controllers {
         /// <response code="403">Access Denied</response>
         /// <response code="500">Unexpected server error</response>
         [HttpPut("refund")]
-        public async Task<IActionResult> RefundCoinsAsync([FromHeader] RefundCoinsCommand request,
-                                                          CancellationToken                     cancellationToken) {
+        public async Task<IActionResult> RefundCoinsAsync([FromBody] RefundCoinsCommand request,
+                                                          CancellationToken               cancellationToken) {
             return Ok(await _dispatcher.Send(request, cancellationToken));
         }
     }
