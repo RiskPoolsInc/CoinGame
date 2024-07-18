@@ -17,7 +17,7 @@ ingress:
   tlsSecret:
     tls.crt: fake
     tls.key: fake
-
+  
 
 certificate:
   organization: "silentnotary"
@@ -177,9 +177,7 @@ postgres:
 
 data:
   netapi:
-    db: "Host=coingame-postgres;Port=5432;Database=coingame;Username=dev;Password=qwerty;Integrated Security=true;Pooling=true;"
-    walletServiceOptions:
-      host: "http://webapi:3000"
+    db: "Host=coingame-postgres;Port=5432;Database=coingame;Username=dev;Password=qwerty;Integrated Security=true;Pooling=true;"    
   refunds:
     db:
       path: "refunds"
