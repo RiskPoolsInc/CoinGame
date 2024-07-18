@@ -1,7 +1,5 @@
-﻿using App.Core.Commands.Database;
-using App.Core.Commands.Games;
+﻿using App.Core.Commands.Games;
 using App.Core.Commands.Transactions;
-using App.Core.Requests.Database;
 using App.Core.Requests.Games;
 using App.Interfaces.Core;
 using App.Web.Core;
