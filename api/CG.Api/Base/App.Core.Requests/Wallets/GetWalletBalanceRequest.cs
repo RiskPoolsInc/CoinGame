@@ -2,7 +2,14 @@
 
 namespace App.Core.Requests.Wallets;
 
-public class GetWalletBalanceRequest : IRequest<WalletView> {
-    public Guid? WalletId { get; set; }
-    public string? Address { get; set; }
+public class GetWalletBalanceRequest : IRequest<WalletBalanceView> {
+    public Guid WalletId { get; set; }
+
+    public GetWalletBalanceRequest() {
+        
+    }
+
+    public GetWalletBalanceRequest(Guid walletId) {
+        WalletId = walletId;
+    }
 }

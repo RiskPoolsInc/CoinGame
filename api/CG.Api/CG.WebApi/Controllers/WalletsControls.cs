@@ -1,4 +1,5 @@
 ﻿using App.Core.Commands.Wallets;
+using App.Core.Requests.Wallets;
 using App.Interfaces.Core;
 using App.Web.Core;
 using App.Web.Core.Errors;
@@ -28,6 +29,19 @@ namespace CG.WebApi.Controllers {
         [HttpPut("create")]
         public async Task<IActionResult> CreateWalletAsync(CancellationToken cancellationToken) {
             return Ok(await _dispatcher.Send(new CreateWalletCommand(), cancellationToken));
+        }
+        
+        /// <summary>
+        /// Get wallet info
+        /// </summary>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>Returns created wallet</returns>
+        /// <response code="200">The user games</response>
+        /// <response code="403">Access Denied</response>
+        /// <response code="500">Unexpected server error</response>
+        [HttpGet("{id:guid}/status")]
+        public async Task<IActionResult> GetWalletInfoAsync([FromRoute] Guid id, CancellationToken cancellationToken) {
+            return Ok(await _dispatcher.Send(new GetWalletBalanceRequest(id), cancellationToken));
         }
 
         /// <summary>
