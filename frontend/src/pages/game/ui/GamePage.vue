@@ -6,7 +6,11 @@ import RefundBlock from "@/features/game/refund-block";
 import ProcessCards from "@/features/game/process-cards/ui/ProcessCards.vue";
 import VProgress from "@/shared/ui/base-components/v-progress/ui/VProgress.vue";
 
-const { gameState } = useGameStore();
+const { gameState, restoreWallet } = useGameStore();
+
+onMounted(() => {
+  restoreWallet()
+})
 
 </script>
 

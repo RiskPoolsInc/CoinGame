@@ -3,21 +3,27 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const crypto = require('crypto-web');
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const CilUtils = require('cil-utils');
 import axios from "axios";
 const api_backend = axios.create({ baseURL: process.env.VUE_APP_BACKEND_URL })
 
 import { defineStore } from "pinia";
-import { reactive } from "vue";
+import {computed, reactive} from "vue";
 import { sha224, sha256 } from 'js-sha256';
 import { useCookies } from '@vueuse/integrations/useCookies'
 import { copyToClipboard } from "quasar";
+import {useIntervalFn, useLocalStorage} from '@vueuse/core';
+import initCilInstance from "@/shared/lib/utils/initCilInstance";
 
 const cookies = useCookies()
 
 import { IGameState } from "@/entities/game/model/game.interface";
 
 export const useGameStore = defineStore("game", () => {
+  const wallet = useLocalStorage<Wallet>('wallet', {} as Wallet);
+  const { pause, resume, isActive } = useIntervalFn(() => {
+    updateBalance
+  }, 30000)
+
   const gameState = reactive<IGameState>({
     inProgress: false,
     wallet: "",
@@ -31,39 +37,36 @@ export const useGameStore = defineStore("game", () => {
     gameWalletAddress: ""
   });
 
+  const hasWallet = computed(() => !!Object.keys(wallet.value))
+
   // Mutations
   const setBid = (bid: number) => {
     gameState.bid = bid;
   };
 
 
-  const updateBalance = async () => {
-    let nBalance = 0;
-    const res = await api_backend.get('get-balance' + '?uid=' + encodeURIComponent(gameState.uid), {
-      headers: {
-      }
-    })
-      .then((response) => {
-        console.log(response.data);
-        nBalance = response.data.balance
-      })
-      .catch((error) => {
-        console.log(error)
-      })
-    gameState.balance = Number(nBalance);
-  }
-
   const generateWallet = async () => {
     try {
-      const res = await api_backend.put('wallet/create')
-      console.log(res)
+      const res = await api_backend.put('v1/wallets/create')
+      gameState.wallet = res.data.hash
+      wallet.value = res.data
+      resume()
     } catch (e) {
       console.error(e)
     }
   };
 
+  const restoreWallet = () => {
+    gameState.wallet = wallet.value.hash
+  }
+
+  const updateBalance = async () => {
+    const instance = await initCilInstance()
+    gameState.balance = await instance.getBalance(gameState.wallet)
+  }
+
   const copyWallet = async () => {
-    await copyToClipboard(gameState.wallet);
+    await copyToClipboard(`Ux${gameState.wallet}`);
   };
 
   const number2Hash = (number: number) => {
@@ -157,7 +160,6 @@ export const useGameStore = defineStore("game", () => {
             }
             if (response.data.status == "1") {
               gameState.inProgress = false;
-              await updateBalance();
             } else {
               await new Promise(r => setTimeout(r, 5000));
             }
@@ -183,5 +185,7 @@ export const useGameStore = defineStore("game", () => {
     startGame,
     copyWallet,
     generateWallet,
+    restoreWallet,
+    hasWallet
   };
 });

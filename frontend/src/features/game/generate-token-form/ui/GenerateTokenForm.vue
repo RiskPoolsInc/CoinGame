@@ -6,13 +6,11 @@ import VButton from "@/shared/ui/base-components/v-button";
 import VInput from "@/shared/ui/base-components/v-input/ui/VInput.vue";
 
 import VChip from "@/shared/ui/base-components/v-chip";
-import { ref } from "vue";
 import {useGame} from "@/shared/composables/useGame";
 
 const $q = useQuasar();
-const walletIsAlreadyGenerated = ref(false);
 
-const { gameState, generateWallet, copyWallet } = useGameStore();
+const { gameState, generateWallet, copyWallet, hasWallet } = useGameStore();
 const { formattedBalance } = useGame();
 
 const handleCopyWallet = () => {
@@ -40,14 +38,14 @@ const handleCopyWallet = () => {
             class-name="full-width"
             text-color="dark"
             size="lg"
-            :disabled = "walletIsAlreadyGenerated"
-            @click="generateWallet(); walletIsAlreadyGenerated = true"
+            @click="generateWallet"
+            :disabled="hasWallet"
           />
         </div>
 
         <div class="generate-token-form__wallet">
           <VInput
-            v-model="gameState.wallet"
+            :model-value="`Ux${gameState.wallet}`"
             disabled
             label="Your game wallet"
           />
