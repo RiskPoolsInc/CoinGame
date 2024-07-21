@@ -114,6 +114,8 @@ public class EntityToViewProfile : Profile
         #region Wallets
 
         CreateMap<Wallet, WalletView>();
+        CreateMap<Wallet, WalletBalanceView>()
+           .ForMember(a => a.Address, opt => opt.MapFrom(s => s.Hash));
 
         #endregion
     }
