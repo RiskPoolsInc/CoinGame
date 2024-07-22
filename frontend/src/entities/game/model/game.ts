@@ -50,14 +50,16 @@ export const useGameStore = defineStore("game", () => {
       const res = await api_backend.put('v1/wallets/create')
       gameState.wallet = res.data.hash
       wallet.value = res.data
+      await updateBalance()
       resume()
     } catch (e) {
       console.error(e)
     }
   };
 
-  const restoreWallet = () => {
+  const restoreWallet = async () => {
     gameState.wallet = wallet.value.hash
+    await updateBalance()
   }
 
   const updateBalance = async () => {
@@ -130,49 +132,55 @@ export const useGameStore = defineStore("game", () => {
   }
 
   const startGame = async () => {
-    gameState.inProgress = true;
-    if (gameState.parityList.length > 0) {
-      resetGame();
-    }
-    gameState.previousBalance = gameState.balance;
-
-    // let currentBalance = gameState.bid || 0;
-    const bid = Number(gameState.bid);
-    gameState.bidForBalanceChart = bid;
-
-    const res = await api_backend.get('play-game' + '?round=' + encodeURIComponent(gameState.round) +
-      '&bid=' + encodeURIComponent(bid) +
-      '&uid=' + encodeURIComponent(gameState.uid), {
-      headers: {
-      }
+    await api_backend.put('v1/games/new', {
+        rounds: gameState.round,
+        rate: gameState.bid,
+        WalletId: wallet.value.id
     })
-      .then(async (response) => {
-        console.log(response.data);
-        const gameid = response.data.gameid
 
-        while (gameState.inProgress) {
-          const gameRes = await api_backend.get('game-status' + '?gameid=' + encodeURIComponent(gameid), {
-            headers: {
+    /*    gameState.inProgress = true;
+        if (gameState.parityList.length > 0) {
+          resetGame();
+        }
+        gameState.previousBalance = gameState.balance;
+
+        // let currentBalance = gameState.bid || 0;
+        const bid = Number(gameState.bid);
+        gameState.bidForBalanceChart = bid;
+
+        const res = await api_backend.get('play-game' + '?round=' + encodeURIComponent(gameState.round) +
+          '&bid=' + encodeURIComponent(bid) +
+          '&uid=' + encodeURIComponent(gameState.uid), {
+          headers: {
+          }
+        })
+          .then(async (response) => {
+            console.log(response.data);
+            const gameid = response.data.gameid
+
+            while (gameState.inProgress) {
+              const gameRes = await api_backend.get('game-status' + '?gameid=' + encodeURIComponent(gameid), {
+                headers: {
+                }
+              }).then(async (response) => {
+                if (response.data.status !== "-1") {
+                  gameState.parityList = response.data.parityList;
+                }
+                if (response.data.status == "1") {
+                  gameState.inProgress = false;
+                } else {
+                  await new Promise(r => setTimeout(r, 5000));
+                }
+              }).catch((error) => {
+                console.log(error)
+                gameState.inProgress = false;
+              })
             }
-          }).then(async (response) => {
-            if (response.data.status !== "-1") {
-              gameState.parityList = response.data.parityList;
-            }
-            if (response.data.status == "1") {
-              gameState.inProgress = false;
-            } else {
-              await new Promise(r => setTimeout(r, 5000));
-            }
-          }).catch((error) => {
+          })
+          .catch((error) => {
             console.log(error)
             gameState.inProgress = false;
-          })
-        }
-      })
-      .catch((error) => {
-        console.log(error)
-        gameState.inProgress = false;
-      })
+          })*/
   };
 
   return {
