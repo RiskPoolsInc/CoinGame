@@ -20,8 +20,8 @@ import { IGameState } from "@/entities/game/model/game.interface";
 
 export const useGameStore = defineStore("game", () => {
   const wallet = useLocalStorage<Wallet>('wallet', {} as Wallet);
-  const { pause, resume, isActive } = useIntervalFn(() => {
-    updateBalance
+  const { resume } = useIntervalFn(async () => {
+    await updateBalance()
   }, 30000)
 
   const gameState = reactive<IGameState>({
