@@ -40,11 +40,17 @@ const send =  async (req: Request, res: Response, next: NextFunction) => {
             ])),
             Number(process.env.CONCILIUM_ID) || 0
         );
+        const fee = instance._estimateTxFee(
+            transaction._data.payload.ins.length,
+            transaction._data.payload.outs.length,
+            true,
+        );
         await instance.sendTx(transaction)
 
         res.status(200).json({
             hash: transaction.getHash(),
-            sum
+            sum,
+            fee
         });
     } catch (e) {
         console.log(e)

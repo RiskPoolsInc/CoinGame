@@ -66,6 +66,8 @@ router.get("/completed", transactionsController.completed);
  *                   type: string
  *                 sum:
  *                   type: string
+ *                 fee:
+ *                   type: string
  */
 
 router.post("/send", transactionsController.send);
