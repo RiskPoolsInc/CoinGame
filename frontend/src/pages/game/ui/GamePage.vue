@@ -8,8 +8,8 @@ import VProgress from "@/shared/ui/base-components/v-progress/ui/VProgress.vue";
 
 const { gameState, restoreWallet } = useGameStore();
 
-onMounted(() => {
-  restoreWallet()
+onMounted(async () => {
+  await restoreWallet()
 })
 
 </script>
