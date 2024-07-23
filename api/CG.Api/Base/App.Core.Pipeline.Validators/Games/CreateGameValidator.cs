@@ -16,7 +16,9 @@ public class CreateGameValidator : AbstractValidator<CreateGameCommand> {
 
         RuleFor(a => a.WalletId)
            .MustAsync(async (walletId, ct) => {
-                var activeGame = await walletRepository.AnyAsync(s => s.Games.Any(a => a.StateId != (int)GameStateTypes.Completed), ct);
+                var activeGame =
+                    await walletRepository.AnyAsync(
+                        s => s.Games.Any(a => a.StateId != (int)GameStateTypes.Completed && a.WalletId == walletId), ct);
                 return !activeGame;
             })
            .WithMessage("Found active game");
@@ -28,7 +30,7 @@ public class CreateGameValidator : AbstractValidator<CreateGameCommand> {
 
                 var balance = await walletService.GetBalance($"Ux{address}");
                 return true;
-                return balance.Balance > cmd.Rate + 704;//TODO
+                return balance.Balance > cmd.Rate + 704; //TODO
             })
            .WithMessage(a => $"Not enougth coins for create game. Balance should be more then {a.Rate + 704} UBX");
         RuleFor(a => a.Rounds).GreaterThanOrEqualTo(1);

@@ -42,7 +42,7 @@ namespace CG.WebApi.Controllers {
         /// <response code="500">Unexpected server error</response>
         [HttpGet("current")]
         public async Task<IActionResult> GetCurrentGameAsync([FromQuery] GetCurrentGameRequest request,
-                                                             CancellationToken                  cancellationToken) {
+                                                             CancellationToken                 cancellationToken) {
             return Ok(await _dispatcher.Send(request, cancellationToken));
         }
 

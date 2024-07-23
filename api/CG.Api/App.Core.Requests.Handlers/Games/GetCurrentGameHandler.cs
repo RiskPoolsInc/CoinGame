@@ -17,7 +17,9 @@ public class GetCurrentGameHandler : IRequestHandler<GetCurrentGameRequest, Game
     }
 
     public async Task<GameView> Handle(GetCurrentGameRequest request, CancellationToken cancellationToken) {
-        var game = await _gameRepository.Where(a => a.Wallet.Id == request.WalletId && a.StateId == (int)GameStateTypes.InProgress)
+        var states = new[] { (int)GameStateTypes.InProgress, (int)GameStateTypes.Created };
+
+        var game = await _gameRepository.Where(a => a.Wallet.Id == request.WalletId && states.Contains(a.StateId))
                                         .SingleAsync<Game, GameView>(cancellationToken);
         return game;
     }

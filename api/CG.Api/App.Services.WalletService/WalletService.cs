@@ -68,12 +68,12 @@ public class WalletService : IWalletService {
         return result as BalanceView;
     }
 
-    public async Task<TransactionIsCompletedView> CheckTransactionIsCompleted(string hash) {
+    public async Task<TransactionIsCompletedView> CheckTransactionIsCompleted(string hash, CancellationToken cancellationToken = default) {
         var path = GetPath(WalletServiceEnpointTypes.TransactionIsCompleted);
 
         var result = await Get<TransactionIsCompletedView>(path, new Dictionary<string, string>(new[] {
             new KeyValuePair<string, string>("hash", hash)
-        }));
+        }), cancellationToken);
         return result as TransactionIsCompletedView;
     }
 

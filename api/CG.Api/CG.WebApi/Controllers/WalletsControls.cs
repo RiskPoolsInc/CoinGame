@@ -1,4 +1,5 @@
 ﻿using App.Core.Commands.Wallets;
+using App.Core.Requests.Games;
 using App.Core.Requests.Wallets;
 using App.Interfaces.Core;
 using App.Web.Core;
@@ -42,6 +43,21 @@ namespace CG.WebApi.Controllers {
         [HttpGet("{id:guid}/status")]
         public async Task<IActionResult> GetWalletInfoAsync([FromRoute] Guid id, CancellationToken cancellationToken) {
             return Ok(await _dispatcher.Send(new GetWalletBalanceRequest(id), cancellationToken));
+        }
+        
+        /// <summary>
+        /// Check possible to run Game
+        /// </summary>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <param name="walletId">Wallet Id</param>
+        /// <returns>Returns the user game</returns>
+        /// <response code="200">The user games</response>
+        /// <response code="403">Access Denied</response>
+        /// <response code="500">Unexpected server error</response>
+        [HttpGet("{walletId:guid}/games/prepared")]
+        public async Task<IActionResult> GameIsPreparedToRunAsync([FromRoute] Guid walletId, CancellationToken cancellationToken) {
+            var request = new GetGameIsPreparedToRunRequest(walletId);
+            return Ok(await _dispatcher.Send(request, cancellationToken));
         }
 
         /// <summary>

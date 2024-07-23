@@ -49,7 +49,6 @@ public class RunGameHandler : IRequestHandler<RunGameCommand, GameView> {
 
         var currentGame = await _gameRepository.FindAsync(currentGameId, cancellationToken);
 
-
         if (currentGame.StateId == (int)GameStateTypes.Completed)
             throw new Exception("Game was completed");
 
@@ -63,6 +62,14 @@ public class RunGameHandler : IRequestHandler<RunGameCommand, GameView> {
 
         currentGame.StateId = (int)GameStateTypes.InProgress;
         await _gameRepository.SaveAsync(cancellationToken);
+
+        await RunGame(currentGame);
+
+        return await _gameRepository.Get(currentGameId).SingleAsync<Game, GameView>(cancellationToken);
+    }
+
+    private async Task RunGame(Game currentGame) {
+        var currentGameId = currentGame.Id;
         var gameResult = 0;
         var gameLose = false;
 
@@ -77,11 +84,11 @@ public class RunGameHandler : IRequestHandler<RunGameCommand, GameView> {
             gameResult += roundResultIsWin ? 1 : -1;
 
             if (gameResult < 0) {
-                currentGame = await _gameRepository.FindAsync(currentGameId, cancellationToken);
+                currentGame = await _gameRepository.FindAsync(currentGameId, default);
                 currentGame.StateId = (int)GameStateTypes.Completed;
                 currentGame.ResultId = (int)GameResultTypes.Lose;
                 gameLose = true;
-                await _gameRepository.SaveAsync(cancellationToken);
+                await _gameRepository.SaveAsync(default);
 
                 var transactionService = new GameServiceTransactionComand() {
                     WalletId = currentGame.WalletId,
@@ -93,16 +100,14 @@ public class RunGameHandler : IRequestHandler<RunGameCommand, GameView> {
         }
 
         if (!gameLose) {
-            currentGame = await _gameRepository.FindAsync(currentGameId, cancellationToken);
+            currentGame = await _gameRepository.FindAsync(currentGameId, default);
             currentGame.StateId = (int)GameStateTypes.Completed;
             currentGame.ResultId = (int)GameResultTypes.Win;
-            await _gameRepository.SaveAsync(cancellationToken);
+            await _gameRepository.SaveAsync(default);
 
             var transactionService = new CreateTransactionRewardCommand(currentGameId);
             await _dispatcher.Send(transactionService);
         }
-
-        return await _gameRepository.Get(currentGameId).SingleAsync<Game, GameView>(cancellationToken);
     }
 
     private async Task RandomDelay() {
