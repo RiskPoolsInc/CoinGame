@@ -47,7 +47,7 @@ public class CreateTransactionRewardHandler : IRequestHandler<CreateTransactionR
         for (var i = 0; i < rounds.Length; i++) {
             var round = rounds[i];
 
-            if (round.GameRoundResult.Id == (int)GameRoundResultTypes.Win)
+            if (round.Result.Id == (int)GameRoundResultTypes.Win)
                 gameReward += game.RoundSum;
             else
                 gameReward -= game.RoundSum;

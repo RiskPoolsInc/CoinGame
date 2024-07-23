@@ -9,7 +9,7 @@ namespace App.Data.Sql.Configurations;
 public class GameRoundConfiguration : EntityTypeConfiguration<GameRound> {
     public override void Configure(EntityTypeBuilder<GameRound> builder) {
         builder.HasOne(a => a.Game)
-               .WithMany()
+               .WithMany(s => s.GameRounds)
                .HasForeignKey(a => a.GameId)
                .OnDelete(DeleteBehavior.Restrict);
 
