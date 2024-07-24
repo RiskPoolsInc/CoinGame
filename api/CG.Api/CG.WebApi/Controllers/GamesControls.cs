@@ -33,6 +33,20 @@ namespace CG.WebApi.Controllers {
         }
 
         /// <summary>
+        /// Get Game
+        /// </summary>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>Returns the user game</returns>
+        /// <response code="200">The user game</response>
+        /// <response code="403">Access Denied</response>
+        /// <response code="500">Unexpected server error</response>
+        [HttpGet("{id:guid}")]
+        public async Task<IActionResult> GetGameAsync([FromRoute] Guid id, CancellationToken cancellationToken) {
+            var request = new GetGameRequest(id);
+            return Ok(await _dispatcher.Send(request, cancellationToken));
+        }
+
+        /// <summary>
         /// Get Current Game
         /// </summary>
         /// <param name="cancellationToken">Cancellation token</param>

@@ -77,7 +77,7 @@ public class RunGameHandler : IRequestHandler<RunGameCommand, GameView> {
             await RandomDelay();
             var nextNumber = NextNumber();
             var isEven = (nextNumber % 2) == 0;
-            var roundResult = isEven ? GameRoundResultTypes.Win : GameRoundResultTypes.Lose;
+            var roundResult = isEven ? GameRoundResultTypes.Lose : GameRoundResultTypes.Win;
             var roundResultIsWin = roundResult == GameRoundResultTypes.Win;
             await _dispatcher.Send(new CreateGameRoundCommand(currentGameId, nextNumber, roundResult));
 
