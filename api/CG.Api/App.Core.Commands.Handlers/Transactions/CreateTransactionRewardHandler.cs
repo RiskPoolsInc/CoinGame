@@ -40,7 +40,7 @@ public class CreateTransactionRewardHandler : IRequestHandler<CreateTransactionR
         var wallet = await _walletRepository.Get(game.Wallet.Id).SingleAsync();
 
         var rounds = await _gameRoundRepository.Where(a => a.GameId == game.Id)
-                                               .OrderBy(a => a.Number)
+                                               .OrderBy(a => a.CreatedOn)
                                                .ToArrayAsync<GameRound, GameRoundView>(default);
         var gameReward = 0m;
 
