@@ -139,8 +139,10 @@ public class WalletService : IWalletService {
             (toWallet, sum)
         });
 
-        var result = await Post<GenerateTransactionView>(path, cmd);
-        return result as GenerateTransactionView;
+        var response = await Post<GenerateTransactionView>(path, cmd);
+        var result = response as GenerateTransactionView;
+        result.WalletFrom = walletFromAddress;
+        return result;
     }
 
     public bool NeedServiceTransaction() {
