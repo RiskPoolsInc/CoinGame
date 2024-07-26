@@ -3,28 +3,12 @@ import BalanceChart from "@/entities/game/ui/balance-chart";
 import { useGameStore } from "@/entities/game/model/game";
 import { PROCESS_CARDS_TABLE_COLUMNS } from "@/features/game/process-cards/model/constants";
 import HashTable2 from "@/features/game/hash-table-2";
-import { computed, ref, watch } from "vue";
+import {storeToRefs} from "pinia";
 
-const { gameState } = useGameStore();
+const gameStore = useGameStore();
+const {parityList} = storeToRefs(gameStore)
 
-let list = ref<any[]>([]);
 
-const datasets = computed(() => gameState.parityList);
-
-watch(
-    datasets,
-    async (newSet) => {
-      // Append new items to the list instead of replacing it entirely
-      list.value = [...list.value, ...newSet].filter((v,i,a)=>a.findIndex(v2=>(JSON.stringify(v) === JSON.stringify(v2)))===i)
-    },
-    { deep: true }
-);
-
-watch(() => gameState.inProgress, (newValue) => {
-  if (newValue) {
-    list.value = []
-  }
-})
 </script>
 
 <template>
@@ -54,7 +38,7 @@ watch(() => gameState.inProgress, (newValue) => {
         class="col-lg-6 col-md-12 col-sm-10 col-xs-12 process-card__table-wrapper"
     >
       <div class="process-card__table">
-        <HashTable2 :columns="PROCESS_CARDS_TABLE_COLUMNS" :rows="list" />
+        <HashTable2 :columns="PROCESS_CARDS_TABLE_COLUMNS" :rows="parityList" />
       </div>
     </div>
   </div>

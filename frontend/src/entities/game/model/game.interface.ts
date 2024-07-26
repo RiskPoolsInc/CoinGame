@@ -3,7 +3,7 @@ export interface IParityList {
   hashNumber: string;
   number: number;
   parity: boolean;
-  currentBalance: number;
+  currentGameRoundSum: number
 }
 
 export interface IGameState {
@@ -11,10 +11,8 @@ export interface IGameState {
   wallet: string;
   balance: number;
   previousBalance: number;
-  bid: number | null;
-  bidForBalanceChart: number | null;
   round: number;
-  parityList: IParityList[];
   uid: string;
   gameWalletAddress: string,
+  isPrepared: boolean
 }
