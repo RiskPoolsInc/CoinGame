@@ -50,7 +50,10 @@ watch(() => gameState.value.isPrepared, async (newValue) => {
 })
 
 onMounted(async () => {
-  await gameStore.restoreWallet()
+  await gameStore.restoreWallet();
+/*  await gameStore.restoreGame(() => {
+    preparedInterval.resume()
+  });*/
 })
 
 </script>

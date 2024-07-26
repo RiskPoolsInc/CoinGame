@@ -26,8 +26,7 @@ const downloadTxtFile = () => {
 
   text =
     text +
-    parityList
-      .map((item, index) => {
+    parityList.value.map((item, index) => {
         return index + 1 + " " + item.hashNumber;
       })
       .join("    \n") +

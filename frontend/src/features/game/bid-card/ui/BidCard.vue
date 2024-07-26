@@ -5,6 +5,7 @@ import {useGameStore} from "@/entities/game/model/game";
 import {computed, ref, watch} from "vue";
 import {useGame} from "@/shared/composables/useGame";
 import {useQuasar} from "quasar";
+import {useLocalStorage} from "@vueuse/core/index";
 
 type Emits = {
   (e: 'start'): void
@@ -13,6 +14,7 @@ type Emits = {
 const emit = defineEmits<Emits>()
 
 const { gameState, startGame, bid } = useGameStore();
+const isRefunded = useLocalStorage<boolean>('isRefunded', true);
   const {bidNotice} = useGame()
 const $q = useQuasar()
 
@@ -35,7 +37,7 @@ const $q = useQuasar()
       gameState.round >= 3 &&
       gameState.round <= 10 &&
       gameState.wallet &&
-      !gameState.inProgress
+      !gameState.inProgress && !isRefunded.value
     );
   });
 
