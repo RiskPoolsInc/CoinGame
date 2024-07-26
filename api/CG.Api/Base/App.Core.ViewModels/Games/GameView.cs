@@ -10,5 +10,6 @@ public class GameView : BaseView {
     public GameResultView Result { get; set; }
     public int RoundQuantity { get; set; }
     public decimal RoundSum { get; set; }
+    public decimal RewardSum { get; set; }
     public GameRoundView[] GameRounds { get; set; }
 }

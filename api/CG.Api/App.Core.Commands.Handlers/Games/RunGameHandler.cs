@@ -70,20 +70,23 @@ public class RunGameHandler : IRequestHandler<RunGameCommand, GameView> {
 
     private async Task RunGame(Game currentGame) {
         var currentGameId = currentGame.Id;
-        var gameResult = 0;
+        var gameCounter = 1;
         var gameLose = false;
 
         for (var i = 0; i < currentGame.RoundQuantity; i++) {
+            var sequenceNumberRound = i + 1;
             await RandomDelay();
             var nextNumber = NextNumber();
             var isEven = (nextNumber % 2) == 0;
             var roundResult = isEven ? GameRoundResultTypes.Lose : GameRoundResultTypes.Win;
             var roundResultIsWin = roundResult == GameRoundResultTypes.Win;
-            await _dispatcher.Send(new CreateGameRoundCommand(currentGameId, nextNumber, roundResult));
+            gameCounter += roundResultIsWin ? 1 : -1;
 
-            gameResult += roundResultIsWin ? 1 : -1;
+            await _dispatcher.Send(new CreateGameRoundCommand(currentGameId, nextNumber, roundResult, gameCounter * currentGame.RoundSum,
+                sequenceNumberRound));
 
-            if (gameResult < 0) {
+
+            if (gameCounter <= 0) {
                 currentGame = await _gameRepository.FindAsync(currentGameId, default);
                 currentGame.StateId = (int)GameStateTypes.Completed;
                 currentGame.ResultId = (int)GameResultTypes.Lose;
@@ -103,6 +106,7 @@ public class RunGameHandler : IRequestHandler<RunGameCommand, GameView> {
             currentGame = await _gameRepository.FindAsync(currentGameId, default);
             currentGame.StateId = (int)GameStateTypes.Completed;
             currentGame.ResultId = (int)GameResultTypes.Win;
+            currentGame.RewardSum = currentGame.RoundSum * gameCounter;
             await _gameRepository.SaveAsync(default);
 
             var transactionService = new CreateTransactionRewardCommand(currentGameId);
@@ -118,8 +122,8 @@ public class RunGameHandler : IRequestHandler<RunGameCommand, GameView> {
 
     private int NextNumber() {
         var randomNumbersBetween = new[] {
-                RandomNumberGenerator.GetInt32(1, 10001),
-                RandomNumberGenerator.GetInt32(1, 10001)
+                RandomNumberGenerator.GetInt32(2, 10000),
+                RandomNumberGenerator.GetInt32(2, 10000)
             }.OrderBy(a => a)
              .ToArray();
 

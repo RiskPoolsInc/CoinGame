@@ -17,6 +17,7 @@ public class Game : AuditableEntity {
 
     public int RoundQuantity { get; set; }
     public decimal RoundSum { get; set; }
+    public decimal RewardSum { get; set; }
 
     public virtual ICollection<GameRound> GameRounds { get; set; }
 }
