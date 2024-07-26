@@ -25,6 +25,7 @@
     "vue-3-sanitize": "^0.1.4",
     "vue-query": "^1.26.0",
     "vue-router": "^4.2.5",
+    "vue3-apexcharts": "^1.5.3",
     "zod": "^3.21.4"
   },
   "devDependencies": {

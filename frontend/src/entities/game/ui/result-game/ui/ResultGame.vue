@@ -5,16 +5,16 @@ import { useGameStore } from "@/entities/game/model/game";
 import numberWithSpaces from "@/shared/lib/helpers/numberWithSpaces";
 import {useGame} from "@/shared/composables/useGame";
 
-const { gameState } = useGameStore();
+const { gameState, parityList } = useGameStore();
 const {formattedBalance} = useGame()
 
 const resultGame = computed(() => {
-  if (!gameState.previousBalance || !gameState.parityList || !gameState.parityList.length) {
+//  if (!gameState.previousBalance || !parityList || !parityList.length) {
     return 0;
-  }
+/*  }
   return (
-    numberWithSpaces(gameState.parityList[gameState.parityList.length - 1].currentBalance) || 0
-  );
+    numberWithSpaces(parityList[parityList.length - 1].currentBalance) || 0
+  );*/
 });
 </script>
 

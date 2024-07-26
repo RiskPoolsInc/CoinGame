@@ -5,9 +5,19 @@ import VButton from "@/shared/ui/base-components/v-button/ui/VButton.vue";
 import { useGameStore } from "@/entities/game/model/game";
 import { HASH_TABLE_COLUMNS } from "@/entities/game/model/constants";
 import {useGame} from "@/shared/composables/useGame";
+import {storeToRefs} from "pinia";
 
-const { gameState } = useGameStore();
+type Emits = {
+  (e: 'start'): void
+}
+
+const emit = defineEmits<Emits>()
+
+
+const gameStore = useGameStore();
 const {bidNotice} = useGame()
+const {parityList} = storeToRefs(gameStore)
+
 
 const downloadTxtFile = () => {
   let text = "";
@@ -16,7 +26,7 @@ const downloadTxtFile = () => {
 
   text =
     text +
-    gameState.parityList
+    parityList
       .map((item, index) => {
         return index + 1 + " " + item.hashNumber;
       })
@@ -54,7 +64,7 @@ const downloadTxtFile = () => {
       </div>
 
       <div class="col-lg-7 col-xs-12">
-        <BidCard />
+        <BidCard @start="emit('start')"/>
       </div>
 
       <div class="col-lg-4 col-sm-8 xl-hide lg-hide">
@@ -66,7 +76,7 @@ const downloadTxtFile = () => {
       <div class="col-lg-4 col-sm-8 col-xs-12 toss-a-coin__hash-table">
         <HashTable
           id="hash-table"
-          :rows="gameState.parityList"
+          :rows="parityList"
           :columns="HASH_TABLE_COLUMNS"
         />
 
