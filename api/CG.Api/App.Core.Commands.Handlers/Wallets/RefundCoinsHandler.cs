@@ -39,7 +39,7 @@ public class RefundCoinsHandler : IRequestHandler<RefundCoinsCommand, Transactio
         var generatedTransactionRefund = await _walletService.GenerateTransactionRefund(wallet.Hash, wallet.PrivateKey);
 
         var transaction = new TransactionUserRefund() {
-            WalletHashFrom = generatedTransactionRefund.WalletFrom,
+            WalletHashFrom = wallet.Hash,
             WalletFromId = wallet.Id,
             TransactionHash = generatedTransactionRefund.Hash,
             Sum = generatedTransactionRefund.Sum,
