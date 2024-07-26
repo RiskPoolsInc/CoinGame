@@ -7,14 +7,16 @@ import VInput from "@/shared/ui/base-components/v-input/ui/VInput.vue";
 
 import VChip from "@/shared/ui/base-components/v-chip";
 import {useGame} from "@/shared/composables/useGame";
+import {storeToRefs} from "pinia";
 
 const $q = useQuasar();
 
-const { gameState, generateWallet, copyWallet, hasWallet } = useGameStore();
+const gameStore = useGameStore();
 const { formattedBalance } = useGame();
+const {address} = storeToRefs(gameStore)
 
 const handleCopyWallet = () => {
-  copyWallet();
+  gameStore.copyWallet();
 
   $q.notify({
     message: "Wallet copied",
@@ -38,14 +40,14 @@ const handleCopyWallet = () => {
             class-name="full-width"
             text-color="dark"
             size="lg"
-            @click="generateWallet"
-            :disabled="hasWallet"
+            @click="gameStore.generateWallet"
+            :disabled="gameStore.hasWallet"
           />
         </div>
 
         <div class="generate-token-form__wallet">
           <VInput
-            :model-value="`Ux${gameState.wallet}`"
+            :model-value="address"
             disabled
             label="Your game wallet"
           />
@@ -59,7 +61,7 @@ const handleCopyWallet = () => {
           />
         </div>
         <div class="mt-auto generate-token-form__chip">
-          <VChip v-if="gameState.balance" color="success"> COMPLETED </VChip>
+          <VChip v-if="gameStore.gameState.balance" color="success"> COMPLETED </VChip>
           <VChip v-else color="danger"> EMPTY </VChip>
         </div>
       </div>
@@ -71,7 +73,7 @@ const handleCopyWallet = () => {
             label="COPY WALLET"
             class="col-md-8 col-xs-8 col-sm-4"
             class-name="full-width"
-            :disabled="!gameState.wallet"
+            :disabled="!gameStore.gameState.wallet"
             color="white"
             text-color="dark"
             size="lg"

@@ -4,9 +4,17 @@ import VButton from "@/shared/ui/base-components/v-button/ui/VButton.vue";
 import {useGameStore} from "@/entities/game/model/game";
 import {computed, ref, watch} from "vue";
 import {useGame} from "@/shared/composables/useGame";
+import {useQuasar} from "quasar";
 
-const { gameState, startGame } = useGameStore();
+type Emits = {
+  (e: 'start'): void
+}
+
+const emit = defineEmits<Emits>()
+
+const { gameState, startGame, bid } = useGameStore();
   const {bidNotice} = useGame()
+const $q = useQuasar()
 
   const confirm = ref(false);
   const error = ref(false);
@@ -22,8 +30,8 @@ const { gameState, startGame } = useGameStore();
 
   const statusPlayButton = computed(() => {
     return !(
-      Number(gameState.bid) >= Number(process.env.VUE_APP_MIN_BID) &&
-      Number(gameState.bid) <= Number(process.env.VUE_APP_MAX_BID) &&
+      Number(bid) >= Number(process.env.VUE_APP_MIN_BID) &&
+      Number(bid) <= Number(process.env.VUE_APP_MAX_BID) &&
       gameState.round >= 3 &&
       gameState.round <= 10 &&
       gameState.wallet &&
@@ -31,8 +39,22 @@ const { gameState, startGame } = useGameStore();
     );
   });
 
+  const handlePlayClick = async () => {
+    try {
+      await startGame()
+      emit('start')
+    } catch (e) {
+      console.error(e)
+      $q.notify({
+        message: "Something went wrong",
+        color: "negative",
+        position: "top-right",
+      });
+    }
+  }
+
   const onStart = () => {
-    if (Number(gameState.bid) > gameState.balance) {
+    if (Number(bid) > gameState.balance) {
       error.value = true;
       return;
     }
@@ -41,7 +63,7 @@ const { gameState, startGame } = useGameStore();
   };
 
   const rules = computed(() => {
-    return [() => (Number(gameState.bid) >= Number(process.env.VUE_APP_MIN_BID) && Number(gameState.bid) <= Number(process.env.VUE_APP_MAX_BID)) || bidNotice.value]
+    return [() => (Number(bid) >= Number(process.env.VUE_APP_MIN_BID) && Number(bid) <= Number(process.env.VUE_APP_MAX_BID)) || bidNotice.value]
   })
 </script>
 
@@ -49,7 +71,7 @@ const { gameState, startGame } = useGameStore();
   <div class="bid-card">
     <div class="row justify-center">
       <div class="col-lg-4 col-md-4 col-sm-5 col-xs-10">
-        <VInput class="bid-card__input" v-model="gameState.bid" label="Your bid, UBX"
+        <VInput class="bid-card__input" v-model="bid" label="Your bid, UBX"
                 v-bind="{rules}" />
       </div>
     </div>
@@ -83,7 +105,7 @@ const { gameState, startGame } = useGameStore();
 
         <q-card-actions align="center" class="bid-card__popup-actions">
           <div class="col-lg-3 col-xs-4">
-            <VButton class-name="full-width" label="Play" color="white" text-color="dark" size="lg" @click="startGame"
+            <VButton class-name="full-width" label="Play" color="white" text-color="dark" size="lg" @click="handlePlayClick"
               v-close-popup />
           </div>
 

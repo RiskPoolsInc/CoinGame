@@ -3,8 +3,7 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const crypto = require('crypto-web');
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-import axios from "axios";
-const api_backend = axios.create({ baseURL: process.env.VUE_APP_BACKEND_URL })
+import axios from "@/shared/lib/plugins/axios";
 
 import { defineStore } from "pinia";
 import {computed, reactive} from "vue";
@@ -16,42 +15,63 @@ import initCilInstance from "@/shared/lib/utils/initCilInstance";
 
 const cookies = useCookies()
 
-import { IGameState } from "@/entities/game/model/game.interface";
+import {IGameState, IParityList} from "@/entities/game/model/game.interface";
 
 export const useGameStore = defineStore("game", () => {
   const wallet = useLocalStorage<Wallet>('wallet', {} as Wallet);
-  const { resume } = useIntervalFn(async () => {
+  const parityList = useLocalStorage<IParityList[]>('parityList', []);
+  const bid = useLocalStorage<number>('bid', Number(process.env.VUE_APP_MIN_BID));
+  const balanceInterval = useIntervalFn(async () => {
     await updateBalance()
   }, 30000)
+  const currentGameInterval = useIntervalFn(async () => {
+    await getCurrentGame()
+  }, 5000, {immediate: false})
 
   const gameState = reactive<IGameState>({
     inProgress: false,
     wallet: "",
     balance: 0,
     previousBalance: 0,
-    bid: null,
-    bidForBalanceChart: 0,
     round: 3,
-    parityList: [],
     uid: "",
-    gameWalletAddress: ""
+    gameWalletAddress: "",
+    isPrepared: false
   });
 
-  const hasWallet = computed(() => !!Object.keys(wallet.value))
+  const hasWallet = computed(() => typeof wallet.value !== 'undefined' && !!Object.keys(wallet.value).length)
+
+  const address = computed(() => gameState.wallet && `Ux${gameState.wallet}`)
+
 
   // Mutations
-  const setBid = (bid: number) => {
-    gameState.bid = bid;
+  const setBid = (data: number) => {
+    bid.value = data;
   };
 
+  const updateParityList = (gameRounds: ResponseGameRound[]) => {
+    parityList.value = gameRounds.sort((a, b) => a.roundNumber - b.roundNumber).map((round) => ({
+      hashNumber: round.id,
+      currentGameRoundSum: round.currentGameRoundSum,
+      round: round.result.id,
+      parity: round.result.code === 'Win',
+      number: round.number
+    }))
+  }
+
+  const getCurrentGame = async () => {
+    const response = await axios.get('v1/games/current', {params: {WalletId: wallet.value.id}})
+    if (response.data.gameRounds)
+      updateParityList(response.data.gameRounds)
+  }
 
   const generateWallet = async () => {
     try {
-      const res = await api_backend.put('v1/wallets/create')
+      const res = await axios.put('v1/wallets/create')
       gameState.wallet = res.data.hash
       wallet.value = res.data
       await updateBalance()
-      resume()
+      balanceInterval.resume()
     } catch (e) {
       console.error(e)
     }
@@ -68,7 +88,7 @@ export const useGameStore = defineStore("game", () => {
   }
 
   const copyWallet = async () => {
-    await copyToClipboard(`Ux${gameState.wallet}`);
+      await copyToClipboard(address.value);
   };
 
   const number2Hash = (number: number) => {
@@ -79,30 +99,11 @@ export const useGameStore = defineStore("game", () => {
     return sha224(hash);
   };
 
-  const getRandomNumber = (): number => {
-    return Math.floor(Math.random() * 1000000);
-  };
-
-  const balanceCalculation = (parity: boolean) => {
-    if (parity) {
-      gameState.balance += Number(gameState.bid);
-    } else {
-      gameState.balance -= Number(gameState.bid);
-    }
-  };
-
-  const resetGame = () => {
-    gameState.previousBalance = gameState.balance;
-    gameState.parityList.length = 0;
-  };
 
   const generalReset = async () => {
     gameState.balance = 1000000;
     gameState.previousBalance = 0;
-    gameState.bid = null;
-    gameState.bidForBalanceChart = 0;
     gameState.round = 3;
-    gameState.parityList.length = 0;
   };
 
   const refundFunds = async () => {
@@ -111,9 +112,7 @@ export const useGameStore = defineStore("game", () => {
     }
     console.log('REFUND')
     gameState.inProgress = true
-    gameState.parityList.length = 0;
-    gameState.bidForBalanceChart = 0;
-    const res = await api_backend.get('refund-funds' + '?uid=' + encodeURIComponent(gameState.uid), {
+    const res = await axios.get('refund-funds' + '?uid=' + encodeURIComponent(gameState.uid), {
       headers: {
       }
     })
@@ -131,56 +130,37 @@ export const useGameStore = defineStore("game", () => {
     gameState.inProgress = false
   }
 
-  const startGame = async () => {
-    await api_backend.put('v1/games/new', {
-        rounds: gameState.round,
-        rate: gameState.bid,
+  const runGame = async () => {
+    try {
+      currentGameInterval.resume()
+      const response = await axios.put('v1/games/run', {
         WalletId: wallet.value.id
-    })
+      })
+      updateParityList(response.data.gameRounds)
+    } catch (e) {
+      console.error(e)
+    } finally {
+      currentGameInterval.pause()
+      gameState.inProgress = false
+      gameState.isPrepared = false
+    }
+  }
 
-    /*    gameState.inProgress = true;
-        if (gameState.parityList.length > 0) {
-          resetGame();
-        }
-        gameState.previousBalance = gameState.balance;
-
-        // let currentBalance = gameState.bid || 0;
-        const bid = Number(gameState.bid);
-        gameState.bidForBalanceChart = bid;
-
-        const res = await api_backend.get('play-game' + '?round=' + encodeURIComponent(gameState.round) +
-          '&bid=' + encodeURIComponent(bid) +
-          '&uid=' + encodeURIComponent(gameState.uid), {
-          headers: {
-          }
-        })
-          .then(async (response) => {
-            console.log(response.data);
-            const gameid = response.data.gameid
-
-            while (gameState.inProgress) {
-              const gameRes = await api_backend.get('game-status' + '?gameid=' + encodeURIComponent(gameid), {
-                headers: {
-                }
-              }).then(async (response) => {
-                if (response.data.status !== "-1") {
-                  gameState.parityList = response.data.parityList;
-                }
-                if (response.data.status == "1") {
-                  gameState.inProgress = false;
-                } else {
-                  await new Promise(r => setTimeout(r, 5000));
-                }
-              }).catch((error) => {
-                console.log(error)
-                gameState.inProgress = false;
-              })
-            }
-          })
-          .catch((error) => {
-            console.log(error)
-            gameState.inProgress = false;
-          })*/
+  const startGame = async () => {
+    balanceInterval.pause()
+    gameState.inProgress = true;
+    parityList.value = []
+    try {
+      const response = await axios.put('v1/games/new', {
+        rounds: gameState.round,
+        rate: bid.value,
+        WalletId: wallet.value.id
+      })
+      gameState.balance -= response.data.sum + response.data.fee
+    } catch (e) {
+      gameState.inProgress = false;
+      throw e
+    }
   };
 
   return {
@@ -194,6 +174,12 @@ export const useGameStore = defineStore("game", () => {
     copyWallet,
     generateWallet,
     restoreWallet,
-    hasWallet
+    hasWallet,
+    address,
+    runGame,
+    parityList,
+    bid,
+    wallet
+//    getCurrentGame
   };
 });
