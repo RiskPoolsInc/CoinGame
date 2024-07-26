@@ -18,9 +18,11 @@ const cookies = useCookies()
 import {IGameState, IParityList} from "@/entities/game/model/game.interface";
 
 export const useGameStore = defineStore("game", () => {
+  const isRefunded = useLocalStorage<boolean>('isRefunded', true);
   const wallet = useLocalStorage<Wallet>('wallet', {} as Wallet);
   const parityList = useLocalStorage<IParityList[]>('parityList', []);
   const bid = useLocalStorage<number>('bid', Number(process.env.VUE_APP_MIN_BID));
+  const rewardSum = useLocalStorage<string>('rewardSum','0');
   const balanceInterval = useIntervalFn(async () => {
     await updateBalance()
   }, 30000)
@@ -65,6 +67,21 @@ export const useGameStore = defineStore("game", () => {
       updateParityList(response.data.gameRounds)
   }
 
+  const restoreGame = async (prepareCb: () => void) => {
+    try {
+      const response = await axios.get('v1/games', {params: {WalletId: wallet.value.id}})
+      if (!response.data) return
+      balanceInterval.pause()
+      gameState.round = response.data.roundQuantity;
+      if (response.data.state.code === 'Created' && !response.data.gameRounds.length) {
+        prepareCb()
+        gameState.inProgress = true
+      }
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
   const generateWallet = async () => {
     try {
       const res = await axios.put('v1/wallets/create')
@@ -101,34 +118,13 @@ export const useGameStore = defineStore("game", () => {
 
 
   const generalReset = async () => {
-    gameState.balance = 1000000;
-    gameState.previousBalance = 0;
-    gameState.round = 3;
+    parityList.value = []
+    bid.value = Number(process.env.VUE_APP_MIN_BID)
+    wallet.value = undefined
+    rewardSum.value = '0'
+    gameState.balance = 0;
+    gameState.wallet = '';
   };
-
-  const refundFunds = async () => {
-    if (gameState.balance == 0) {
-      return
-    }
-    console.log('REFUND')
-    gameState.inProgress = true
-    const res = await axios.get('refund-funds' + '?uid=' + encodeURIComponent(gameState.uid), {
-      headers: {
-      }
-    })
-      .then((response) => {
-        gameState.inProgress = false
-        console.log(response.data);
-      })
-      .catch((error) => {
-        gameState.inProgress = false
-        console.log(error)
-      })
-      .finally(() => {
-        gameState.inProgress = false
-      })
-    gameState.inProgress = false
-  }
 
   const runGame = async () => {
     try {
@@ -137,6 +133,8 @@ export const useGameStore = defineStore("game", () => {
         WalletId: wallet.value.id
       })
       updateParityList(response.data.gameRounds)
+      rewardSum.value = `${response.data.rewardSum}`
+      await updateBalance()
     } catch (e) {
       console.error(e)
     } finally {
@@ -150,6 +148,7 @@ export const useGameStore = defineStore("game", () => {
     balanceInterval.pause()
     gameState.inProgress = true;
     parityList.value = []
+    isRefunded.value = false
     try {
       const response = await axios.put('v1/games/new', {
         rounds: gameState.round,
@@ -167,7 +166,6 @@ export const useGameStore = defineStore("game", () => {
     gameState,
     setBid,
     generalReset,
-    refundFunds,
     number2Hash,
     hash2Number,
     startGame,
@@ -179,7 +177,9 @@ export const useGameStore = defineStore("game", () => {
     runGame,
     parityList,
     bid,
-    wallet
+    wallet,
+    rewardSum,
+    restoreGame
 //    getCurrentGame
   };
 });

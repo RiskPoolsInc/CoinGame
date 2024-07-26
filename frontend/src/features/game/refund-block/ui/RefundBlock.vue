@@ -1,8 +1,37 @@
 <script setup lang="ts">
 import VButton from "@/shared/ui/base-components/v-button/ui/VButton.vue";
 import { useGameStore } from "@/entities/game/model/game";
+import axios from "@/shared/lib/plugins/axios";
+import {useQuasar} from "quasar";
+import {useLocalStorage} from "@vueuse/core";
 
-const { generalReset, refundFunds, gameState } = useGameStore();
+const {  gameState, generalReset } = useGameStore();
+const wallet = useLocalStorage<Wallet>('wallet', {} as Wallet);
+const isRefunded = useLocalStorage<boolean>('isRefunded', true);
+const $q = useQuasar()
+
+const refundFunds = async () => {
+  try {
+    console.log(wallet.value.id)
+    await axios.put('v1/wallets/refund', {
+      WalletId: wallet.value.id
+    })
+    isRefunded.value = true
+    await generalReset()
+    $q.notify({
+      message: "The refund request has been sent. Expect UBX to your wallet",
+      color: "positive",
+      position: "top-right",
+    });
+  } catch (e) {
+    console.error(e)
+    $q.notify({
+      message: "Something went wrong",
+      color: "negative",
+      position: "top-right",
+    });
+  }
+}
 </script>
 
 <template>
