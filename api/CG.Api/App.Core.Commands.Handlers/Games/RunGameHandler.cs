@@ -75,8 +75,8 @@ public class RunGameHandler : IRequestHandler<RunGameCommand, GameView> {
 
         for (var i = 0; i < currentGame.RoundQuantity; i++) {
             var sequenceNumberRound = i + 1;
-            await RandomDelay();
-            var nextNumber = NextNumber();
+            await RandomDelay(500, 1000);
+            var nextNumber = await GenerateNextRandomNumber();
             var isEven = (nextNumber % 2) == 0;
             var roundResult = isEven ? GameRoundResultTypes.Lose : GameRoundResultTypes.Win;
             var roundResultIsWin = roundResult == GameRoundResultTypes.Win;
@@ -114,20 +114,25 @@ public class RunGameHandler : IRequestHandler<RunGameCommand, GameView> {
         }
     }
 
-    private async Task RandomDelay() {
+    private async Task RandomDelay(int from, int to) {
         var random = new Random();
-        var next = random.Next(4600, 4900);
+        var next = random.Next(from, to);
         await Task.Delay(next);
     }
 
-    private int NextNumber() {
-        var randomNumbersBetween = new[] {
-                RandomNumberGenerator.GetInt32(2, 10000),
-                RandomNumberGenerator.GetInt32(2, 10000)
+    private async Task<int> GenerateNextRandomNumber() {
+        var firstRandomNumber = RandomNumberGenerator.GetInt32(1, 5000);
+        await RandomDelay(2000, 2500);
+        var secondRandomNumber = RandomNumberGenerator.GetInt32(6000, 10001);
+
+        var orderedRandomNumbers = new[] {
+                firstRandomNumber,
+                secondRandomNumber
             }.OrderBy(a => a)
              .ToArray();
+        await RandomDelay(50, 100);
 
-        var result = RandomNumberGenerator.GetInt32(randomNumbersBetween[0], randomNumbersBetween[1]);
-        return result;
+        var generatedRandomNumber = RandomNumberGenerator.GetInt32(orderedRandomNumbers[0], orderedRandomNumbers[1]);
+        return generatedRandomNumber;
     }
 }
