@@ -5,20 +5,21 @@ const crypto = require('crypto-web');
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 import axios from "@/shared/lib/plugins/axios";
 
-import { defineStore } from "pinia";
+import {defineStore} from "pinia";
 import {computed, reactive} from "vue";
-import { sha224, sha256 } from 'js-sha256';
-import { useCookies } from '@vueuse/integrations/useCookies'
-import { copyToClipboard } from "quasar";
+import {sha224, sha256} from 'js-sha256';
+import {useCookies} from '@vueuse/integrations/useCookies'
+import {copyToClipboard} from "quasar";
 import {useIntervalFn, useLocalStorage} from '@vueuse/core';
 import initCilInstance from "@/shared/lib/utils/initCilInstance";
+import {IGameState, IParityList} from "@/entities/game/model/game.interface";
 
 const cookies = useCookies()
 
-import {IGameState, IParityList} from "@/entities/game/model/game.interface";
-
 export const useGameStore = defineStore("game", () => {
   const isPlaying = useLocalStorage<boolean>('isPlaying', false);
+  const isRuning = useLocalStorage<boolean>('isRuning', false);
+  const gameId = useLocalStorage<string>('gameId', '');
   const wallet = useLocalStorage<Wallet>('wallet', {} as Wallet);
   const parityList = useLocalStorage<IParityList[]>('parityList', []);
   const bid = useLocalStorage<number>('bid', Number(process.env.VUE_APP_MIN_BID));
@@ -63,19 +64,42 @@ export const useGameStore = defineStore("game", () => {
 
   const getCurrentGame = async () => {
     const response = await axios.get('v1/games/current', {params: {WalletId: wallet.value.id}})
-    if (response.data.gameRounds)
+    if (!response.data && currentGameInterval.isActive) {
+      currentGameInterval.pause()
+      isRuning.value = false
+      const latestGame = await getLatestGame()
+      updateParityList(latestGame.gameRounds)
+      rewardSum.value = `${latestGame.rewardSum}`
+      await updateBalance()
+      gameState.inProgress = false
+      gameState.isPrepared = false
+    }
+    if (response.data.gameRounds) {
       updateParityList(response.data.gameRounds)
+    }
+  }
+
+  const getLatestGame = async () => {
+    const response = await axios.get('v1/games', {params: {WalletId: wallet.value.id}})
+    if (!response.data.length) return
+    return response.data.find((game: { id: string }) => game.id === gameId.value)
   }
 
   const restoreGame = async (prepareCb: () => void) => {
+    if (!gameId.value.length) return
     try {
-      const response = await axios.get('v1/games', {params: {WalletId: wallet.value.id}})
-      if (!response.data) return
+      const latestGame = await getLatestGame()
+      if (!latestGame) return
       balanceInterval.pause()
-      gameState.round = response.data.roundQuantity;
-      if (response.data.state.code === 'Created' && !response.data.gameRounds.length) {
+      gameState.round = latestGame.roundQuantity;
+      if (latestGame.state.code === 'Created' && !latestGame.gameRounds.length && !isRuning.value) {
         prepareCb()
         gameState.inProgress = true
+      }
+      if (latestGame.state.code === 'Created' && !latestGame.gameRounds.length && isRuning.value) {
+        gameState.inProgress = true
+        currentGameInterval.resume()
+        updateParityList(latestGame.gameRounds)
       }
     } catch (e) {
       console.error(e)
@@ -124,14 +148,18 @@ export const useGameStore = defineStore("game", () => {
     rewardSum.value = '0'
     gameState.balance = 0;
     gameState.wallet = '';
+    gameId.value = ''
+    isRuning.value = false
   };
 
   const runGame = async () => {
     try {
       currentGameInterval.resume()
+      isRuning.value = true
       const response = await axios.put('v1/games/run', {
         WalletId: wallet.value.id
       })
+      isRuning.value = false
       updateParityList(response.data.gameRounds)
       rewardSum.value = `${response.data.rewardSum}`
       await updateBalance()
@@ -155,6 +183,7 @@ export const useGameStore = defineStore("game", () => {
         rate: bid.value,
         WalletId: wallet.value.id
       })
+      gameId.value = response.data.game.id
       gameState.balance -= response.data.sum + response.data.fee
     } catch (e) {
       gameState.inProgress = false;
@@ -180,6 +209,5 @@ export const useGameStore = defineStore("game", () => {
     wallet,
     rewardSum,
     restoreGame
-//    getCurrentGame
   };
 });
