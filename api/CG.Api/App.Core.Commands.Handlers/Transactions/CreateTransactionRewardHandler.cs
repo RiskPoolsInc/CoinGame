@@ -38,29 +38,16 @@ public class CreateTransactionRewardHandler : IRequestHandler<CreateTransactionR
     public async Task<TransactionRewardView> Handle(CreateTransactionRewardCommand request, CancellationToken cancellationToken) {
         var game = await _gameRepository.Get(request.GameId).SingleAsync<Game, GameView>(default);
         var wallet = await _walletRepository.Get(game.Wallet.Id).SingleAsync();
+        var gameReward = game.RewardSum;
 
-        var rounds = await _gameRoundRepository.Where(a => a.GameId == game.Id)
-                                               .OrderBy(a => a.CreatedOn)
-                                               .ToArrayAsync<GameRound, GameRoundView>(default);
-        var gameReward = 0m;
-
-        for (var i = 0; i < rounds.Length; i++) {
-            var round = rounds[i];
-
-            if (round.Result.Id == (int)GameRoundResultTypes.Win)
-                gameReward += game.RoundSum;
-            else
-                gameReward -= game.RoundSum;
-        }
-
-        var generatedTransaction = await _walletService.GenerateTransactionReward(wallet.Hash, gameReward > 0 ? gameReward : game.RoundSum);
+        var rewardTransaction = await _walletService.GenerateTransactionReward(wallet.Hash, gameReward);
 
         var transaction = new TransactionUserReward {
             GameId = request.GameId,
-            WalletHashFrom = generatedTransaction.WalletFrom,
-            TransactionHash = generatedTransaction.Hash,
-            Sum = generatedTransaction.Sum,
-            Fee = generatedTransaction.Fee,
+            WalletHashFrom = rewardTransaction.WalletFrom,
+            TransactionHash = rewardTransaction.Hash,
+            Sum = rewardTransaction.Sum,
+            Fee = rewardTransaction.Fee,
             StateId = (int)TransactionStateTypes.Created,
             ExistInBlockChain = false,
         };
