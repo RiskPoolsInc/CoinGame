@@ -121,9 +121,9 @@ public class RunGameHandler : IRequestHandler<RunGameCommand, GameView> {
     }
 
     private async Task<int> GenerateNextRandomNumber() {
-        var firstRandomNumber = RandomNumberGenerator.GetInt32(1, 5000);
+        var firstRandomNumber = RandomNumberGenerator.GetInt32(2, 5000);
         await RandomDelay(2000, 2500);
-        var secondRandomNumber = RandomNumberGenerator.GetInt32(6000, 10001);
+        var secondRandomNumber = RandomNumberGenerator.GetInt32(6000, 10000);
 
         var orderedRandomNumbers = new[] {
                 firstRandomNumber,
