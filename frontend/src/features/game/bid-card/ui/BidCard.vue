@@ -14,7 +14,7 @@ type Emits = {
 const emit = defineEmits<Emits>()
 
 const { gameState, startGame, bid } = useGameStore();
-const isRefunded = useLocalStorage<boolean>('isRefunded', true);
+const isPlaying = useLocalStorage<boolean>('isPlaying', false);
   const {bidNotice} = useGame()
 const $q = useQuasar()
 
@@ -37,7 +37,7 @@ const $q = useQuasar()
       gameState.round >= 3 &&
       gameState.round <= 10 &&
       gameState.wallet &&
-      !gameState.inProgress && !isRefunded.value
+      !gameState.inProgress && !isPlaying.value
     );
   });
 

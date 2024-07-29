@@ -7,7 +7,7 @@ import {useLocalStorage} from "@vueuse/core";
 
 const {  gameState, generalReset } = useGameStore();
 const wallet = useLocalStorage<Wallet>('wallet', {} as Wallet);
-const isRefunded = useLocalStorage<boolean>('isRefunded', true);
+const isPlaying = useLocalStorage<boolean>('isPlaying', false);
 const $q = useQuasar()
 
 const refundFunds = async () => {
@@ -16,7 +16,7 @@ const refundFunds = async () => {
     await axios.put('v1/wallets/refund', {
       WalletId: wallet.value.id
     })
-    isRefunded.value = true
+    isPlaying.value = false
     await generalReset()
     $q.notify({
       message: "The refund request has been sent. Expect UBX to your wallet",

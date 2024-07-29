@@ -18,7 +18,7 @@ const cookies = useCookies()
 import {IGameState, IParityList} from "@/entities/game/model/game.interface";
 
 export const useGameStore = defineStore("game", () => {
-  const isRefunded = useLocalStorage<boolean>('isRefunded', true);
+  const isPlaying = useLocalStorage<boolean>('isPlaying', false);
   const wallet = useLocalStorage<Wallet>('wallet', {} as Wallet);
   const parityList = useLocalStorage<IParityList[]>('parityList', []);
   const bid = useLocalStorage<number>('bid', Number(process.env.VUE_APP_MIN_BID));
@@ -148,7 +148,7 @@ export const useGameStore = defineStore("game", () => {
     balanceInterval.pause()
     gameState.inProgress = true;
     parityList.value = []
-    isRefunded.value = false
+    isPlaying.value = true
     try {
       const response = await axios.put('v1/games/new', {
         rounds: gameState.round,
