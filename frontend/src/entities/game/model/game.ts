@@ -73,6 +73,8 @@ export const useGameStore = defineStore("game", () => {
       await updateBalance()
       gameState.inProgress = false
       gameState.isPrepared = false
+      isPlaying.value = false
+      balanceInterval.resume()
     }
     if (response.data.gameRounds) {
       updateParityList(response.data.gameRounds)
@@ -159,16 +161,18 @@ export const useGameStore = defineStore("game", () => {
       const response = await axios.put('v1/games/run', {
         WalletId: wallet.value.id
       })
-      isRuning.value = false
       updateParityList(response.data.gameRounds)
       rewardSum.value = `${response.data.rewardSum}`
       await updateBalance()
+      balanceInterval.resume()
     } catch (e) {
       console.error(e)
     } finally {
       currentGameInterval.pause()
       gameState.inProgress = false
       gameState.isPrepared = false
+      isRuning.value = false
+      isPlaying.value = false
     }
   }
 
@@ -177,6 +181,7 @@ export const useGameStore = defineStore("game", () => {
     gameState.inProgress = true;
     parityList.value = []
     isPlaying.value = true
+    rewardSum.value = '0'
     try {
       const response = await axios.put('v1/games/new', {
         rounds: gameState.round,

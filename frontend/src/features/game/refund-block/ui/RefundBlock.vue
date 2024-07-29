@@ -16,7 +16,6 @@ const refundFunds = async () => {
     await axios.put('v1/wallets/refund', {
       WalletId: wallet.value.id
     })
-    isPlaying.value = false
     await generalReset()
     $q.notify({
       message: "The refund request has been sent. Expect UBX to your wallet",
