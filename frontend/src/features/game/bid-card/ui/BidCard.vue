@@ -6,6 +6,7 @@ import {computed, ref, watch} from "vue";
 import {useGame} from "@/shared/composables/useGame";
 import {useQuasar} from "quasar";
 import {useLocalStorage} from "@vueuse/core/index";
+import {storeToRefs} from "pinia";
 
 type Emits = {
   (e: 'start'): void
@@ -13,7 +14,9 @@ type Emits = {
 
 const emit = defineEmits<Emits>()
 
-const { gameState, startGame, bid } = useGameStore();
+const gameStore = useGameStore();
+const {bid} = storeToRefs(gameStore)
+
 const isPlaying = useLocalStorage<boolean>('isPlaying', false);
   const {bidNotice} = useGame()
 const $q = useQuasar()
@@ -27,23 +30,23 @@ const $q = useQuasar()
       slider.value = 3;
       return;
     }
-    gameState.round = newVal;
+    gameStore.gameState.round = newVal;
   });
 
   const statusPlayButton = computed(() => {
     return !(
-      Number(bid) >= Number(process.env.VUE_APP_MIN_BID) &&
-      Number(bid) <= Number(process.env.VUE_APP_MAX_BID) &&
-      gameState.round >= 3 &&
-      gameState.round <= 10 &&
-      gameState.wallet &&
-      !gameState.inProgress && !isPlaying.value
+      Number(gameStore.bid) >= Number(process.env.VUE_APP_MIN_BID) &&
+      Number(gameStore.bid) <= Number(process.env.VUE_APP_MAX_BID) &&
+      gameStore.gameState.round >= 3 &&
+      gameStore.gameState.round <= 10 &&
+      gameStore.gameState.wallet &&
+      !gameStore.gameState.inProgress && !isPlaying.value
     );
   });
 
   const handlePlayClick = async () => {
     try {
-      await startGame()
+      await gameStore.startGame()
       emit('start')
     } catch (e) {
       console.error(e)
@@ -56,7 +59,7 @@ const $q = useQuasar()
   }
 
   const onStart = () => {
-    if (Number(bid) > gameState.balance) {
+    if (Number(gameStore.bid) > gameStore.gameState.balance) {
       error.value = true;
       return;
     }
@@ -65,7 +68,7 @@ const $q = useQuasar()
   };
 
   const rules = computed(() => {
-    return [() => (Number(bid) >= Number(process.env.VUE_APP_MIN_BID) && Number(bid) <= Number(process.env.VUE_APP_MAX_BID)) || bidNotice.value]
+    return [() => (Number(gameStore.bid) >= Number(process.env.VUE_APP_MIN_BID) && Number(gameStore.bid) <= Number(process.env.VUE_APP_MAX_BID)) || bidNotice.value]
   })
 </script>
 
