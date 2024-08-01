@@ -39,7 +39,7 @@
           <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 my-auto">
             <q-icon name="people" size="sm" />
           </div>
-          <div class="col-lg-11 col-md-4 col-sm-10 col-xs-11 footer-hero__item">
+          <div class="col-lg-11 col-md-4 col-sm-11 col-xs-11 footer-hero__item">
             Partnerships:
             <a class="footer-hero__link" href="mailto:offer@riskpools.io"
               >offer@riskpools.io</a
