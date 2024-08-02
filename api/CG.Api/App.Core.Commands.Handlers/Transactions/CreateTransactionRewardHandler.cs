@@ -1,10 +1,8 @@
 using App.Common.Helpers;
 using App.Core.Commands.Transactions;
 using App.Core.Enums;
-using App.Core.Requests.Handlers.Helpers;
 using App.Core.ViewModels.Games;
 using App.Core.ViewModels.Transactions;
-using App.Data.Entities.GameRounds;
 using App.Data.Entities.Games;
 using App.Data.Entities.Transactions;
 using App.Interfaces.Repositories.Games;
@@ -55,7 +53,6 @@ public class CreateTransactionRewardHandler : IRequestHandler<CreateTransactionR
         _transactionRewardRepository.Add(transaction);
         await _transactionRewardRepository.SaveAsync(default);
 
-        return await _transactionRewardRepository.Get(transaction.Id)
-                                                 .SingleAsync<TransactionUserReward, TransactionRewardView>(default);
+        return await _transactionRewardRepository.Get(transaction.Id).SingleAsync<TransactionUserReward, TransactionRewardView>(default);
     }
 }

@@ -77,20 +77,28 @@ public class WalletService : IWalletService {
         return result as TransactionIsCompletedView;
     }
 
-    public async Task<GenerateTransactionView> GenerateTransactionService(decimal sum) {
+    public async Task<GenerateTransactionView> GenerateTransactionService(decimal roundSum) {
         var path = GetPath(WalletServiceEnpointTypes.GenerateTransaction);
         var gameDepositWallet = GetWallet(ServiceWalletTypes.GameDeposit);
         var serviceWallet = GetWallet(ServiceWalletTypes.Service);
+        var commissionWallet = GetWallet(ServiceWalletTypes.Commission);
 
         if (gameDepositWallet.Value == serviceWallet.Value)
             return null;
 
-        var result = await Post<GenerateTransactionView>(path,
+        var servicePaymentSum = roundSum * 0.98m * 0.784m;
+        var commissionSum = servicePaymentSum * 0.02m;
+
+        var response = await Post<GenerateTransactionView>(path,
             PrepareTransactionRequestBody(gameDepositWallet.PrivateKey,
                 new (string address, decimal sum)[] {
-                    (gameDepositWallet.PrivateKey, sum)
+                    (serviceWallet.Value, servicePaymentSum - commissionSum),
+                    (commissionWallet.Value, commissionSum),
                 }));
-        return result as GenerateTransactionView;
+
+        var result = response as GenerateTransactionView;
+        result.WalletFrom = gameDepositWallet.Value;
+        return result;
     }
 
     private object PrepareTransactionRequestBody(string signerPrivateKey, (string address, decimal sum)[] receivers) {
@@ -112,9 +120,12 @@ public class WalletService : IWalletService {
 
     public async Task<GenerateTransactionView> GenerateTransactionGameDeposit(string from, string privateKey, decimal sum) {
         var path = GetPath(WalletServiceEnpointTypes.GenerateTransaction);
+        var commission = sum * 0.02m;
+        var gameDeposit = sum - commission;
 
         var cmd = PrepareTransactionRequestBody(privateKey, new (string address, decimal sum)[] {
-            (GetWalletAddress(ServiceWalletTypes.GameDeposit), sum)
+            (GetWalletAddress(ServiceWalletTypes.GameDeposit), gameDeposit),
+            (GetWalletAddress(ServiceWalletTypes.Commission), commission),
         });
 
         var result = await Post<GenerateTransactionView>(path, cmd);
@@ -134,9 +145,11 @@ public class WalletService : IWalletService {
         var path = GetPath(WalletServiceEnpointTypes.GenerateTransaction);
         var walletFromAddress = GetWalletAddress(ServiceWalletTypes.Reward);
         var walletFromPrivateKey = GetWalletPrivateKey(ServiceWalletTypes.Reward);
+        var commissionService = GetWalletPrivateKey(ServiceWalletTypes.Commission);
 
         var cmd = PrepareTransactionRequestBody(walletFromPrivateKey, new (string address, decimal sum)[] {
-            (toWallet, sum)
+            (toWallet, sum * 0.98m),
+            (commissionService, sum * 0.02m)
         });
 
         var response = await Post<GenerateTransactionView>(path, cmd);
