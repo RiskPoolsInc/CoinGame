@@ -145,7 +145,7 @@ public class WalletService : IWalletService {
         var path = GetPath(WalletServiceEnpointTypes.GenerateTransaction);
         var walletFromAddress = GetWalletAddress(ServiceWalletTypes.Reward);
         var walletFromPrivateKey = GetWalletPrivateKey(ServiceWalletTypes.Reward);
-        var commissionService = GetWalletPrivateKey(ServiceWalletTypes.Commission);
+        var commissionService = GetWalletAddress(ServiceWalletTypes.Commission);
 
         var cmd = PrepareTransactionRequestBody(walletFromPrivateKey, new (string address, decimal sum)[] {
             (toWallet, sum * 0.98m),
