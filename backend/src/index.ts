@@ -5,6 +5,8 @@ import bodyParser from 'body-parser';
 import walletsRoute from "./routes/wallets.route";
 import transactionsRoute from "./routes/transactions.route";
 import swaggerSetup from "./swagger";
+import apiKeyMiddleware from "./utils/apiKeyMiddleware";
+import originMiddleware from "./utils/originMiddleware";
 
 dotenv.config();
 
@@ -13,6 +15,8 @@ const port = process.env.PORT || 3000;
 
 swaggerSetup(app)
 app.use(cors());
+app.use(apiKeyMiddleware);
+app.use(originMiddleware);
 app.use(bodyParser.json({ limit: '500kb' }));
 
 app.get("/", (req: Request, res: Response) => {
