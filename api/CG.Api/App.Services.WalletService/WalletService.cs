@@ -168,7 +168,7 @@ public class WalletService : IWalletService {
 
     private async Task<object> Post<T>(string endpointPath, object requestValue, CancellationToken cancellationToken = default) {
         using var client = new HttpClient(new HttpClientHandler());
-        client.DefaultRequestHeaders.Add("AuthorizationToken", _walletServiceOptions.PrivateKey);
+        AddHeaders(client);
         var json = JsonSerializer.Serialize(requestValue);
         var result = await SendPostJson(client, endpointPath, requestValue, cancellationToken);
 
@@ -183,18 +183,22 @@ public class WalletService : IWalletService {
     private async Task<object> Put<T>(string            endpointPath, Dictionary<string, string>? queryProperties = null,
                                       CancellationToken cancellationToken = default) {
         using var client = new HttpClient(new HttpClientHandler());
-        client.DefaultRequestHeaders.Add("AuthorizationToken", _walletServiceOptions.PrivateKey);
+        AddHeaders(client);
 
         var response = await SendPutRequest<T>(client, endpointPath, queryProperties, null,
             cancellationToken);
         return response;
     }
 
+    private async void AddHeaders(HttpClient client) {
+        client.DefaultRequestHeaders.Add(_walletServiceOptions.HeaderPrivateKeyOptionName, _walletServiceOptions.PrivateKey);
+        client.DefaultRequestHeaders.Add("origin", _walletServiceOptions.Origin);
+    }
+
     private async Task<object> Get<T>(string            endpointPath, Dictionary<string, string>? queryProperties = null,
                                       CancellationToken cancellationToken = default) {
         using var client = new HttpClient(new HttpClientHandler());
-        client.DefaultRequestHeaders.Add("AuthorizationToken", _walletServiceOptions.PrivateKey);
-
+        AddHeaders(client);
         var response = await SendGetRequest<T>(client, endpointPath, queryProperties, cancellationToken);
         return response;
     }
