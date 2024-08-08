@@ -37,7 +37,7 @@
         </div>
 
         <div class="footer-content__company-label col-lg-2 col-md-2 col-xs-12 text-right">
-          (с) Riskpools 2023
+          (с) Riskpools 2024
         </div>
       </div>
     </div>

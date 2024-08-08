@@ -12,6 +12,7 @@
     color: var(--color-white);
     font-size: 60px;
     font-weight: 700;
+    word-break: break-all;
   }
 
   &__subtitle {
@@ -62,6 +63,7 @@
       font-size: 22px;
       padding-top: 14px;
       display: block;
+      word-break: break-all;
     }
   }
 
