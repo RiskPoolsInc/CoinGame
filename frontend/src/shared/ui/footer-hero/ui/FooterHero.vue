@@ -15,7 +15,7 @@
               href="https://t.me/riskpools1"
               target="_blank"
             >
-              Telegram chat
+              Telegram
             </a>
           </div>
 
@@ -49,8 +49,8 @@
             <q-icon name="bi-twitter-x" size="sm" />
           </div>
           <div class="col-lg-11 col-md-4 col-sm-10 col-xs-10 footer-hero__item">
-            <a class="footer-hero__link" href="https://twitter.com/RiskPools"
-              >Twitter profile</a
+            <a class="footer-hero__link" target="_blank" href="https://twitter.com/RiskPools"
+              >Twitter (X)</a
             >
           </div>
         </div>
