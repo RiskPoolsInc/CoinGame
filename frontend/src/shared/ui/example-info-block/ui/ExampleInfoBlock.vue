@@ -12,33 +12,22 @@
       <div class="example-info-block__content row">
         <div class="col-lg-8">
           <p class="example-info-block__context">
-            In this classic children’s game, one player – call him Bob - tosses
-            a coin and covers it with their hand. The other player – Alice - has
-            to guess if it’s heads or tails. In our scenario, Alice plays
-            against a risk pool. If she guesses right, she’ll get the reward
-            from the pool; but if she guesses wrong, the reward will go to the
-            pool holder.
+            In this classic children’s game, one player, let’s call him Bob, tosses a coin and covers it with his hand. The other player, Alice, has to guess if it’s heads or tails. In our scenario, Alice plays against a risk pool. If she guesses correctly, she’ll receive the reward from the pool; if she guesses incorrectly, the reward goes to the pool holder.
             <br />
             <br />
-            Now let’s toss the coin several times instead of once. Alice’s
-            reward balance grows whenever she guesses correctly and goes down
-            when she is wrong. If the balance reaches zero, the game stops; and
-            if after a specified number of rounds it’s still more than zero, she
-            receives the winnings.
+            Now, let’s toss the coin several times instead of once. Alice’s reward balance grows when she guesses correctly and decreases when she’s wrong. If the balance reaches zero, the game stops; if after a specified number of rounds it’s still above zero, she receives the winnings.
             <br />
             <br />
-            To make things even more interesting and level the playing field,
-            let’s introduce the following conditions:
+            To make things more interesting and level the playing field, we introduce the following conditions:
             <br />
             <br />
             1) The player starts by bidding a certain amount.
             <br />
-            2) Heads (even number): the player wins a % of the bid's amount.
+            2) Heads (even number): the player wins a percentage of the bid amount.
             <br />
-            3) Tails (odd number): the player loses a % of the bid's amount.
+            3) Tails (odd number): the player loses a percentage of the bid amount.
             <br />
-            4) The game can have 3 to 10 rounds, depending on the player’s
-            preferences.
+            4) The game can have 3 to 10 rounds, depending on the player’s preferences.
           </p>
         </div>
         <div class="col-lg-4">

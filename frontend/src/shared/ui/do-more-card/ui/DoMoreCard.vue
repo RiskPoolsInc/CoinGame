@@ -13,12 +13,12 @@ const getImageUrl = (url: string) => {
 </script>
 
 <template>
-  <div class="do-more-card">
+  <a :href="data.link" class="do-more-card" target="_blank">
     <div class="do-more-card__logo">
       <img :src="getImageUrl(data.logo)" alt="" />
     </div>
     <div class="do-more-card__context" v-html="$sanitize(data.context)" />
-  </div>
+  </a>
 </template>
 
 <style scoped lang="scss">
