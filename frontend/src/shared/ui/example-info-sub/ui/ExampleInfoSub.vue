@@ -12,7 +12,7 @@ import ExampleInfoContent from "@/shared/ui/example-info-content/ui/ExampleInfoC
       </div>
       <example-info-content title="As a player" btn-name="PLACE A BET" btn-link="/game">
         1) Top up the gaming wallet <br />
-        You can deposit between 100,000 UBIX (around $1) and 1,000,000,000 UBIX. Buy UBIX on Ubixpay, UBIX.Exchange, MEXC, BitMart, Uniswap, etc.
+        You can deposit between 100,000 UBX (around $1) and 1,000,000,000 UBX. Buy UBX on Ubixpay, UBIX.Exchange, MEXC, BitMart, Uniswap, etc.
         <span>
           <a
               class="example-info-sub__context--link"
@@ -25,7 +25,7 @@ import ExampleInfoContent from "@/shared/ui/example-info-content/ui/ExampleInfoC
         <br />
         <br />
         2) Decide how much you are willing to bid <br />
-        In each game round, you can risk between 100,000 UBIX and the total amount in your game wallet.
+        In each game round, you can risk between 100,000 UBX and the total amount in your game wallet.
         <br />
         <br />
         3) Play the game!
