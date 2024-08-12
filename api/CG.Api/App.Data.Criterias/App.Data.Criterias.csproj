@@ -15,4 +15,8 @@
         <ProjectReference Include="..\Base\App.Interfaces.RequestsParams\App.Interfaces.RequestsParams.csproj"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Statistics\" />
+    </ItemGroup>
+
 </Project>
