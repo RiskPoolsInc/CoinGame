@@ -42,10 +42,8 @@ public class GetEarnedCoinsHandler : IRequestHandler<GetEarnedCoinsRequest, deci
         //commission from ubistake payments of lose games
         var coinsAfterSubCommission = loseGamesSum - loseGamesDepositsEarnedCoins;
         var ubistakePaymentsSum = loseGamesSum * 0.98m * 0.784m;
-        var earnedCoinsByUbistakePayments = ubistakePaymentsSum * 0.02m;
 
         return Convert.ToInt64(loseGamesDepositsEarnedCoins +
-            earnedCoinsByUbistakePayments +
             winGamesDepositsEarnedCoins +
             gameRewardsEarnedCoins);
     }

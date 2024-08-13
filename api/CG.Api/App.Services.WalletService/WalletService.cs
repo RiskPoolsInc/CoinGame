@@ -87,13 +87,11 @@ public class WalletService : IWalletService {
             return null;
 
         var servicePaymentSum = roundSum * 0.98m * 0.784m;
-        var commissionSum = servicePaymentSum * 0.02m;
 
         var response = await Post<GenerateTransactionView>(path,
             PrepareTransactionRequestBody(gameDepositWallet.PrivateKey,
                 new (string address, decimal sum)[] {
-                    (serviceWallet.Value, servicePaymentSum - commissionSum),
-                    (commissionWallet.Value, commissionSum),
+                    (serviceWallet.Value, servicePaymentSum)
                 }));
 
         var result = response as GenerateTransactionView;
