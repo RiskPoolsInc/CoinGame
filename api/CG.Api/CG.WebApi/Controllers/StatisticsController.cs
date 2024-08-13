@@ -81,8 +81,8 @@ namespace CG.WebApi.Controllers {
         /// <response code="403">Access Denied</response>
         /// <response code="500">Unexpected server error</response>
         [HttpGet("coins/ubistake/earned")]
-        public async Task<IActionResult> GetCounsUbistakeEarnedAsync([FromQuery] GetEarnedCoinsRequest request,
-                                                                     CancellationToken                 cancellationToken) {
+        public async Task<IActionResult> GetCounsUbistakeEarnedAsync([FromQuery] GetUbistakeEarnedCoinsRequest request,
+                                                                     CancellationToken                         cancellationToken) {
             return Ok(await _dispatcher.Send(request, cancellationToken));
         }
     }

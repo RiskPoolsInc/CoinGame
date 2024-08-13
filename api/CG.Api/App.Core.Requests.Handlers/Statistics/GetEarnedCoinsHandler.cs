@@ -44,9 +44,9 @@ public class GetEarnedCoinsHandler : IRequestHandler<GetEarnedCoinsRequest, deci
         var ubistakePaymentsSum = loseGamesSum * 0.98m * 0.784m;
         var earnedCoinsByUbistakePayments = ubistakePaymentsSum * 0.02m;
 
-        return loseGamesDepositsEarnedCoins +
+        return Convert.ToInt64(loseGamesDepositsEarnedCoins +
             earnedCoinsByUbistakePayments +
             winGamesDepositsEarnedCoins +
-            gameRewardsEarnedCoins;
+            gameRewardsEarnedCoins);
     }
 }
