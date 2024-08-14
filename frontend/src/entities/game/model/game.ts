@@ -26,7 +26,7 @@ export const useGameStore = defineStore("game", () => {
   const rewardSum = useLocalStorage<string>('rewardSum','0');
   const balanceInterval = useIntervalFn(async () => {
     await updateBalance()
-  }, 30000)
+  }, 10000)
   const currentGameInterval = useIntervalFn(async () => {
     await getCurrentGame()
   }, 5000, {immediate: false})
@@ -192,6 +192,9 @@ export const useGameStore = defineStore("game", () => {
       gameState.balance -= response.data.sum + response.data.fee
     } catch (e) {
       gameState.inProgress = false;
+      gameState.isPrepared = false;
+      isRuning.value = false
+      isPlaying.value = false
       throw e
     }
   };

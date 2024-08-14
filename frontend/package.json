@@ -14,6 +14,7 @@
     "@vueuse/integrations": "^10.9.0",
     "aos": "^2.3.4",
     "apexcharts": "^3.44.1",
+    "axios-retry": "^4.5.0",
     "cil-utils": "github:SilentNotaryEcosystem/Cil-Utils#front",
     "core-js": "^3.8.3",
     "crypto-web": "github:SilentNotaryEcosystem/Crypto-web",
