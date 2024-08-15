@@ -1,4 +1,5 @@
 using System.Security.Cryptography;
+using System.Text;
 
 using App.Common.Helpers;
 using App.Core.Commands.GameRounds;
@@ -68,32 +69,33 @@ public class RunGameHandler : IRequestHandler<RunGameCommand, GameView> {
 
     private async Task RunGame(Game currentGame) {
         var currentGameId = currentGame.Id;
-        var gameCounter = 1;
-        var gameLose = false;
+        var betMultiplier = 1;
+        var gameIsLose = false;
 
         for (var i = 0; i < currentGame.RoundQuantity; i++) {
-            var sequenceNumberRound = i + 1;
+            var roundNumber = i + 1;
             await RandomDelay(500, 1000);
-            var nextNumber = await GenerateNextRandomNumber();
-            var roundResult = (nextNumber % 2) == 0 ? GameRoundResultTypes.Lose : GameRoundResultTypes.Win;
+            var randomNumber = await GenerateNextRandomNumber();
+
+            var randomNumberHash = CalculateHash(randomNumber);
+            var roundResult = (randomNumber % 2) == 0 ? GameRoundResultTypes.Lose : GameRoundResultTypes.Win;
 
             if (roundResult == GameRoundResultTypes.Win)
-                gameCounter++;
+                betMultiplier++;
             else
-                gameCounter--;
+                betMultiplier--;
 
-            await _dispatcher.Send(new CreateGameRoundCommand(currentGameId, nextNumber, roundResult, gameCounter * currentGame.RoundSum,
-                sequenceNumberRound));
+            await _dispatcher.Send(new CreateGameRoundCommand(currentGameId, randomNumber, randomNumberHash, roundResult,
+                betMultiplier * currentGame.RoundSum, roundNumber));
 
-            if (gameCounter <= 0) {
-                gameLose = true;
+            if (betMultiplier <= 0) {
+                gameIsLose = true;
                 await GameIsLose(currentGameId);
-                break;
+                return;
             }
         }
 
-        if (!gameLose)
-            await GameIsWin(gameCounter, currentGameId);
+        await GameIsWin(betMultiplier, currentGameId);
     }
 
     private async Task<TransactionServiceView> GameIsLose(Guid currentGameId) {
@@ -123,9 +125,9 @@ public class RunGameHandler : IRequestHandler<RunGameCommand, GameView> {
     }
 
     private async Task<int> GenerateNextRandomNumber() {
-        var firstRandomNumber = RandomNumberGenerator.GetInt32(2, 5000);
+        var firstRandomNumber = GenerateRandomNumber;
         await RandomDelay(1800, 2300);
-        var secondRandomNumber = RandomNumberGenerator.GetInt32(6000, 10000);
+        var secondRandomNumber = GenerateRandomNumber;
         await RandomDelay(1800, 2300);
 
         var orderedRandomNumbers = new[] {
@@ -138,4 +140,12 @@ public class RunGameHandler : IRequestHandler<RunGameCommand, GameView> {
         var generatedRandomNumber = RandomNumberGenerator.GetInt32(orderedRandomNumbers[0], orderedRandomNumbers[1]);
         return generatedRandomNumber;
     }
+
+    private string CalculateHash(int number) {
+        using var hashInst = SHA256.Create();
+        var hash = Convert.ToHexString(hashInst.ComputeHash(Encoding.UTF8.GetBytes(number.ToString())));
+        return hash;
+    }
+
+    private int GenerateRandomNumber => RandomNumberGenerator.GetInt32(1, 1000000);
 }

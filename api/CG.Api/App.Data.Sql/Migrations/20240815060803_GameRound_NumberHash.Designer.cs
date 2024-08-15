@@ -3,15 +3,17 @@ using System;
 using App.Data.Sql;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace App.Data.Sql.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240815060803_GameRound_NumberHash")]
+    partial class GameRound_NumberHash
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -634,16 +636,22 @@ namespace App.Data.Sql.Migrations
             modelBuilder.Entity("App.Data.Entities.Transactions.TransactionGameDeposit", b =>
                 {
                     b.HasBaseType("App.Data.Entities.Transactions.Transaction");
+
+                    b.HasDiscriminator().HasValue(1);
                 });
 
             modelBuilder.Entity("App.Data.Entities.Transactions.TransactionService", b =>
                 {
                     b.HasBaseType("App.Data.Entities.Transactions.Transaction");
+
+                    b.HasDiscriminator().HasValue(4);
                 });
 
             modelBuilder.Entity("App.Data.Entities.Transactions.TransactionUserRefund", b =>
                 {
                     b.HasBaseType("App.Data.Entities.Transactions.Transaction");
+
+                    b.HasDiscriminator().HasValue(3);
                 });
 
             modelBuilder.Entity("App.Data.Entities.Transactions.TransactionUserReward", b =>

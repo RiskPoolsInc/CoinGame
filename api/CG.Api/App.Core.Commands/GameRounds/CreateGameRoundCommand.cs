@@ -9,14 +9,17 @@ public class CreateGameRoundCommand : IRequest<GameRoundView> {
     public decimal CurrentGameRoundSum { get; set; }
     public int RoundNumber { get; set; }
     public int Result { get; set; }
+    public string GeneratedNumberHash { get; set; }
 
     public CreateGameRoundCommand() {
     }
 
-    public CreateGameRoundCommand(Guid gameId, int generatedNumber, GameRoundResultTypes result, decimal currentGameRoundSum,
-                                  int  roundNumber) {
+    public CreateGameRoundCommand(Guid    gameId, int generatedNumber, string generatedNumberHash, GameRoundResultTypes result,
+                                  decimal currentGameRoundSum,
+                                  int     roundNumber) {
         GameId = gameId;
         GeneratedNumber = generatedNumber;
+        GeneratedNumberHash = generatedNumberHash;
         CurrentGameRoundSum = currentGameRoundSum;
         RoundNumber = roundNumber;
         Result = (int)result;
