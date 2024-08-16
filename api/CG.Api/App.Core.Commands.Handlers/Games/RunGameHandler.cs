@@ -144,7 +144,7 @@ public class RunGameHandler : IRequestHandler<RunGameCommand, GameView> {
     private string CalculateHash(int number) {
         using var hashInst = SHA256.Create();
         var hash = Convert.ToHexString(hashInst.ComputeHash(Encoding.UTF8.GetBytes(number.ToString())));
-        return hash;
+        return hash.ToLower();
     }
 
     private int GenerateRandomNumber => RandomNumberGenerator.GetInt32(1, 1000000);
