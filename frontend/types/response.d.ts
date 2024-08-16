@@ -7,5 +7,6 @@ declare type ResponseGameRound = {
         code: 'Win' | 'Lose'
     }
     roundNumber: number
+    hashForNumber: string
     currentGameRoundSum: number
 }

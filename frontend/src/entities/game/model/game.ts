@@ -54,7 +54,7 @@ export const useGameStore = defineStore("game", () => {
 
   const updateParityList = (gameRounds: ResponseGameRound[]) => {
     parityList.value = gameRounds.sort((a, b) => a.roundNumber - b.roundNumber).map((round) => ({
-      hashNumber: round.id,
+      hashNumber: round.hashForNumber,
       currentGameRoundSum: round.currentGameRoundSum,
       round: round.result.id,
       parity: round.result.code === 'Win',
