@@ -22,6 +22,7 @@ public class CreateGameRoundHandler : IRequestHandler<CreateGameRoundCommand, Ga
             ResultId = request.Result,
             RoundNumber = request.RoundNumber,
             CurrentGameRoundSum = request.CurrentGameRoundSum,
+            HashForNumber = request.GeneratedNumberHash
         };
         _gameRoundRepository.Add(gameRoundResult);
         await _gameRoundRepository.SaveAsync(default);
