@@ -7,7 +7,8 @@ namespace App.Data.Entities.TransactionReceiver;
 public class TransactionReceiver : AuditableEntity {
     public Guid TransactionId { get; set; }
     public virtual Transaction Transaction { get; set; }
-    public string WalletHash { get; set; }
+
+    public string WalletAddress { get; set; }
     public decimal Sum { get; set; }
 
     public int TypeId { get; set; }

@@ -14,7 +14,7 @@ public abstract class Transaction : AuditableEntity {
     public virtual Wallet WalletFrom { get; set; }
     public string WalletHashFrom { get; set; }
 
-    public string TransactionHash { get; set; }
+    public string? TransactionHash { get; set; }
 
     public decimal Sum { get; set; }
     public decimal Fee { get; set; }
@@ -26,4 +26,8 @@ public abstract class Transaction : AuditableEntity {
     public virtual TransactionStateType State { get; set; }
 
     public bool ExistInBlockChain { get; set; }
+    public bool SkipTransaction { get; set; }
+    public int SkipTransactionReasonId { get; set; }
+    public string? Error { get; set; }
+    public bool ErrorTransaction { get; set; }
 }

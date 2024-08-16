@@ -1,4 +1,5 @@
 ﻿using App.Core.ViewModels.Dictionaries;
+using App.Core.ViewModels.External;
 using App.Core.ViewModels.Games;
 using App.Core.ViewModels.Wallets;
 
@@ -13,4 +14,5 @@ public class TransactionGameDepositView : BaseView {
     public TransactionTypeView Type { get; set; }
     public TransactionStateView State { get; set; }
     public bool ExistInBlockChain { get; set; }
+    public TransactionReceiverView[] Receivers { get; set; }
 }

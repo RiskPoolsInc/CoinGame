@@ -11,5 +11,6 @@ public class WalletServiceOptions : IConfig {
     public string PrivateKey { get; set; }
     public string HeaderPrivateKeyOptionName { get; set; }
     public string Origin { get; set; }
+    public bool ExternalServiceTransactionsEnable { get; set; }
     public WalletServiceEnpoint[] Endpoints { get; set; }
 }

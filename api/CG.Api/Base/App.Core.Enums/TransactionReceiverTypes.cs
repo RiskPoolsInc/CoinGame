@@ -1,7 +1,8 @@
 namespace App.Core.Enums;
 
 public enum TransactionReceiverTypes {
-    GameDeposit = 1,
-    Service = 2,
-    User = 3,
+    GameDepositWallet = 1,
+    ProfitWallet = 2,
+    UserWallet = 3,
+    UbistakeWallet = 4
 }

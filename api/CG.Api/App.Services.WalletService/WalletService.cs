@@ -3,6 +3,7 @@ using System.Net.Http.Json;
 using System.Text.RegularExpressions;
 using System.Web;
 
+using App.Core.Enums;
 using App.Core.ViewModels.External;
 using App.Services.Telegram.Options;
 
@@ -82,11 +83,24 @@ public class WalletService : IWalletService {
         var gameDepositWallet = GetWallet(ServiceWalletTypes.GameDeposit);
         var serviceWallet = GetWallet(ServiceWalletTypes.Service);
         var commissionWallet = GetWallet(ServiceWalletTypes.Commission);
+        var commissionPercent = commissionWallet.PercentCoins.HasValue ? commissionWallet.PercentCoins.Value : 0m;
+        var servicePercent = serviceWallet.PercentCoins.HasValue ? serviceWallet.PercentCoins.Value : 0m;
 
-        if (gameDepositWallet.Value == serviceWallet.Value)
-            return null;
+        if (gameDepositWallet.Value == serviceWallet.Value || servicePercent == 0)
+            return new GenerateTransactionView {
+                SkipTransaction = true,
+                SkipTransactionReasonId = (int)(gameDepositWallet.Value == serviceWallet.Value
+                    ? SkipTransactionReasonTypes.EqualDepositServiceWallets
+                    : SkipTransactionReasonTypes.ServiceWalletZeroPercent),
+                Hash = "",
+                Fee = 0,
+                Sum = 0,
+                WalletFrom = gameDepositWallet.Value
+            };
+        var commissionMiltiplier = (100m - commissionPercent) / 100m;
+        var serviceMultiplier = servicePercent / 100m;
 
-        var servicePaymentSum = roundSum * 0.98m * 0.784m;
+        var servicePaymentSum = roundSum * commissionMiltiplier * serviceMultiplier;
 
         var response = await Post<GenerateTransactionView>(path,
             PrepareTransactionRequestBody(gameDepositWallet.PrivateKey,
@@ -96,6 +110,16 @@ public class WalletService : IWalletService {
 
         var result = response as GenerateTransactionView;
         result.WalletFrom = gameDepositWallet.Value;
+
+        result.Receviers = new[] {
+            new TransactionReceiverView {
+                WalletHash = serviceWallet.Value,
+                Sum = servicePaymentSum,
+                Percent =
+                    FromCoins =
+                        TypeId = (int)TransactionReceiverTypes.ProfitWallet
+            }
+        };
         return result;
     }
 
@@ -156,9 +180,16 @@ public class WalletService : IWalletService {
         return result;
     }
 
-    public bool NeedServiceTransaction() {
-        return GetWalletAddress(ServiceWalletTypes.Service) != GetWalletAddress(ServiceWalletTypes.GameDeposit);
-    }
+    public bool EqualGameDepositAndServiceWallets =>
+        GetWalletAddress(ServiceWalletTypes.Service).ToLower() == GetWalletAddress(ServiceWalletTypes.GameDeposit).ToLower();
+
+    public bool ExternalServiceTransactionsEnable => _walletServiceOptions.ExternalServiceTransactionsEnable;
+
+    public string GameDepositWallet => GetWalletAddress(ServiceWalletTypes.GameDeposit);
+    public string CommissionWallet => GetWalletAddress(ServiceWalletTypes.Commission);
+    public double CommissionPercent => GetWallet(ServiceWalletTypes.Commission).PercentCoins.Value;
+    public string ServiceWallet => GetWalletAddress(ServiceWalletTypes.Service);
+    public double ServicePercent => GetWallet(ServiceWalletTypes.Service).PercentCoins.Value;
 
     #endregion
 
