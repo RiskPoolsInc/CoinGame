@@ -14,6 +14,21 @@ const swaggerOptions = {
             },
             servers: [{ url: 'http://localhost:3000' }],
         },
+        components: {
+            securitySchemes: {
+                ApiKeyAuth: {
+                    type: 'apiKey',
+                    in: 'header',
+                    name: 'x-api-key',
+                    description: 'Enter API key',
+                },
+            },
+        },
+        security: [
+            {
+                ApiKeyAuth: [],
+            },
+        ],
     },
     apis: ['./src/routes/*.ts'],
 };

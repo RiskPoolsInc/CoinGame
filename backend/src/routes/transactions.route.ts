@@ -72,4 +72,43 @@ router.get("/completed", transactionsController.completed);
 
 router.post("/send", transactionsController.send);
 
+/**
+ * @swagger
+ * /transactions/fee:
+ *   post:
+ *     summary: Calc fee
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - signerPrivateKey
+ *               - receivers
+ *             properties:
+ *               signerPrivateKey:
+ *                 type: string
+ *               receivers:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *                   properties:
+ *                    address:
+ *                     type: string
+ *                    sum:
+ *                      type: number
+ *     responses:
+ *       200:
+ *         description: Success
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 fee:
+ *                   type: string
+ */
+router.post("/fee", transactionsController.calcFee);
+
 export default router;
