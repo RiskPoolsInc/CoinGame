@@ -6,10 +6,10 @@ const instance = axios.create({ baseURL: process.env.VUE_APP_BACKEND_URL })
 axiosRetry(
     instance,
     {
-        retries: 3,
+        retries: 4,
         retryDelay: (retryCount) => {
-            return retryCount * 5000;
-        } 
+            return retryCount * 30000;
+        }
     }
 );
 
