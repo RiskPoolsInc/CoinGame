@@ -16,7 +16,7 @@ const port = process.env.PORT || 3000;
 swaggerSetup(app)
 app.use(cors());
 app.use(apiKeyMiddleware);
-app.use(originMiddleware);
+//app.use(originMiddleware);
 app.use(bodyParser.json({ limit: '500kb' }));
 
 app.get("/", (req: Request, res: Response) => {
