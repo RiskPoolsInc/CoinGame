@@ -6,4 +6,5 @@ public enum WalletServiceEnpointTypes {
     GenerateTransaction = 3,
     GetBalance = 4,
     TransactionIsCompleted = 5,
+    CalculateTransaction = 6,
 }

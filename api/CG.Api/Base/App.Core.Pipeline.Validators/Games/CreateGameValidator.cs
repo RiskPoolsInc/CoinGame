@@ -22,7 +22,7 @@ public class CreateGameValidator : AbstractValidator<CreateGameCommand> {
                 return !activeGame;
             })
            .WithMessage("Found active game");
-        RuleFor(a => a.Rate).GreaterThanOrEqualTo(1000);
+        RuleFor(a => a.Rate).GreaterThanOrEqualTo(10000);
 
         RuleFor(a => a)
            .MustAsync(async (cmd, ct) => {
