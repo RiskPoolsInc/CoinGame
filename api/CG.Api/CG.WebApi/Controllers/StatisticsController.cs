@@ -49,7 +49,7 @@ namespace CG.WebApi.Controllers {
         /// </summary>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>Returns the sum games rewards</returns>
-        /// <response code="200">The user games</response>
+        /// <response code="200">The GamesRewardsSum</response>
         /// <response code="403">Access Denied</response>
         /// <response code="500">Unexpected server error</response>
         [HttpGet("games/rewards/sum")]
@@ -63,13 +63,26 @@ namespace CG.WebApi.Controllers {
         /// </summary>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>Returns the sum of earned coins (2% from transactions)</returns>
-        /// <response code="200">The user games</response>
-        /// <response code="403">Access Denied</response>
+        /// <response code="200">The earned coins</response>
+        /// <response code="403">Access Denied</response>s
         /// <response code="500">Unexpected server error</response>
         [HttpGet("coins/earned")]
         public async Task<IActionResult> GetCounsEarnedAsync([FromQuery] GetEarnedCoinsRequest request,
                                                              CancellationToken                 cancellationToken) {
             return Ok(await _dispatcher.Send(request, cancellationToken));
+        }
+        
+        /// <summary>
+        /// Wallet profit balance
+        /// </summary>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>Returns the balance of wallet for profit (2% from transactions)</returns>
+        /// <response code="200">v</response>
+        /// <response code="403">Access Denied</response>
+        /// <response code="500">Unexpected server error</response>
+        [HttpGet("profit/balance")]
+        public async Task<IActionResult> GetWalletProfitBalanceAsync(CancellationToken                 cancellationToken) {
+            return Ok(await _dispatcher.Send(new GetWalletProfitBalanceRequest(), cancellationToken));
         }
 
         /// <summary>

@@ -160,6 +160,8 @@ public class WalletService : IWalletService {
         return GetWalletAddress(ServiceWalletTypes.Service) != GetWalletAddress(ServiceWalletTypes.GameDeposit);
     }
 
+    public string ProfitWalletAddress => GetWalletAddress(ServiceWalletTypes.Commission);
+
     #endregion
 
     #region BaseMethods
