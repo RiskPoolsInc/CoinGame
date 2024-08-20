@@ -6,7 +6,7 @@ using App.Web.Core.Errors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CG.WebApi.Controllers {
-    [ApiController, ApiVersion("1.0"), Route("api/v{version:apiVersion}/[controller]"), Produces(SupportedMimeTypes.Json)]
+    [ApiController, ApiVersion("1.0"), Route("api/v{version:apiVersion}/statistics"), Produces(SupportedMimeTypes.Json)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(GenericErrorModel), StatusCodes.Status500InternalServerError)]
@@ -22,7 +22,7 @@ namespace CG.WebApi.Controllers {
         /// </summary>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>Returns the games count</returns>
-        /// <response code="200">The user games</response>
+        /// <response code="200">The Count Games</response>
         /// <response code="403">Access Denied</response>
         /// <response code="500">Unexpected server error</response>
         [HttpGet("games/count")]
@@ -35,7 +35,7 @@ namespace CG.WebApi.Controllers {
         /// </summary>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>Returns the sum games rates</returns>
-        /// <response code="200">The user games</response>
+        /// <response code="200">The Sum of Games Rates</response>
         /// <response code="403">Access Denied</response>
         /// <response code="500">Unexpected server error</response>
         [HttpGet("games/rates/sum")]
@@ -90,7 +90,7 @@ namespace CG.WebApi.Controllers {
         /// </summary>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>Returns the sum Ubistake earned coins</returns>
-        /// <response code="200">The user games</response>
+        /// <response code="200">The Sum of Ubistake Earned Games</response>
         /// <response code="403">Access Denied</response>
         /// <response code="500">Unexpected server error</response>
         [HttpGet("coins/ubistake/earned")]
