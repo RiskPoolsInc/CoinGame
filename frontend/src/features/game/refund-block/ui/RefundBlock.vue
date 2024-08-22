@@ -12,7 +12,6 @@ const $q = useQuasar()
 
 const refundFunds = async () => {
   try {
-    console.log(wallet.value.id)
     await axios.put('v1/wallets/refund', {
       WalletId: wallet.value.id
     })

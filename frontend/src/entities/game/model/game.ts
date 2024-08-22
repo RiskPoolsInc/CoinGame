@@ -92,15 +92,19 @@ export const useGameStore = defineStore("game", () => {
     try {
       const latestGame = await getLatestGame()
       if (!latestGame) return
-      balanceInterval.pause()
       gameState.round = latestGame.roundQuantity;
+
       if (latestGame.state.code === 'Created' && !latestGame.gameRounds.length && !isRuning.value) {
         prepareCb()
         gameState.inProgress = true
+        balanceInterval.pause()
       }
       if (latestGame.state.code === 'Created' && !latestGame.gameRounds.length && isRuning.value) {
         gameState.inProgress = true
         currentGameInterval.resume()
+        updateParityList(latestGame.gameRounds)
+        balanceInterval.pause()
+      } else {
         updateParityList(latestGame.gameRounds)
       }
     } catch (e) {
@@ -123,11 +127,14 @@ export const useGameStore = defineStore("game", () => {
   const restoreWallet = async () => {
     gameState.wallet = wallet.value.hash
     await updateBalance()
+    balanceInterval.resume()
   }
 
   const updateBalance = async () => {
     const instance = await initCilInstance()
-    gameState.balance = await instance.getBalance(gameState.wallet)
+    if (gameState.wallet) {
+      gameState.balance = await instance.getBalance(gameState.wallet)
+    }
   }
 
   const copyWallet = async () => {
@@ -152,6 +159,7 @@ export const useGameStore = defineStore("game", () => {
     gameState.wallet = '';
     gameId.value = ''
     isRuning.value = false
+    balanceInterval.pause()
   };
 
   const runGame = async () => {
