@@ -23,12 +23,9 @@ public class GetUbistakeEarnedCoinsHandler : IRequestHandler<GetUbistakeEarnedCo
 
         var loseGamesSum = await completedGamesQuery.Where(a => a.ResultId == (int)GameResultTypes.Lose)
                                                     .SumAsync(a => a.RoundSum, cancellationToken);
-
-        //comission from lose games transactions
-        var loseGamesDepositsEarnedCoins = loseGamesSum * 0.02m;
-
+        
         //commission from ubistake payments of lose games
-        var ubistakePaymentsSum = loseGamesSum * 0.98m * 0.784m;
+        var ubistakePaymentsSum = loseGamesSum * 0.784m;
 
         return Convert.ToInt64(ubistakePaymentsSum);
     }
