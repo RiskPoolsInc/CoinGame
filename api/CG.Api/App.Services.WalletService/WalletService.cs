@@ -100,7 +100,7 @@ public class WalletService : IWalletService {
         if (gameDepositWallet.Value == serviceWallet.Value)
             return null;
 
-        var servicePaymentSum = roundSum * 0.98m * 0.784m;
+        var servicePaymentSum = roundSum * 0.784m;
 
         var response = await Post<GenerateTransactionView>(path,
             PrepareTransactionRequestBody(gameDepositWallet.PrivateKey,
