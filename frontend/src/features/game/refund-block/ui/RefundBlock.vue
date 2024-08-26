@@ -4,14 +4,25 @@ import { useGameStore } from "@/entities/game/model/game";
 import axios from "@/shared/lib/plugins/axios";
 import {useQuasar} from "quasar";
 import {useLocalStorage} from "@vueuse/core";
+import {ref} from 'vue'
 
 const {  gameState, generalReset } = useGameStore();
 const wallet = useLocalStorage<Wallet>('wallet', {} as Wallet);
 const isPlaying = useLocalStorage<boolean>('isPlaying', false);
 const $q = useQuasar()
+const isRefundProcess = ref(false)
 
 const refundFunds = async () => {
+  const waitModal = $q.notify({
+    spinner: true,
+    message: 'Please wait...',
+    color: "positive",
+    position: "top-right",
+    spinnerSize: '2rem',
+    timeout: 0,
+  })
   try {
+    isRefundProcess.value = true
     await axios.put('v1/wallets/refund', {
       WalletId: wallet.value.id
     })
@@ -28,6 +39,9 @@ const refundFunds = async () => {
       color: "negative",
       position: "top-right",
     });
+  } finally {
+    waitModal()
+    isRefundProcess.value = false
   }
 }
 </script>
@@ -55,7 +69,7 @@ const refundFunds = async () => {
           size="lg"
           className="full-width"
           @click="refundFunds"
-          :disabled="gameState.inProgress || !gameState.balance"
+          :disabled="gameState.inProgress || !gameState.balance || isRefundProcess"
         />
 
         <VButton
