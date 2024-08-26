@@ -20,27 +20,12 @@ public class GetEarnedCoinsHandler : IRequestHandler<GetEarnedCoinsRequest, deci
 
         var completedGamesQuery = _gameRepository.Where(filterByCreatedOn)
                                                  .Where(a => a.StateId == (int)GameStateTypes.Completed);
+        
+        var gameDepositProfit = await completedGamesQuery.SumAsync(a => a.RoundSum, cancellationToken);
 
-        var winGameSumCoins = await completedGamesQuery.Where(a => a.ResultId == (int)GameResultTypes.Win)
-                                                       .SumAsync(a => a.RoundSum, cancellationToken);
+        var gameRewardsProdit = await completedGamesQuery.Where(a => a.ResultId == (int)GameResultTypes.Win)
+                                                         .SumAsync(a => a.RewardSum, cancellationToken);
 
-        //comission from win games transactions
-        var winGamesDepositsEarnedCoins = winGameSumCoins * 0.02m;
-
-        var gameRewardsSumCoins = await completedGamesQuery.Where(a => a.ResultId == (int)GameResultTypes.Win)
-                                                           .SumAsync(a => a.RewardSum, cancellationToken);
-
-        //comission from reward games transactions
-        var gameRewardsEarnedCoins = gameRewardsSumCoins * 0.02m;
-
-        var loseGamesSum = await completedGamesQuery.Where(a => a.ResultId == (int)GameResultTypes.Lose)
-                                                    .SumAsync(a => a.RoundSum, cancellationToken);
-
-        //comission from lose games transactions
-        var loseGamesDepositsEarnedCoins = loseGamesSum * 0.02m;
-
-        return Convert.ToInt64(loseGamesDepositsEarnedCoins +
-            winGamesDepositsEarnedCoins +
-            gameRewardsEarnedCoins);
+        return Convert.ToInt64(gameDepositProfit * 0.02m + gameRewardsProdit * 0.02m);
     }
 }
