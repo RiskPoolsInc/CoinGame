@@ -4,7 +4,7 @@
 
   const gameStore = useGameStore();
   const data = computed(() => ([
-      {x: 0, y: Number(gameStore.bid)},
+      {x: 0, y: 0},
       ...gameStore.parityList.map((round, x) => ({
         x: x + 1,
         y: round.currentGameRoundSum
