@@ -31,17 +31,13 @@ public class GetEarnedCoinsHandler : IRequestHandler<GetEarnedCoinsRequest, deci
                                                            .SumAsync(a => a.RewardSum, cancellationToken);
 
         //comission from reward games transactions
-        var gameRewardsEarnedCoins = winGameSumCoins * 0.02m;
+        var gameRewardsEarnedCoins = gameRewardsSumCoins * 0.02m;
 
         var loseGamesSum = await completedGamesQuery.Where(a => a.ResultId == (int)GameResultTypes.Lose)
                                                     .SumAsync(a => a.RoundSum, cancellationToken);
 
         //comission from lose games transactions
         var loseGamesDepositsEarnedCoins = loseGamesSum * 0.02m;
-
-        //commission from ubistake payments of lose games
-        var coinsAfterSubCommission = loseGamesSum - loseGamesDepositsEarnedCoins;
-        var ubistakePaymentsSum = loseGamesSum * 0.98m * 0.784m;
 
         return Convert.ToInt64(loseGamesDepositsEarnedCoins +
             winGamesDepositsEarnedCoins +
