@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <LangVersion>default</LangVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\App.Data.Criterias.Core\App.Data.Criterias.Core.csproj" />
+      <ProjectReference Include="..\App.Data.Entities\App.Data.Entities.csproj" />
+      <ProjectReference Include="..\App.Interfaces.RequestParams\App.Interfaces.RequestParams.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Helpers" />
+    </ItemGroup>
+
+</Project>
