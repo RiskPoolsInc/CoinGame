@@ -10,6 +10,7 @@
         <PackageReference Include="MediatR" Version="10.0.1" />
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.27" />
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="3.1.18" />
+        <PackageReference Include="SilentNotary.Infrastructure.Common" Version="0.0.16" />
     </ItemGroup>
 
     <ItemGroup>

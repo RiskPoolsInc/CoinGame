@@ -77,8 +77,22 @@ public class WalletService : IWalletService {
         return result as TransactionIsCompletedView;
     }
 
-    public async Task<GenerateTransactionView> CalculateTransaction(string from, string privateKey, decimal sum) {
-        var path = GetPath(WalletServiceEnpointTypes.CalculateTransaction);
+    public async Task<object> TransactionMaxRate(string from, string privateKey, decimal sum) {
+        var path = GetPath(WalletServiceEnpointTypes.CalculateMaxRate);
+        var commission = sum * 0.02m;
+        var gameDeposit = sum - commission;
+
+        var cmd = PrepareTransactionRequestBody(privateKey, new (string address, decimal sum)[] {
+            (GetWalletAddress(ServiceWalletTypes.GameDeposit), -1),
+            (GetWalletAddress(ServiceWalletTypes.Commission), commission),
+        });
+
+        var result = await Post<object>(path, cmd);
+        return result as object;
+    }
+
+    public async Task<TransactionFeeView> TransactionFee(string from, string privateKey, decimal sum) {
+        var path = GetPath(WalletServiceEnpointTypes.TransactionFee);
         var commission = sum * 0.02m;
         var gameDeposit = sum - commission;
 
@@ -87,8 +101,8 @@ public class WalletService : IWalletService {
             (GetWalletAddress(ServiceWalletTypes.Commission), commission),
         });
 
-        var result = await Post<GenerateTransactionView>(path, cmd);
-        return result as GenerateTransactionView;
+        var result = await Post<TransactionFeeView>(path, cmd);
+        return result as TransactionFeeView;
     }
 
     public async Task<GenerateTransactionView> GenerateTransactionService(decimal roundSum) {

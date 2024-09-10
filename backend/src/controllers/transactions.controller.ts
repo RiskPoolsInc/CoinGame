@@ -98,8 +98,44 @@ const calcFee =  async (req: Request, res: Response, next: NextFunction) => {
     }
 }
 
+const calcMaxFee =  async (req: Request, res: Response, next: NextFunction) => {
+    const {receivers, signerPrivateKey} = req.body
+    try {
+        const instance = await initCilInstance(signerPrivateKey);
+        const transaction = await instance.createSendCoinsTx(
+            receivers.map((receiver: Receiver) => ([
+                instance.stripAddressPrefix(receiver.address),
+                receiver.sum
+            ])),
+            Number(process.env.CONCILIUM_ID) || 0
+        );
+        const fee = instance._estimateTxFee(
+            transaction._data.payload.ins.length,
+            transaction._data.payload.outs.length,
+            true,
+        );
+        res.status(200).json({
+            transaction,
+            fee
+        });
+    } catch (e) {
+        console.log(e)
+        const err = e as ResponseError
+        for (const [message, statusCode] of Object.entries(errorResponseMap)) {
+            if (err.message.includes(message)) {
+                res.status(statusCode).json(err.message);
+                return;
+            }
+        }
+        next(e);
+    }
+}
+
+
+
 export default {
     completed,
     send,
-    calcFee
+    calcFee,
+    calcMaxRate: calcMaxFee
 }

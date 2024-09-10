@@ -1,4 +1,5 @@
-﻿using App.Core.Commands.Transactions;
+﻿using App.Core.Commands.Payments;
+using App.Core.Commands.Transactions;
 using App.Core.Commands.Wallets;
 using App.Interfaces.Core;
 using App.Web.Core;
@@ -29,6 +30,19 @@ namespace TS.WebApi.Controllers {
         [HttpPost("generate")]
         public async Task<IActionResult> CreateWalletAsync([FromBody] GenerateTransactionCommand request,CancellationToken cancellationToken) {
             return Ok(await _dispatcher.Send(new CreateWalletCommand(), cancellationToken));
+        }
+        
+        /// <summary>
+        /// Check completing transaction
+        /// </summary>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>Returns result of completeing blockahin</returns>
+        /// <response code="200">The result of check transaction in completeds</response>
+        /// <response code="403">Access Denied</response>
+        /// <response code="500">Unexpected server error</response>
+        [HttpPost("{hash:string}/completed")]
+        public async Task<IActionResult> CheckCompletingAsync([FromBody] GenerateTransactionCommand request,CancellationToken cancellationToken) {
+            return Ok(await _dispatcher.Send(new CheckExistTransactionInBlockChainCommand(), cancellationToken));
         }
     }
 }
