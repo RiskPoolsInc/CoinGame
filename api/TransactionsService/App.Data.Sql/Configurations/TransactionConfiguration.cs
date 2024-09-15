@@ -6,15 +6,15 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace App.Data.Sql.Configurations;
 
-public class TransactionConfiguration : EntityTypeConfiguration<Transaction> {
-    public override void Configure(EntityTypeBuilder<Transaction> builder) {
+public class TransactionConfiguration : EntityTypeConfiguration<ATransaction> {
+    public override void Configure(EntityTypeBuilder<ATransaction> builder) {
         builder.HasOne(a => a.Type)
                .WithMany()
                .HasForeignKey(a => a.TypeId)
                .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasDiscriminator(a => a.TypeId)
-               .HasValue<BaseTransaction>(1)
+               .HasValue<Transaction>(1)
                .HasValue<TransactionRefund>(2);
 
         builder.HasOne(a => a.State)
@@ -22,9 +22,9 @@ public class TransactionConfiguration : EntityTypeConfiguration<Transaction> {
                .HasForeignKey(a => a.StateId)
                .OnDelete(DeleteBehavior.Restrict);
 
-        builder.HasOne(a => a.WalletFrom)
+        builder.HasOne(a => a.Wallet)
                .WithMany(a => a.Transactions)
-               .HasForeignKey(a => a.WalletFromId)
+               .HasForeignKey(a => a.WalletId)
                .OnDelete(DeleteBehavior.Restrict);
     }
 }

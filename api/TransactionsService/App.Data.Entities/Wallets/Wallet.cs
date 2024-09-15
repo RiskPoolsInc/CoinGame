@@ -12,5 +12,5 @@ public class Wallet : ArchivableEntity {
     public string PrivateKey { get; set; }
     public bool IsEncrypted { get; set; }
 
-    public virtual ICollection<Transaction> Transactions { get; set; }
+    public virtual ICollection<ATransaction> Transactions { get; set; }
 }

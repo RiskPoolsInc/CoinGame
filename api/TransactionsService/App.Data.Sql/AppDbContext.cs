@@ -1,4 +1,5 @@
 ﻿using App.Data.Entities.Dictionaries;
+using App.Data.Entities.Senders;
 using App.Data.Entities.TransactionReceivers;
 using App.Data.Entities.Transactions;
 using App.Data.Entities.Wallets;
@@ -22,7 +23,8 @@ public class AppDbContext : BaseDbContext, IAppDbContext {
     #region Entities
 
     public DbSet<Wallet> Wallets { get; set; }
-    public DbSet<Transaction> Transactions { get; set; }
+    public DbSet<ATransaction> Transactions { get; set; }
+    public DbSet<Service> Services { get; set; }
     public DbSet<TransactionReceiver> TransactionReceivers { get; set; }
 
     #endregion

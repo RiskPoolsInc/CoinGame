@@ -13,7 +13,7 @@ public class EntityToViewProfile : Profile {
     public EntityToViewProfile() {
         #region Transaction
 
-        CreateMap<Transaction, TransactionView>();
+        CreateMap<ATransaction, TransactionView>();
         CreateMap<TransactionReceiver, TransactionReceiverView>();
 
         #endregion

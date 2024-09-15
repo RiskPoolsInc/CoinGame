@@ -1,4 +1,5 @@
 using App.Core.Commands.Wallets;
+using App.Core.Enums;
 using App.Core.ViewModels.Wallets;
 using App.Interfaces.Core;
 using App.Services.WalletService;
@@ -17,8 +18,9 @@ public class GenerateWalletHandler : IRequestHandler<GenerateWalletCommand, Wall
     }
 
     public async Task<WalletView> Handle(GenerateWalletCommand request, CancellationToken cancellationToken) {
-        var generatedWallet = await _walletService.GenerateWallet();
-        var command = _mapper.Map<CreateWalletCommand>(generatedWallet);
-        return await _dispatcher.Send(command);
+        var generatedWallet = await _walletService.GenerateWallet(cancellationToken);
+        var command = _mapper.Map<CreateGeneratedWalletCommand>(generatedWallet);
+        var wallet = await _dispatcher.Send(command, cancellationToken);
+        return wallet;
     }
 }

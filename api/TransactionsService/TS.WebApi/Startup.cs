@@ -42,7 +42,6 @@ using Newtonsoft.Json.Serialization;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 using CommandToEntityProfile = App.Data.Mapping.CommandToEntityProfile;
-using ExternalViewToCommandProfile = App.Data.Mapping.ExternalViewToCommandProfile;
 
 namespace TS.WebApi;
 
@@ -73,7 +72,7 @@ public class Startup {
             cfg.AddProfile<CommandToModelProfile>();
             cfg.AddProfile<CommandToCommandProfile>();
 
-            cfg.AddProfile<ExternalViewToCommandProfile>();
+            cfg.AddProfile<ExternalViewProfile>();
         }));
         builder.RegisterModule<AppDbContextModule>();
 

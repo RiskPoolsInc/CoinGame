@@ -51,7 +51,6 @@ using TS.Configuration;
 using TS.WebApi;
 
 using CommandToEntityProfile = App.Data.Mapping.CommandToEntityProfile;
-using ExternalViewToCommandProfile = App.Data.Mapping.ExternalViewToCommandProfile;
 
 namespace TS.MessagesService;
 
@@ -82,7 +81,7 @@ public class Startup {
             cfg.AddProfile<CommandToModelProfile>();
             cfg.AddProfile<CommandToCommandProfile>();
 
-            cfg.AddProfile<ExternalViewToCommandProfile>();
+            cfg.AddProfile<ExternalViewProfile>();
         }));
         builder.RegisterModule<AppDbContextModule>();
 
@@ -203,7 +202,8 @@ public class Startup {
         ConfigureCompression(services);
         services.AddHttpConfig();
 
-        services.AddCommandHandlers()
+        services.AddCqrsSlave()
+           .AddCommandHandlers()
                 .AddScoped<IDiScope, ServiceLocatior>()
                 .AddScoped<ILogService, LogService>()
                 .AddSingleton<ITypeFactory, TypeFactory>()

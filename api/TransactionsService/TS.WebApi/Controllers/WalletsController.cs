@@ -19,7 +19,7 @@ namespace TS.WebApi.Controllers {
         }
 
         /// <summary>
-        /// Generate wallet
+        /// Generate new wallet
         /// </summary>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>Returns generated wallet</returns>
@@ -32,16 +32,29 @@ namespace TS.WebApi.Controllers {
         }
 
         /// <summary>
-        /// Get wallet info
+        /// Get wallet balance by Wallet Id
         /// </summary>
         /// <param name="cancellationToken">Cancellation token</param>
         /// <returns>Returns created wallet</returns>
         /// <response code="200">The user games</response>
         /// <response code="403">Access Denied</response>
         /// <response code="500">Unexpected server error</response>
-        [HttpGet("{id:guid}")]
-        public async Task<IActionResult> GetWalletInfoAsync([FromRoute] Guid id, CancellationToken cancellationToken) {
+        [HttpGet("{id:guid}/balance")]
+        public async Task<IActionResult> GetWalletBalanceAsync([FromRoute] Guid id, CancellationToken cancellationToken) {
             return Ok(await _dispatcher.Send(new GetWalletBalanceRequest(id), cancellationToken));
+        }
+
+        /// <summary>
+        /// Get wallet balance by address
+        /// </summary>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>Returns wallet balance</returns>
+        /// <response code="200">The wallet balance</response>
+        /// <response code="403">Access Denied</response>
+        /// <response code="500">Unexpected server error</response>
+        [HttpGet("{address:string}/balance")]
+        public async Task<IActionResult> GetWalletBalanceByAddressAsync([FromRoute] string address, CancellationToken cancellationToken) {
+            return Ok(await _dispatcher.Send(new GetBalanceByAddressRequest(address), cancellationToken));
         }
 
         /// <summary>
@@ -52,10 +65,9 @@ namespace TS.WebApi.Controllers {
         /// <response code="200">The transaction refund</response>
         /// <response code="403">Access Denied</response>
         /// <response code="500">Unexpected server error</response>
-        [HttpPut("refund")]
-        public async Task<IActionResult> RefundCoinsAsync([FromBody] RefundCoinsCommand request,
-                                                          CancellationToken             cancellationToken) {
-            return Ok(await _dispatcher.Send(request, cancellationToken));
+        [HttpPost("{id:guid}/refund")]
+        public async Task<IActionResult> RefundCoinsAsync(Guid id, CancellationToken cancellationToken) {
+            return Ok(await _dispatcher.Send(new RefundCoinsCommand(id), cancellationToken));
         }
     }
 }

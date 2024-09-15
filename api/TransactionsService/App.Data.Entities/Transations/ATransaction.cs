@@ -5,12 +5,14 @@ using App.Data.Entities.Wallets;
 
 namespace App.Data.Entities.Transactions;
 
-public abstract class Transaction : AuditableEntity {
-    public Guid? WalletFromId { get; set; }
-    public virtual Wallet WalletFrom { get; set; }
-    public string WalletHashFrom { get; set; }
+public abstract class ATransaction : AuditableEntity {
+    public Guid SenderId { get; set; }
 
-    public string Hash { get; set; }
+    public Guid? WalletId { get; set; }
+    public virtual Wallet Wallet { get; set; }
+    public string Address { get; set; }
+
+    public string? Hash { get; set; }
 
     public decimal Sum { get; set; }
     public decimal Fee { get; set; }
@@ -22,6 +24,8 @@ public abstract class Transaction : AuditableEntity {
     public virtual TransactionStateType State { get; set; }
 
     public bool ExistInBlockChain { get; set; }
+
+    public string Error { get; set; }
 
     public virtual ICollection<TransactionReceiver> Receivers { get; set; }
 }

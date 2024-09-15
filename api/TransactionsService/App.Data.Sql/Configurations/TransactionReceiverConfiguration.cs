@@ -13,7 +13,7 @@ public class TransactionReceiverConfiguration : EntityTypeConfiguration<Transact
                .HasForeignKey(a => a.TypeId)
                .OnDelete(DeleteBehavior.Restrict);
 
-        builder.HasOne(a => a.Transaction)
+        builder.HasOne(a => a.ATransaction)
                .WithMany(a => a.Receivers)
                .HasForeignKey(a => a.TransactionId)
                .OnDelete(DeleteBehavior.Restrict);

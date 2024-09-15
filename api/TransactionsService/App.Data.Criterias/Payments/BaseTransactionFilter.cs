@@ -5,9 +5,9 @@ using App.Data.Entities.Transactions;
 
 namespace App.Data.Criterias.Payments;
 
-public class BaseTransactionFilter : PagedCriteria<Transaction>
+public class BaseTransactionFilter : PagedCriteria<ATransaction>
 {
-    public override Expression<Func<Transaction, bool>> Build()
+    public override Expression<Func<ATransaction, bool>> Build()
     {
         var criteria = True;
 
@@ -17,7 +17,7 @@ public class BaseTransactionFilter : PagedCriteria<Transaction>
         return criteria.Build();
     }
 
-    public override IQueryable<Transaction> OrderBy(IQueryable<Transaction> source)
+    public override IQueryable<ATransaction> OrderBy(IQueryable<ATransaction> source)
     {
         if (string.IsNullOrWhiteSpace(Sort))
             SetSortBy(a => a.CreatedOn);

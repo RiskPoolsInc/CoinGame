@@ -14,7 +14,7 @@ public class ImportWalletHandler : IRequestHandler<ImportWalletCommand, WalletVi
     }
 
     public Task<WalletView> Handle(ImportWalletCommand request, CancellationToken cancellationToken) {
-        var createWalletCommand = _mapper.Map<CreateWalletCommand>(request);
-        return _dispatcher.Send(createWalletCommand);
+        var createWalletCommand = _mapper.Map<CreateImportedWalletCommand>(request);
+        return _dispatcher.Send(createWalletCommand, cancellationToken);
     }
 }
