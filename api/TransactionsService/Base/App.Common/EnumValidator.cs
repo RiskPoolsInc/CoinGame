@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace App.Core.Pipeline.Validators.Helpers;
+namespace App.Common;
 
 public class EnumValidator<T> : AbstractValidator<int> where T : struct, Enum {
     public EnumValidator() {

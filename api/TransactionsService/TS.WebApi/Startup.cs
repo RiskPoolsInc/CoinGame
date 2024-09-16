@@ -155,33 +155,8 @@ public class Startup {
                  });
 
         services.AddSwaggerGen(options => {
-            options.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme,
-                new OpenApiSecurityScheme {
-                    In = ParameterLocation.Header,
-                    Description = "Please insert JWT",
-                    Name = "Authorization",
-                    Type = SecuritySchemeType.ApiKey,
-                    Scheme = JwtBearerDefaults.AuthenticationScheme
-                });
-
-            options.AddSecurityRequirement(new OpenApiSecurityRequirement {
-                {
-                    new OpenApiSecurityScheme {
-                        Reference = new OpenApiReference {
-                            Type = ReferenceType.SecurityScheme,
-                            Id = JwtBearerDefaults.AuthenticationScheme
-                        },
-                        Scheme = "oauth2",
-                        Name = JwtBearerDefaults.AuthenticationScheme,
-                        In = ParameterLocation.Header
-                    },
-                    new List<string>()
-                }
-            });
             options.OperationFilter<CancellationTokenFilter>();
-
-            // options.ResolveConflictingActions(apiDescriptions => apiDescriptions.First()); //This line
-            // set the comments path for the Swagger JSON and UI.
+            options.OperationFilter<AddRequiredHeaderParameter>();
             var basePath = AppContext.BaseDirectory;
             var xmlPath = Path.Combine(basePath, @"TS.WebApi.xml");
 
@@ -193,34 +168,6 @@ public class Startup {
                 .AddJsonOptions(options =>
                      options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
         ConfigureCompression(services);
-        services.AddHttpConfig();
-
-        // ConfigureAuthentication(services, configurationFactory.Create<OAuthConfig>());
-    }
-
-    public void ConfigureAuthentication(IServiceCollection services, OAuthConfig authConfig) {
-        var signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(authConfig.ClientSecret));
-
-        var tokenValidationParameters = new TokenValidationParameters {
-            ValidateIssuer = true,
-            ValidIssuer = authConfig.Issuer,
-            ValidateAudience = true,
-            ValidAudience = authConfig.Issuer,
-            ValidateLifetime = true,
-            IssuerSigningKey = signingKey
-        };
-
-        services.AddAuthentication(options => {
-                     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                 })
-                .AddJwtBearer(options => {
-                     options.RequireHttpsMetadata = !_isDevelop;
-                     options.IncludeErrorDetails = true;
-                     options.SaveToken = true;
-                     options.TokenValidationParameters = tokenValidationParameters;
-                 });
-        services.AddHttpConfig();
     }
 
     public void ConfigureCompression(IServiceCollection services) {
@@ -242,9 +189,7 @@ public class Startup {
         app.UseStaticFiles();
         app.UseRouting();
         app.UseCors("CoreCorsPolicy");
-        app.UseAuthentication();
         app.UseResponseCompression();
-        app.UseAuthorization();
         app.UseEndpoints(c => c.MapControllers());
 
         app.UseSwagger(c => {
@@ -263,7 +208,7 @@ public class Startup {
                 c.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName.ToUpperInvariant());
 
             c.RoutePrefix = "api";
-            c.DocumentTitle = "CG API";
+            c.DocumentTitle = "TS API";
         });
     }
 }

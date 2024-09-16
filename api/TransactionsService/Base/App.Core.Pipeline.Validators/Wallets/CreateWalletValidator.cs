@@ -1,6 +1,6 @@
+using App.Common;
 using App.Core.Commands.Wallets;
 using App.Core.Enums;
-using App.Core.Pipeline.Validators.Helpers;
 
 using FluentValidation;
 

@@ -1,12 +1,14 @@
 ﻿using App.Data.Entities.Core;
 using App.Data.Entities.Dictionaries;
+using App.Data.Entities.Senders;
 using App.Data.Entities.TransactionReceivers;
 using App.Data.Entities.Wallets;
 
 namespace App.Data.Entities.Transactions;
 
 public abstract class BaseTransaction : AuditableEntity {
-    public Guid SenderId { get; set; }
+    public Guid ServiceProfileId { get; set; }
+    public virtual ServiceProfile ServiceProfile { get; set; }
 
     public Guid? WalletId { get; set; }
     public virtual Wallet Wallet { get; set; }

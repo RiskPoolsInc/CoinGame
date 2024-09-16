@@ -3,15 +3,17 @@ using System;
 using App.Data.Sql;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace App.Data.Sql.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240916144845_ServiceProfile")]
+    partial class ServiceProfile
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -197,7 +199,7 @@ namespace App.Data.Sql.Migrations
                     b.Property<string>("Hash")
                         .HasColumnType("text");
 
-                    b.Property<Guid>("ServiceProfileId")
+                    b.Property<Guid>("SenderId")
                         .HasColumnType("uuid");
 
                     b.Property<int>("StateId")
@@ -216,8 +218,6 @@ namespace App.Data.Sql.Migrations
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ServiceProfileId");
 
                     b.HasIndex("StateId");
 
@@ -308,12 +308,6 @@ namespace App.Data.Sql.Migrations
 
             modelBuilder.Entity("App.Data.Entities.Transactions.BaseTransaction", b =>
                 {
-                    b.HasOne("App.Data.Entities.Senders.ServiceProfile", "ServiceProfile")
-                        .WithMany()
-                        .HasForeignKey("ServiceProfileId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("App.Data.Entities.Dictionaries.TransactionStateType", "State")
                         .WithMany()
                         .HasForeignKey("StateId")

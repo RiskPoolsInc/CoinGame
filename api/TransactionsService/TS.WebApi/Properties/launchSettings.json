@@ -9,7 +9,7 @@
     }
   },
   "profiles": {
-    "CF.WebApi": {
+    "TS.WebApi": {
       "commandName": "Project",
       "launchBrowser": false,
       "launchUrl": "",

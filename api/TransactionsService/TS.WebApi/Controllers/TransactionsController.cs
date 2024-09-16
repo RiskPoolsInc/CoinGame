@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace TS.WebApi.Controllers {
     [ApiController, ApiVersion("1.0"), Route("api/v{version:apiVersion}/transactions"), Produces(SupportedMimeTypes.Json)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(GenericErrorModel), StatusCodes.Status500InternalServerError)]
     public class TransactionsController : BaseController {

@@ -27,7 +27,9 @@ public class WebContextProvider : IContextProvider {
     public object GetProfile => _serviceProfileRepository.Get(Context.ProfileId.Value).Single();
 
     public string GetApiKey() {
-        return _httpContextAccessor.HttpContext.GetValue<string>("x-api-key");
+        var headers = _httpContextAccessor.HttpContext.Request.Headers;
+        headers.TryGetValue("x-api-key", out var apiKey);
+        return apiKey;
     }
 
     private ICurrentRequestClient ParseContext() {
