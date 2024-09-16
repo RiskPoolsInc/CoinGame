@@ -28,10 +28,11 @@ namespace TS.WebApi.Controllers {
         /// <response code="403">Access Denied</response>
         /// <response code="500">Unexpected server error</response>
         [HttpPost("new")]
-        public async Task<IActionResult> GenerateTransactionsync([FromBody] GenerateTransactionCommand request,CancellationToken cancellationToken) {
-            return Ok(await _dispatcher.Send(new CreateWalletCommand(), cancellationToken));
+        public async Task<IActionResult> GenerateTransactionsync([FromBody] GenerateTransactionCommand request,
+                                                                 CancellationToken                     cancellationToken) {
+            return Ok(await _dispatcher.Send(request, cancellationToken));
         }
-        
+
         /// <summary>
         /// Check completing transaction
         /// </summary>
@@ -41,8 +42,22 @@ namespace TS.WebApi.Controllers {
         /// <response code="403">Access Denied</response>
         /// <response code="500">Unexpected server error</response>
         [HttpPost("{hash:string}/completed")]
-        public async Task<IActionResult> CheckCompletingAsync([FromRoute] string hash,CancellationToken cancellationToken) {
+        public async Task<IActionResult> CheckCompletingAsync([FromRoute] string hash, CancellationToken cancellationToken) {
             return Ok(await _dispatcher.Send(new CheckTransactionStateCommand(hash), cancellationToken));
+        }
+
+        /// <summary>
+        /// Get fee for transaction
+        /// </summary>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <returns>Returns result of calculating fee for transaction</returns>
+        /// <response code="200">The result of calculating fee for transaction</response>
+        /// <response code="403">Access Denied</response>
+        /// <response code="500">Unexpected server error</response>
+        [HttpPost("fee")]
+        public async Task<IActionResult> GetFeeAsync([FromBody] CalculateTransactionFeeCommand request,
+                                                     CancellationToken                         cancellationToken) {
+            return Ok(await _dispatcher.Send(request, cancellationToken));
         }
     }
 }

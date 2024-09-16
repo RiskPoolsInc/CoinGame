@@ -3,6 +3,7 @@ using App.Core.ViewModels.External;
 
 namespace App.Core.Commands.Transactions;
 
-public class SendGenerateTransactionCommand : BaseSendTransactionCommand {
+public class CalculateTransactionFeeCommand : IRequest<TransactionFeeView> {
+    public Guid WalletId { get; set; }
     public TransactionReceiverModel[] Receivers { get; set; }
 }

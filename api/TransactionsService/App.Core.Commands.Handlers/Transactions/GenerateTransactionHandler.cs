@@ -1,15 +1,19 @@
 using App.Common.Helpers;
 using App.Core.Commands.Transactions;
 using App.Core.Enums;
+using App.Core.Requests.Wallets;
 using App.Core.ViewModels.Transactions;
 using App.Data.Criterias.Wallets;
 using App.Data.Entities.TransactionReceivers;
 using App.Data.Entities.Transactions;
+using App.Interfaces.Handlers.Requests;
 using App.Interfaces.Repositories.Transactions;
 using App.Interfaces.Repositories.Wallets;
 using App.Services.WalletService;
 using App.Services.WalletService.Models;
+
 using TransactionReceiverModel = App.Services.WalletService.Models.TransactionReceiverModel;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace App.Core.Commands.Handlers.Transactions;
@@ -20,37 +24,42 @@ public class GenerateTransactionHandler : IRequestHandler<GenerateTransactionCom
     private readonly ITransactionErrorRepository _transactionErrorRepository;
     private readonly IWalletRepository _walletRepository;
     private readonly IMapper _mapper;
+    private readonly IGetWalletPrivateKeyHandler _privateKeyHandler;
 
-    public GenerateTransactionHandler(IWalletService              walletService, ITransactionRepository transactionRepository,
+    public GenerateTransactionHandler(IWalletService              walletService,
+                                      ITransactionRepository      transactionRepository,
                                       ITransactionErrorRepository transactionErrorRepository,
-                                      IWalletRepository           walletRepository, IMapper mapper) {
+                                      IWalletRepository           walletRepository,
+                                      IMapper                     mapper,
+                                      IGetWalletPrivateKeyHandler privateKeyHandler) {
         _walletService = walletService;
         _transactionRepository = transactionRepository;
         _transactionErrorRepository = transactionErrorRepository;
         _walletRepository = walletRepository;
         _mapper = mapper;
+        _privateKeyHandler = privateKeyHandler;
     }
 
     public async Task<TransactionView> Handle(GenerateTransactionCommand request, CancellationToken cancellationToken) {
-        var wallet = await _walletRepository.Get(request.WalletId)
-                                            .SingleAsync(cancellationToken);
-        var privateKey = WalletService.DecrypPrivateKey(wallet.PrivateKey, wallet.Id);
+        var getPrivateKeyRequest = new GetWalletPrivateKeyRequest(request.WalletId);
+        var walletPrivateKey = await _privateKeyHandler.Handle(getPrivateKeyRequest, cancellationToken);
 
         try {
             var receivers = _mapper.Map<TransactionReceiverModel[]>(request.Receivers);
 
-            var generatedTransaction = await _walletService.GenerateTransaction(wallet.Address, privateKey, receivers);
+            var generatedTransaction =
+                await _walletService.GenerateTransaction(walletPrivateKey.Address, walletPrivateKey.PrivateKey, receivers);
 
             var transaction = _mapper.Map<Transaction>(generatedTransaction);
 
-            transaction.WalletId = wallet.Id;
-            transaction.Address = wallet.Address;
+            transaction.WalletId = walletPrivateKey.Id;
+            transaction.Address = walletPrivateKey.Address;
             transaction.StateId = (int)TransactionStateTypes.Created;
 
             // Hash = generatedTransaction.Hash,
             // Sum = generatedTransaction.Sum,
             // Fee = generatedTransaction.Fee,
- 
+
             _transactionRepository.Add(transaction);
 
             var transactionReceivers = _mapper.Map<TransactionReceiver[]>(generatedTransaction.Receviers);
@@ -62,7 +71,8 @@ public class GenerateTransactionHandler : IRequestHandler<GenerateTransactionCom
             return await _transactionRepository.Get(transaction.Id).SingleAsync<Transaction, TransactionView>(cancellationToken);
         }
         catch (Exception e) {
-            var transactionError = await SaveTransactionError(e, wallet.Id, wallet.Address, request.Receivers.Sum(a => a.Sum));
+            var transactionError =
+                await SaveTransactionError(e, walletPrivateKey.Id, walletPrivateKey.Address, request.Receivers.Sum(a => a.Sum));
             throw new Exception($"Transaction error id: {transactionError.Id}. {e.Message}");
         }
     }

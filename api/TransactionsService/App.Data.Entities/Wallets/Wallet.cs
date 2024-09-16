@@ -1,10 +1,13 @@
 ﻿using App.Data.Entities.Core;
 using App.Data.Entities.Dictionaries;
+using App.Data.Entities.Senders;
 using App.Data.Entities.Transactions;
 
 namespace App.Data.Entities.Wallets;
 
 public class Wallet : ArchivableEntity {
+    public Guid ServiceId { get; set; }
+    public virtual Service Service { get; set; }
     public string Address { get; set; }
 
     public int TypeId { get; set; }              // [Generated, Imported]

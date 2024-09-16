@@ -1,5 +1,7 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
+using System.Security.Cryptography;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
 
@@ -38,14 +40,6 @@ public class WalletService : IWalletService {
 
     #region Public Methods
 
-    public static string EncryptPrivateKey(string privateKey, Guid key) {
-        return privateKey;
-    }
-
-    public static string DecrypPrivateKey(string privateKey, Guid key) {
-        return privateKey;
-    }
-
     public async Task<GeneratedWalletView> GenerateWallet(CancellationToken cancellationToken = default) {
         var path = GetPath(WalletServiceEnpointTypes.GenerateWallet);
         var result = await Put<GeneratedWalletView>(path, null, cancellationToken);
@@ -78,7 +72,7 @@ public class WalletService : IWalletService {
         return response as object;
     }
 
-    public async Task<TransactionFeeView> TransactionFee(string from, string privateKey, TransactionReceiverModel[] receivers) {
+    public async Task<TransactionFeeView> TransactionFee(string address, string privateKey, TransactionReceiverModel[] receivers) {
         var path = GetPath(WalletServiceEnpointTypes.TransactionFee);
 
         var cmd = PrepareTransactionRequestBody(privateKey, receivers);
@@ -87,13 +81,81 @@ public class WalletService : IWalletService {
         return result as TransactionFeeView;
     }
 
-    public async Task<GenerateTransactionView> GenerateTransaction(string                     fromAddress, string privateKey,
+    public async Task<GenerateTransactionView> GenerateTransaction(string                     address, string privateKey,
                                                                    TransactionReceiverModel[] toAddresses) {
         var path = GetPath(WalletServiceEnpointTypes.GenerateTransaction);
         var cmd = PrepareTransactionRequestBody(privateKey, toAddresses);
 
         var result = await Post<GenerateTransactionView>(path, cmd);
         return result as GenerateTransactionView;
+    }
+
+    public string EncryptPrivateKey(string privateKey, Guid key) {
+        var encryptedPrivateKey = EncryptString(privateKey, key.ToString("D"));
+        return encryptedPrivateKey;
+    }
+
+    public string DecryptPrivateKey(string encryptedText, Guid key) {
+        return DecryptString(encryptedText, key.ToString("D"));
+    }
+
+    #endregion
+
+    #region Encryption
+
+    //AES Encryption
+    private string EncryptString(string plainText, string keyToUse) {
+        var iv = new byte[16];
+        byte[] array;
+
+        using (var aes = Aes.Create()) {
+            aes.Key = Encoding.UTF8.GetBytes(Get128BitString(keyToUse));
+            aes.IV = iv;
+
+            var encryptor = aes.CreateEncryptor(aes.Key, aes.IV);
+
+            using (var memoryStream = new MemoryStream()) {
+                using (var cryptoStream = new CryptoStream((Stream)memoryStream, encryptor, CryptoStreamMode.Write)) {
+                    using (var streamWriter = new StreamWriter((Stream)cryptoStream)) {
+                        streamWriter.Write(plainText);
+                    }
+
+                    array = memoryStream.ToArray();
+                }
+            }
+        }
+
+        return Convert.ToBase64String(array);
+    }
+
+    private string DecryptString(string cipherText, string keyToUse) {
+        var iv = new byte[16];
+        var buffer = Convert.FromBase64String(cipherText);
+
+        using (var aes = Aes.Create()) {
+            aes.Key = Encoding.UTF8.GetBytes(Get128BitString(keyToUse));
+            aes.IV = iv;
+            var decryptor = aes.CreateDecryptor(aes.Key, aes.IV);
+
+            using (var memoryStream = new MemoryStream(buffer)) {
+                using (var cryptoStream = new CryptoStream((Stream)memoryStream, decryptor, CryptoStreamMode.Read)) {
+                    using (var streamReader = new StreamReader((Stream)cryptoStream)) {
+                        return streamReader.ReadToEnd();
+                    }
+                }
+            }
+        }
+    }
+
+    private string Get128BitString(string keyToConvert) {
+        var b = new StringBuilder();
+
+        for (var i = 0; i < 16; i++)
+            b.Append(keyToConvert[i % keyToConvert.Length]);
+
+        keyToConvert = b.ToString();
+
+        return keyToConvert;
     }
 
     #endregion
