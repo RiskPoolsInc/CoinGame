@@ -23,8 +23,8 @@ public class AppDbContext : BaseDbContext, IAppDbContext {
     #region Entities
 
     public DbSet<Wallet> Wallets { get; set; }
-    public DbSet<ATransaction> Transactions { get; set; }
-    public DbSet<Service> Services { get; set; }
+    public DbSet<BaseTransaction> Transactions { get; set; }
+    public DbSet<ServiceProfile> ServiceProfiles { get; set; }
     public DbSet<TransactionReceiver> TransactionReceivers { get; set; }
 
     #endregion

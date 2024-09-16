@@ -1,11 +1,9 @@
-﻿using System.Security.Claims;
-
+﻿using App.Common.Helpers;
+using App.Interfaces.Repositories.ServiceProfiles;
 using App.Interfaces.Security;
 using App.Security.Metadata;
 using App.Security.Principals;
 
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 
 namespace App.Security.Context;
@@ -13,29 +11,30 @@ namespace App.Security.Context;
 public class WebContextProvider : IContextProvider {
     private const string USER_AGENT_KEY = "User-Agent";
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly IServiceProfileRepository _serviceProfileRepository;
     private readonly Lazy<ICurrentRequestClient> _loader;
     private readonly Lazy<IRequestInfo> _metadata;
 
-    public WebContextProvider(IHttpContextAccessor httpContextAccessor) {
+    public WebContextProvider(IHttpContextAccessor httpContextAccessor, IServiceProfileRepository serviceProfileRepository) {
         _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
+        _serviceProfileRepository = serviceProfileRepository;
         _loader = new Lazy<ICurrentRequestClient>(ParseContext, true);
         _metadata = new Lazy<IRequestInfo>(ParseMetadata, true);
     }
 
     public ICurrentRequestClient Context => _loader.Value;
     public IRequestInfo Request => _metadata.Value;
+    public object GetProfile => _serviceProfileRepository.Get(Context.ProfileId.Value).Single();
 
-    public string GetAccessToken() {
-        return _httpContextAccessor.HttpContext.GetTokenAsync(JwtBearerDefaults.AuthenticationScheme, "access_token")
-                                   .GetAwaiter()
-                                   .GetResult();
+    public string GetApiKey() {
+        return _httpContextAccessor.HttpContext.GetValue<string>("x-api-key");
     }
 
     private ICurrentRequestClient ParseContext() {
-        var identity = _httpContextAccessor.HttpContext.User.Identity;
+        var apiKey = GetApiKey();
 
-        if (identity.IsAuthenticated)
-            return new WebPrincipal(identity as ClaimsIdentity);
+        if (!string.IsNullOrWhiteSpace(apiKey))
+            return new WebPrincipal(apiKey, _serviceProfileRepository);
         return new AnonymousPrincipal();
     }
 

@@ -6,7 +6,7 @@ namespace App.Data.Entities.TransactionReceivers;
 
 public class TransactionReceiver : AuditableEntity {
     public Guid TransactionId { get; set; }
-    public virtual ATransaction ATransaction { get; set; }
+    public virtual BaseTransaction BaseTransaction { get; set; }
     public string FromAddress { get; set; }
     public string Address { get; set; }
     public decimal Sum { get; set; }

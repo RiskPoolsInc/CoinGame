@@ -6,8 +6,8 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace App.Data.Sql.Configurations;
 
-public class TransactionConfiguration : EntityTypeConfiguration<ATransaction> {
-    public override void Configure(EntityTypeBuilder<ATransaction> builder) {
+public class TransactionConfiguration : EntityTypeConfiguration<BaseTransaction> {
+    public override void Configure(EntityTypeBuilder<BaseTransaction> builder) {
         builder.HasOne(a => a.Type)
                .WithMany()
                .HasForeignKey(a => a.TypeId)

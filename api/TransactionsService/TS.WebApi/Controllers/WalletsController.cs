@@ -31,7 +31,7 @@ public class WalletsController : BaseController {
     /// <response code="200">The generated wallet</response>
     /// <response code="403">Access Denied</response>
     /// <response code="500">Unexpected server error</response>
-    [HttpPost("generate")]
+    [HttpPost("create")]
     public async Task<IActionResult> GenerateWalletAsync(CancellationToken cancellationToken) {
         return Ok(await _dispatcher.Send(new GenerateWalletCommand(), cancellationToken));
     }
@@ -50,11 +50,11 @@ public class WalletsController : BaseController {
     }
 
     /// <summary>
-    /// Get wallet balance by Wallet Id
+    /// Get wallet balance
     /// </summary>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>Returns created wallet</returns>
-    /// <response code="200">The user games</response>
+    /// <response code="200">The wallet balance</response>
     /// <response code="403">Access Denied</response>
     /// <response code="500">Unexpected server error</response>
     [HttpGet("{id:guid}/balance")]
@@ -66,12 +66,12 @@ public class WalletsController : BaseController {
     /// Refund coins
     /// </summary>
     /// <param name="cancellationToken">Cancellation token</param>
-    /// <returns>Returns transaction refund</returns>
-    /// <response code="200">The transaction refund</response>
+    /// <returns>Returns generated transaction refund</returns>
+    /// <response code="200">The generated refund transaction</response>
     /// <response code="403">Access Denied</response>
     /// <response code="500">Unexpected server error</response>
-    [HttpPost("{id:guid}/refund")]
-    public async Task<IActionResult> RefundCoinsAsync([FromRoute] Guid id, CancellationToken cancellationToken) {
-        return Ok(await _dispatcher.Send(new RefundCoinsCommand(id), cancellationToken));
+    [HttpPost("refund")]
+    public async Task<IActionResult> RefundCoinsAsync([FromBody] RefundCoinsCommand request, CancellationToken cancellationToken) {
+        return Ok(await _dispatcher.Send(request, cancellationToken));
     }
 }

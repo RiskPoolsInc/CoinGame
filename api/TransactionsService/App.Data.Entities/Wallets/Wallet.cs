@@ -7,7 +7,7 @@ namespace App.Data.Entities.Wallets;
 
 public class Wallet : ArchivableEntity {
     public Guid ServiceId { get; set; }
-    public virtual Service Service { get; set; }
+    public virtual ServiceProfile ServiceProfile { get; set; }
     public string Address { get; set; }
 
     public int TypeId { get; set; }              // [Generated, Imported]
@@ -15,5 +15,5 @@ public class Wallet : ArchivableEntity {
     public string PrivateKey { get; set; }
     public bool IsEncrypted { get; set; }
 
-    public virtual ICollection<ATransaction> Transactions { get; set; }
+    public virtual ICollection<BaseTransaction> Transactions { get; set; }
 }

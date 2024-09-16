@@ -5,7 +5,7 @@ using App.Data.Entities.Wallets;
 
 namespace App.Data.Entities.Transactions;
 
-public abstract class ATransaction : AuditableEntity {
+public abstract class BaseTransaction : AuditableEntity {
     public Guid SenderId { get; set; }
 
     public Guid? WalletId { get; set; }

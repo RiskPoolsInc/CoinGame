@@ -11,6 +11,7 @@ public class PreRequestHandlersModule : Module
 {
     protected override void Load(ContainerBuilder builder)
     {
+        builder.RegisterGeneric(typeof(AccessBehavior<>)).As(typeof(IRequestPreProcessor<>));
         builder.RegisterGeneric(typeof(EntityExistBehavior<>)).As(typeof(IRequestPreProcessor<>));
         builder.RegisterGeneric(typeof(ValidationBehavior<>)).As(typeof(IRequestPreProcessor<>));
         builder.RegisterGeneric(typeof(LoggingBehaviour<,>)).As(typeof(IPipelineBehavior<,>));

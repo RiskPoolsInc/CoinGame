@@ -27,7 +27,7 @@ namespace TS.WebApi.Controllers {
         /// <response code="200">The user games</response>
         /// <response code="403">Access Denied</response>
         /// <response code="500">Unexpected server error</response>
-        [HttpPost("new")]
+        [HttpPost("send")]
         public async Task<IActionResult> GenerateTransactionsync([FromBody] GenerateTransactionCommand request,
                                                                  CancellationToken                     cancellationToken) {
             return Ok(await _dispatcher.Send(request, cancellationToken));
@@ -41,9 +41,10 @@ namespace TS.WebApi.Controllers {
         /// <response code="200">The result of check transaction in completeds</response>
         /// <response code="403">Access Denied</response>
         /// <response code="500">Unexpected server error</response>
-        [HttpPost("{hash:string}/completed")]
-        public async Task<IActionResult> CheckCompletingAsync([FromRoute] string hash, CancellationToken cancellationToken) {
-            return Ok(await _dispatcher.Send(new CheckTransactionStateCommand(hash), cancellationToken));
+        [HttpPost("completed")]
+        public async Task<IActionResult> CheckCompletingAsync([FromBody] CheckTransactionStateCommand request,
+                                                              CancellationToken                       cancellationToken) {
+            return Ok(await _dispatcher.Send(request, cancellationToken));
         }
 
         /// <summary>

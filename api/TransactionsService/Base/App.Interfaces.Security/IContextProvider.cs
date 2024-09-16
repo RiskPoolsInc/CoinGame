@@ -3,5 +3,5 @@
 public interface IContextProvider {
     ICurrentRequestClient Context { get; }
     IRequestInfo Request { get; }
-    public string GetAccessToken();
+    public string GetApiKey();
 }

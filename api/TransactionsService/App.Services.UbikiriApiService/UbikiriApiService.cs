@@ -18,7 +18,7 @@ public class UbikiriApiService {
     public UbikiriApiService(IContextProvider contextProvider, UbikiriSettings ubikiriSettings) {
         _contextProvider = contextProvider;
         _ubikiriSettings = ubikiriSettings;
-        AccessToken = contextProvider.GetAccessToken();
+        AccessToken = contextProvider.GetApiKey();
     }
 
     public string? AccessToken { get; set; }
