@@ -13,7 +13,7 @@ public class AccessBehavior<TRequest> : IRequestPreProcessor<TRequest> where TRe
     }
 
     public Task Process(TRequest request, CancellationToken cancellationToken) {
-        if (!_currentUser.IsAnonymous && _currentUser.ProfileId.HasValue)
+        if (!_currentUser.IsAnonymous && _currentUser.ProfileId != Guid.Empty)
             return Task.CompletedTask;
 
         throw new AccessDeniedException();

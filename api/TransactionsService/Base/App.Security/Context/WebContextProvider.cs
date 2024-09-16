@@ -1,4 +1,5 @@
 ﻿using App.Common.Helpers;
+using App.Data.Entities.ServiceProfiles;
 using App.Interfaces.Repositories.ServiceProfiles;
 using App.Interfaces.Security;
 using App.Security.Metadata;
@@ -24,7 +25,13 @@ public class WebContextProvider : IContextProvider {
 
     public ICurrentRequestClient Context => _loader.Value;
     public IRequestInfo Request => _metadata.Value;
-    public object GetProfile => _serviceProfileRepository.Get(Context.ProfileId.Value).Single();
+
+    public ServiceProfile GetProfile {
+        get {
+            var service = _serviceProfileRepository.Get(Context.ProfileId).Single();
+            return service;
+        }
+    }
 
     public string GetApiKey() {
         var headers = _httpContextAccessor.HttpContext.Request.Headers;

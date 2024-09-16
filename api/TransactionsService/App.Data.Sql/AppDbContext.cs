@@ -1,5 +1,5 @@
 ﻿using App.Data.Entities.Dictionaries;
-using App.Data.Entities.Senders;
+using App.Data.Entities.ServiceProfiles;
 using App.Data.Entities.TransactionReceivers;
 using App.Data.Entities.Transactions;
 using App.Data.Entities.Wallets;

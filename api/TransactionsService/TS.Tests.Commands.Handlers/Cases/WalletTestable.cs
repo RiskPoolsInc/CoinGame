@@ -9,6 +9,7 @@ using App.Data.Entities.Wallets;
 using App.Interfaces.Core;
 using App.Interfaces.Handlers.Requests;
 using App.Interfaces.Repositories.Wallets;
+using App.Interfaces.Security;
 using App.Services.WalletService;
 
 using AutoMapper;
@@ -32,6 +33,7 @@ public class WalletTestable : IDisposable {
     private readonly Wallet[] _wallets; // = new List<Wallet>() { _entity }.AsQueryable();
     private readonly Mock<IWalletService> _walletServiceMock;
     private readonly Mock<IDispatcher> _dispatcherMock;
+    private readonly Mock<IContextProvider> _contextProviderMock;
 
     private readonly GeneratedWalletView _generatedWalletView = new GeneratedWalletView() {
         Address = "aaassdddc",
@@ -47,6 +49,7 @@ public class WalletTestable : IDisposable {
     public WalletTestable() {
         _walletRepositoryMock = new Mock<IWalletRepository>();
         _walletHandlerMock = new Mock<IGetWalletHandler>();
+        _contextProviderMock = new Mock<IContextProvider>();
         _mapper = Mapper.Instance;
         _cts = new CancellationTokenSource();
         _cancellationToken = _cts.Token;
@@ -65,7 +68,7 @@ public class WalletTestable : IDisposable {
         _walletServiceMock.Setup(m => m.EncryptPrivateKey(It.IsAny<string>(), It.IsAny<Guid>())).Returns(_encryptedPrivateKey);
 
         var createWalletHandler = new CreateWalletHandler(_mapper, _walletRepositoryMock.Object,
-            _walletHandlerMock.Object, _walletServiceMock.Object);
+            _walletHandlerMock.Object, _walletServiceMock.Object, _contextProviderMock.Object);
         return await createWalletHandler.Handle(createWalletCommand, _cancellationToken);
     }
 

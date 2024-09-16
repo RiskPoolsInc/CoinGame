@@ -13,9 +13,9 @@ public class WebPrincipal : ICurrentRequestClient {
     public WebPrincipal(string apiKey, IServiceProfileRepository serviceProfileRepository) {
         _apiKey = apiKey;
         _serviceProfileRepository = serviceProfileRepository;
-        ProfileId = serviceProfileRepository.Where(a => a.ApiKey == _apiKey).FirstOrDefault().Id;
+        ProfileId = serviceProfileRepository.Where(a => a.ApiKey == _apiKey).Single().Id;
     }
 
     public bool IsAnonymous => false;
-    public Guid? ProfileId { get; set; }
+    public Guid ProfileId { get; set; }
 }

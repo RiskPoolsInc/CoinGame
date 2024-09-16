@@ -12,10 +12,6 @@ public class WalletServiceModule : Module {
         builder.RegisterType<WalletService>().As<IWalletService>();
 
         builder.Register(ctx => ctx.Resolve<IConfiguration>()
-                                   .GetSection(SystemSettingsOptions.SECTION_NAME)
-                                   .Get<SystemSettingsOptions>());
-
-        builder.Register(ctx => ctx.Resolve<IConfiguration>()
                                    .GetSection(WalletServiceOptions.SECTION_NAME)
                                    .Get<WalletServiceOptions>());
     }

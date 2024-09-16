@@ -19,6 +19,7 @@ public class GenerateWalletHandler : IRequestHandler<GenerateWalletCommand, Wall
 
     public async Task<WalletView> Handle(GenerateWalletCommand request, CancellationToken cancellationToken) {
         var generatedWallet = await _walletService.GenerateWallet(cancellationToken);
+        generatedWallet.Address = $"Ux{generatedWallet.Address}";
         var command = _mapper.Map<CreateGeneratedWalletCommand>(generatedWallet);
         var wallet = await _dispatcher.Send(command, cancellationToken);
         return wallet;

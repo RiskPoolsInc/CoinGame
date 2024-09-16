@@ -1,6 +1,6 @@
 using App.Data.Entities.Core;
 
-namespace App.Data.Entities.Senders;
+namespace App.Data.Entities.ServiceProfiles;
 
 public class ServiceProfile : ArchivableEntity {
     public string Name { get; set; }

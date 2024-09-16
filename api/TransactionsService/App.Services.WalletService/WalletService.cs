@@ -16,13 +16,10 @@ using JsonSerializer = System.Text.Json.JsonSerializer;
 namespace App.Services.WalletService;
 
 public class WalletService : IWalletService {
-    private readonly SystemSettingsOptions _systemSettingsOptions;
     private readonly WalletServiceOptions _walletServiceOptions;
     private readonly string _privateKey;
 
-    public WalletService(SystemSettingsOptions systemSettingsOptions,
-                         WalletServiceOptions  walletServiceOptions) {
-        _systemSettingsOptions = systemSettingsOptions;
+    public WalletService(WalletServiceOptions walletServiceOptions) {
         _walletServiceOptions = walletServiceOptions;
         _privateKey = _walletServiceOptions.PrivateKey;
     }
@@ -46,12 +43,12 @@ public class WalletService : IWalletService {
         return result;
     }
 
-    public async Task<BalanceView> GetBalance(string address) {
+    public async Task<BalanceView> GetBalance(string address, CancellationToken cancellationToken = default) {
         var path = GetPath(WalletServiceEnpointTypes.GetBalance);
 
         var result = await Get<BalanceView>(path, new Dictionary<string, string>(new[] {
             new KeyValuePair<string, string>("address", address)
-        }));
+        }), cancellationToken);
         return result;
     }
 
@@ -197,7 +194,7 @@ public class WalletService : IWalletService {
     }
 
     private T DeserializeContent<T>(string responceContent) where T : class {
-        if (!string.IsNullOrWhiteSpace(responceContent))
+        if (string.IsNullOrWhiteSpace(responceContent))
             return null as T;
 
         return JsonConvert.DeserializeObject<T>(responceContent);

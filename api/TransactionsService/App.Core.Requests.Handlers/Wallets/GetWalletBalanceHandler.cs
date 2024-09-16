@@ -9,7 +9,7 @@ using MediatR;
 
 namespace App.Core.Requests.Handlers.Wallets;
 
-public class GetWalletBalanceHandler : IRequestHandler<GetWalletBalanceRequest, WalletView> {
+public class GetWalletBalanceHandler : IRequestHandler<GetWalletBalanceRequest, WalletBalanceView> {
     private readonly IWalletRepository _walletRepository;
     private readonly IWalletService _walletService;
 
@@ -18,8 +18,8 @@ public class GetWalletBalanceHandler : IRequestHandler<GetWalletBalanceRequest, 
         _walletService = walletService;
     }
 
-    public async Task<WalletView> Handle(GetWalletBalanceRequest request, CancellationToken cancellationToken) {
-        var wallet = await _walletRepository.Get(request.WalletId).SingleAsync<Wallet, WalletView>(cancellationToken);
+    public async Task<WalletBalanceView> Handle(GetWalletBalanceRequest request, CancellationToken cancellationToken) {
+        var wallet = await _walletRepository.Get(request.WalletId).SingleAsync<Wallet, WalletBalanceView>(cancellationToken);
         wallet.Balance = (await _walletService.GetBalance(wallet.Address)).Balance;
         return wallet;
     }

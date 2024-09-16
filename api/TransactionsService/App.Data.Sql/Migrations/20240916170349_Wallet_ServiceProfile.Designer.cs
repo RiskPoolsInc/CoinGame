@@ -3,15 +3,17 @@ using System;
 using App.Data.Sql;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace App.Data.Sql.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240916170349_Wallet_ServiceProfile")]
+    partial class Wallet_ServiceProfile
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -99,7 +101,7 @@ namespace App.Data.Sql.Migrations
                     b.ToTable("WalletTypes");
                 });
 
-            modelBuilder.Entity("App.Data.Entities.ServiceProfiles.ServiceProfile", b =>
+            modelBuilder.Entity("App.Data.Entities.Senders.ServiceProfile", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -181,9 +183,6 @@ namespace App.Data.Sql.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid>("CreatedById")
-                        .HasColumnType("uuid");
-
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("timestamp without time zone");
 
@@ -199,6 +198,9 @@ namespace App.Data.Sql.Migrations
 
                     b.Property<string>("Hash")
                         .HasColumnType("text");
+
+                    b.Property<Guid>("ServiceProfileId")
+                        .HasColumnType("uuid");
 
                     b.Property<int>("StateId")
                         .HasColumnType("integer");
@@ -217,7 +219,7 @@ namespace App.Data.Sql.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedById");
+                    b.HasIndex("ServiceProfileId");
 
                     b.HasIndex("StateId");
 
@@ -240,9 +242,6 @@ namespace App.Data.Sql.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid>("CreatedById")
-                        .HasColumnType("uuid");
-
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("timestamp without time zone");
 
@@ -259,6 +258,9 @@ namespace App.Data.Sql.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<Guid>("ServiceProfileId")
+                        .HasColumnType("uuid");
+
                     b.Property<int>("TypeId")
                         .HasColumnType("integer");
 
@@ -267,7 +269,7 @@ namespace App.Data.Sql.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedById");
+                    b.HasIndex("ServiceProfileId");
 
                     b.HasIndex("TypeId");
 
@@ -305,9 +307,9 @@ namespace App.Data.Sql.Migrations
 
             modelBuilder.Entity("App.Data.Entities.Transactions.BaseTransaction", b =>
                 {
-                    b.HasOne("App.Data.Entities.ServiceProfiles.ServiceProfile", "CreatedBy")
+                    b.HasOne("App.Data.Entities.Senders.ServiceProfile", "ServiceProfile")
                         .WithMany()
-                        .HasForeignKey("CreatedById")
+                        .HasForeignKey("ServiceProfileId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -331,9 +333,9 @@ namespace App.Data.Sql.Migrations
 
             modelBuilder.Entity("App.Data.Entities.Wallets.Wallet", b =>
                 {
-                    b.HasOne("App.Data.Entities.ServiceProfiles.ServiceProfile", "CreatedBy")
+                    b.HasOne("App.Data.Entities.Senders.ServiceProfile", "ServiceProfile")
                         .WithMany()
-                        .HasForeignKey("CreatedById")
+                        .HasForeignKey("ServiceProfileId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

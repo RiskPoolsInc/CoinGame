@@ -1,4 +1,4 @@
-using App.Data.Entities.Senders;
+using App.Data.Entities.ServiceProfiles;
 
 namespace App.Interfaces.Repositories.ServiceProfiles;
 
