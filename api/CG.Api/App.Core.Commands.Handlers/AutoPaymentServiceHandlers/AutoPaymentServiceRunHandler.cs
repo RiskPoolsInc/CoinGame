@@ -12,8 +12,7 @@ public class AutoPaymentServiceRunHandler : IAutoPaymentServiceRunHandler {
     }
 
     public async Task<Unit> Handle(AutoPaymentServiceRunCommand request, CancellationToken cancellationToken) {
-        await _service.RunAsync(cancellationToken);
-        await Task.Delay(TimeSpan.FromSeconds(1));
+        await _service.WorkAsync(cancellationToken);
         return Unit.Value;
     }
 }

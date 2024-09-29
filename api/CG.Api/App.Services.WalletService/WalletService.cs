@@ -1,14 +1,11 @@
-﻿using System.Net;
-using System.Net.Http.Json;
+﻿using System.Net.Http.Json;
 using System.Text.RegularExpressions;
 using System.Web;
 
 using App.Core.ViewModels.External;
 using App.Services.Telegram.Options;
-
-using Newtonsoft.Json;
-
-using JsonSerializer = System.Text.Json.JsonSerializer;
+using App.Services.WalletService.Helpers;
+using App.Services.WalletService.Models;
 
 namespace App.Services.WalletService;
 
@@ -82,9 +79,9 @@ public class WalletService : IWalletService {
         var commission = sum * 0.02m;
         var gameDeposit = sum - commission;
 
-        var cmd = PrepareTransactionRequestBody(privateKey, new (string address, decimal sum)[] {
-            (GetWalletAddress(ServiceWalletTypes.GameDeposit), -1),
-            (GetWalletAddress(ServiceWalletTypes.Commission), commission),
+        var cmd = PrepareTransactionRequestBody(privateKey, new ReceiverCoinsModel[] {
+            new(GetWalletAddress(ServiceWalletTypes.GameDeposit), -1),
+            new(GetWalletAddress(ServiceWalletTypes.Commission), commission),
         });
 
         var result = await Post<object>(path, cmd);
@@ -96,9 +93,9 @@ public class WalletService : IWalletService {
         var commission = sum * 0.02m;
         var gameDeposit = sum - commission;
 
-        var cmd = PrepareTransactionRequestBody(privateKey, new (string address, decimal sum)[] {
-            (GetWalletAddress(ServiceWalletTypes.GameDeposit), gameDeposit),
-            (GetWalletAddress(ServiceWalletTypes.Commission), commission),
+        var cmd = PrepareTransactionRequestBody(privateKey, new ReceiverCoinsModel[] {
+            new(GetWalletAddress(ServiceWalletTypes.GameDeposit), gameDeposit),
+            new(GetWalletAddress(ServiceWalletTypes.Commission), commission),
         });
 
         var result = await Post<TransactionFeeView>(path, cmd);
@@ -117,29 +114,28 @@ public class WalletService : IWalletService {
         var servicePaymentSum = roundSum * 0.784m;
 
         var response = await Post<GenerateTransactionView>(path,
-            PrepareTransactionRequestBody(gameDepositWallet.PrivateKey,
-                new (string address, decimal sum)[] {
-                    (serviceWallet.Value, servicePaymentSum)
-                }));
+            PrepareTransactionRequestBody(gameDepositWallet.PrivateKey, new[] {
+                new ReceiverCoinsModel(serviceWallet.Value, servicePaymentSum)
+            }));
 
         var result = response as GenerateTransactionView;
         result.WalletFrom = gameDepositWallet.Value;
         return result;
     }
 
-    private object PrepareTransactionRequestBody(string signerPrivateKey, (string address, decimal sum)[] receivers) {
-        var receiversArray = new object[receivers.Length];
+    private object PrepareTransactionRequestBody(string signerPrivateKey, IEnumerable<ReceiverCoinsModel> receivers) {
+        var receiversObjectList = new List<object>();
 
-        for (var i = 0; i < receiversArray.Length; i++) {
-            receiversArray[i] = new {
-                address = receivers[i].address,
-                sum = receivers[i].sum
-            };
+        foreach (var receiverModel in receivers) {
+            receiversObjectList.Add(new {
+                address = receiverModel.Address,
+                sum = receiverModel.Sum
+            });
         }
 
         var request = new {
             signerPrivateKey = signerPrivateKey,
-            receivers = receiversArray
+            receivers = receiversObjectList.ToArray()
         };
         return request;
     }
@@ -149,9 +145,9 @@ public class WalletService : IWalletService {
         var commission = sum * 0.02m;
         var gameDeposit = sum - commission;
 
-        var cmd = PrepareTransactionRequestBody(privateKey, new (string address, decimal sum)[] {
-            (GetWalletAddress(ServiceWalletTypes.GameDeposit), gameDeposit),
-            (GetWalletAddress(ServiceWalletTypes.Commission), commission),
+        var cmd = PrepareTransactionRequestBody(privateKey, new ReceiverCoinsModel[] {
+            new(GetWalletAddress(ServiceWalletTypes.GameDeposit), gameDeposit),
+            new(GetWalletAddress(ServiceWalletTypes.Commission), commission),
         });
 
         var result = await Post<GenerateTransactionView>(path, cmd);
@@ -167,15 +163,60 @@ public class WalletService : IWalletService {
         return result as GenerateTransactionView;
     }
 
+    public async Task<TransactionGameRewardView[]> GenerateTransactionRewards(GameRewardReceiverModel[] receivers) {
+        var path = GetPath(WalletServiceEnpointTypes.GenerateTransaction);
+        var walletFromAddress = GetWalletAddress(ServiceWalletTypes.Reward);
+        var walletFromPrivateKey = GetWalletPrivateKey(ServiceWalletTypes.Reward);
+        var commissionAddress = GetWalletAddress(ServiceWalletTypes.Commission);
+
+        var gamesRewards = new List<TransactionGameRewardView>();
+        var rewardsReceivers = new List<ReceiverCoinsModel>();
+        var groupedByAddress = receivers.GroupBy(a => a.Address);
+        var commission = 0m;
+        var commissionPercent = 0.02m;
+
+        foreach (var gameRewardReceiverModel in groupedByAddress) {
+            var receiverAddress = gameRewardReceiverModel.Key;
+            var sumReward = gameRewardReceiverModel.Sum(a => a.Sum);
+
+            var userGamesRewards = gameRewardReceiverModel.Select(a => new TransactionGameRewardView {
+                Hash = null,
+                Sum = a.Sum * (100m - commissionPercent),
+                WalletFrom = walletFromAddress,
+                ReceiverAddress = receiverAddress,
+                GameId = a.GameId,
+            });
+
+            var rewardsReceiver = new ReceiverCoinsModel {
+                Address = receiverAddress,
+                Sum = userGamesRewards.Sum(a => a.Sum),
+            };
+            commission += sumReward - rewardsReceiver.Sum;
+        }
+
+        var commissionReceiver = new ReceiverCoinsModel {
+            Address = commissionAddress,
+            Sum = commission,
+        };
+        rewardsReceivers.Add(commissionReceiver);
+        var generateTransactionRequest = PrepareTransactionRequestBody(walletFromPrivateKey, rewardsReceivers.ToArray());
+        var generateTransactionView = await Post<GenerateTransactionView>(path, generateTransactionRequest);
+
+        foreach (var transactionGameRewardView in gamesRewards)
+            transactionGameRewardView.Hash = generateTransactionView.Hash;
+
+        return gamesRewards.ToArray();
+    }
+
     public async Task<GenerateTransactionView> GenerateTransactionReward(string toWallet, decimal sum) {
         var path = GetPath(WalletServiceEnpointTypes.GenerateTransaction);
         var walletFromAddress = GetWalletAddress(ServiceWalletTypes.Reward);
         var walletFromPrivateKey = GetWalletPrivateKey(ServiceWalletTypes.Reward);
         var commissionService = GetWalletAddress(ServiceWalletTypes.Commission);
 
-        var cmd = PrepareTransactionRequestBody(walletFromPrivateKey, new (string address, decimal sum)[] {
-            (toWallet, sum * 0.98m),
-            (commissionService, sum * 0.02m)
+        var cmd = PrepareTransactionRequestBody(walletFromPrivateKey, new ReceiverCoinsModel[] {
+            new(toWallet, sum * 0.98m),
+            new(commissionService, sum * 0.02m)
         });
 
         var response = await Post<GenerateTransactionView>(path, cmd);
@@ -194,60 +235,19 @@ public class WalletService : IWalletService {
 
     #region BaseMethods
 
-    private async Task<object> Post<T>(string endpointPath, object requestValue, CancellationToken cancellationToken = default) {
-        using var client = new HttpClient(new HttpClientHandler());
-        AddHeaders(client);
-        var json = JsonSerializer.Serialize(requestValue);
-        var result = await SendPostJson(client, endpointPath, requestValue, cancellationToken);
-
-        if (result.IsSuccessStatusCode)
-            return !string.IsNullOrWhiteSpace(result.Content)
-                ? JsonConvert.DeserializeObject(result.Content, typeof(T))
-                : result.Content;
-
-        throw new HttpRequestException(result.Content);
-    }
-
-    private async Task<object> Put<T>(string            endpointPath, Dictionary<string, string>? queryProperties = null,
-                                      CancellationToken cancellationToken = default) {
-        using var client = new HttpClient(new HttpClientHandler());
-        AddHeaders(client);
-
-        var response = await SendPutRequest<T>(client, endpointPath, queryProperties, null,
-            cancellationToken);
-        return response;
-    }
-
     private async void AddHeaders(HttpClient client) {
         client.DefaultRequestHeaders.Add(_walletServiceOptions.HeaderPrivateKeyOptionName, _walletServiceOptions.PrivateKey);
         client.DefaultRequestHeaders.Add("origin", _walletServiceOptions.Origin);
     }
 
-    private async Task<object> Get<T>(string            endpointPath, Dictionary<string, string>? queryProperties = null,
-                                      CancellationToken cancellationToken = default) {
-        using var client = new HttpClient(new HttpClientHandler());
-        AddHeaders(client);
-        var response = await SendGetRequest<T>(client, endpointPath, queryProperties, cancellationToken);
-        return response;
-    }
-
-    private async Task<object> SendPutRequest<T>(HttpClient                  client,
-                                                 string                      endPoint,
-                                                 Dictionary<string, string>? queryProperties   = null,
-                                                 HttpContent?                httpContent       = null,
-                                                 CancellationToken           cancellationToken = default) {
-        using (client) {
-            var uri = AddQueryProperties(endPoint, queryProperties);
-            var response = await client.PutAsync(uri, httpContent, cancellationToken);
-            var content = await response.Content.ReadAsStringAsync(cancellationToken);
-
-            if (response.IsSuccessStatusCode)
-                return !string.IsNullOrWhiteSpace(content)
-                    ? JsonConvert.DeserializeObject(content, typeof(T))
-                    : response.Content;
-
-            throw new HttpRequestException(content);
-        }
+    private async Task<T> Put<T>(string                      endPoint,
+                                 Dictionary<string, string>? queryProperties   = null,
+                                 HttpContent?                httpContent       = null,
+                                 CancellationToken           cancellationToken = default) where T : class {
+        using var client = NewHttpClient();
+        var uri = AddQueryProperties(endPoint, queryProperties);
+        var response = await client.PutAsync(uri, httpContent, cancellationToken);
+        return await response.DecerializeResponce<T>();
     }
 
     private Uri AddQueryProperties(string url, Dictionary<string, string>? queryProperties = null) {
@@ -266,42 +266,27 @@ public class WalletService : IWalletService {
         return new Uri(url);
     }
 
-    private async Task<object> SendGetRequest<T>(HttpClient                  client,
-                                                 string                      endPoint,
-                                                 Dictionary<string, string>? queryProperties   = null,
-                                                 CancellationToken           cancellationToken = default) {
-        using (client) {
-            var uri = AddQueryProperties(endPoint, queryProperties);
-
-            var response = await client.GetAsync(uri, cancellationToken);
-            var content = await response.Content.ReadAsStringAsync(cancellationToken);
-
-            if (response.IsSuccessStatusCode)
-                return !string.IsNullOrWhiteSpace(content)
-                    ? JsonConvert.DeserializeObject(content, typeof(T))
-                    : response.Content;
-
-            throw new HttpRequestException(content);
-        }
+    private async Task<object> Get<T>(string                      endPoint,
+                                      Dictionary<string, string>? queryProperties   = null,
+                                      CancellationToken           cancellationToken = default) where T : class {
+        using var client = NewHttpClient();
+        var uri = AddQueryProperties(endPoint, queryProperties);
+        var response = await client.GetAsync(uri, cancellationToken);
+        return response.DecerializeResponce<T>();
     }
 
-    private async Task<(string Content, HttpStatusCode Code, bool IsSuccessStatusCode)> SendPostJson(HttpClient client,
-        string endPoint,
-        object entity,
-        CancellationToken cancellationToken = default) {
+    private async Task<T> Post<T>(string            endPoint, object entity,
+                                  CancellationToken cancellationToken = default) where T : class {
+        using var client = NewHttpClient();
         var url = new Uri(endPoint);
         var response = await client.PostAsJsonAsync(url, entity, cancellationToken);
-        var resultCode = response.StatusCode;
-        var content = await response.Content.ReadAsStringAsync(cancellationToken);
-        return (content, resultCode, response.IsSuccessStatusCode);
+        return await response.DecerializeResponce<T>();
     }
 
-    private bool IsSuccessStatusCode(int status) {
-        return status is >= 200 and <= 299;
-    }
-
-    private bool IsSuccessStatusCode(HttpStatusCode status) {
-        return IsSuccessStatusCode((int)status);
+    private HttpClient NewHttpClient() {
+        var client = new HttpClient(new HttpClientHandler());
+        AddHeaders(client);
+        return client;
     }
 
     #endregion

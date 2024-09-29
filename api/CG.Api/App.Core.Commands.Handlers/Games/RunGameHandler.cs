@@ -114,7 +114,7 @@ public class RunGameHandler : IRequestHandler<RunGameCommand, GameView> {
         currentGame.RewardSum = currentGame.RoundSum * gameCounter;
         await _gameRepository.SaveAsync(default);
 
-        var transactionService = new CreateTransactionRewardCommand(currentGameId);
+        var transactionService = new SendTransactionRewardCommand(currentGameId);
         return await _dispatcher.Send(transactionService);
     }
 

@@ -12,7 +12,6 @@ public class AutoPaymentServiceStopHandler : IAutoPaymentServiceStopHandler {
     }
 
     public async Task<Unit> Handle(AutoPaymentServiceStopCommand request, CancellationToken cancellationToken) {
-        _service.Stop();
         await Task.Delay(TimeSpan.FromSeconds(1));
         return Unit.Value;
     }

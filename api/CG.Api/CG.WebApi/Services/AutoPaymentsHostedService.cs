@@ -12,8 +12,6 @@ public class AutoPaymentsHostedService : BackgroundService {
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken) {
-        while (!stoppingToken.IsCancellationRequested) {
-            await _autoPaymentService.RunAsync(stoppingToken);
-        }
+        await _autoPaymentService.WorkAsync(stoppingToken);
     }
 }

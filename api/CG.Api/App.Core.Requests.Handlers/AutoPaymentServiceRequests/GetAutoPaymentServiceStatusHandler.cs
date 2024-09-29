@@ -20,7 +20,7 @@ public class GetAutoPaymentServiceStatusHandler : IRequestHandler<GetAutoPayment
         var statusText = ((AutoPaymentServiceStatuses)status).ToString();
 
         var statusView = new AutoPaymentServiceStatusView {
-            Id = status,
+            Id = (int)status,
             Code = statusText,
             Name = statusText
         };

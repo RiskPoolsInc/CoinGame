@@ -13,8 +13,7 @@ public class AutoPaymentService : IAutoPaymentService {
     private readonly IAutoPaymentServiceOptions _options;
     private readonly IDispatcher _dispatcher;
     private readonly ISendRewardsHandler _handler;
-    private CancellationTokenSource _cts = new();
-    private int _status = (int)AutoPaymentServiceStatuses.Stop;
+    private AutoPaymentServiceStatuses _status = AutoPaymentServiceStatuses.Stop;
 
     public AutoPaymentService(ILogger<AutoPaymentService> logger,     IAutoPaymentServiceOptions options,
                               IDispatcher                 dispatcher, ISendRewardsHandler        handler) {
@@ -24,46 +23,43 @@ public class AutoPaymentService : IAutoPaymentService {
         _handler = handler;
     }
 
-    public async Task RunAsync(CancellationToken cancellationToken) {
-        _logger.LogInformation("Starting Auto Payment Service");
-
-        if ((AutoPaymentServiceStatuses)_status == AutoPaymentServiceStatuses.Run)
-            throw new Exception("AutoPayment service is already running.");
-
-        _cts = new CancellationTokenSource();
-        await WorkAsync(cancellationToken);
-    }
-
-    public void Stop() {
-        _logger.LogInformation("Stopping Auto Payment Service");
-
-        if (!_cts.IsCancellationRequested)
-            _cts.Cancel();
-        else
-            throw new Exception("AutoPayment service is already stopped.");
-    }
-
     public async Task WorkAsync(CancellationToken cancellationToken) {
         _logger.LogInformation("Auto Payment Service updating status to Database");
         await _dispatcher.Send(new CreateAutoPaymentServiceLogCommand(AutoPaymentServiceStatuses.Run));
         _logger.LogInformation("Auto Payment Service Runned");
         var cycleTime = _options.TimeRepeatAutoPaymentMilliseconds;
+        _status = AutoPaymentServiceStatuses.Run;
 
-        do {
-            _logger.LogInformation("Auto Payment Service Send Rewards Command");
-            await _handler.Handle(new SendRewardsCommand(), cancellationToken);
-            _logger.LogInformation("Delay {time} ms...", cycleTime);
-            await Task.Delay(cycleTime, cancellationToken);
-            _logger.LogInformation("Delay {time} ms completed", cycleTime);
-        } while (!cancellationToken.IsCancellationRequested);
+        try {
+            do {
+                if (_status == AutoPaymentServiceStatuses.Stop) {
+                    await Task.Delay(TimeSpan.FromSeconds(5), cancellationToken);
+                    continue;
+                }
 
-        _logger.LogInformation("Auto Payment Service stopping");
-        _logger.LogInformation("Auto Payment Service updating status to Database");
-        await _dispatcher.Send(new CreateAutoPaymentServiceLogCommand(AutoPaymentServiceStatuses.Stop));
-        _logger.LogInformation("Auto Payment Service stopped");
+                _logger.LogInformation("Auto Payment Service Send Rewards Command");
+                var result = await _handler.Handle(new SendRewardsCommand(), cancellationToken);
+                _logger.LogInformation("Delay {time} ms at: {currentTime}", cycleTime, DateTimeOffset.Now);
+                await Task.Delay(cycleTime, cancellationToken);
+                _logger.LogInformation("Delay {time} ms completed at: {currentTime}", cycleTime, DateTimeOffset.Now);
+
+                if (_status == AutoPaymentServiceStatuses.Stop)
+                    _logger.LogInformation("Auto Payment Service is paused");
+            } while (!cancellationToken.IsCancellationRequested);
+
+            _logger.LogInformation("Auto Payment Service stopping");
+            _logger.LogInformation("Auto Payment Service updating status to Database");
+            await _dispatcher.Send(new CreateAutoPaymentServiceLogCommand(AutoPaymentServiceStatuses.Stop));
+            _logger.LogInformation("Auto Payment Service stopped");
+        }
+        catch (Exception e) {
+            _logger.LogInformation($"Auto Payment Service stopped with fault: {e}");
+            _status = AutoPaymentServiceStatuses.Stop;
+            throw;
+        }
     }
 
-    public int Status() {
+    public AutoPaymentServiceStatuses Status() {
         return _status;
     }
 }
