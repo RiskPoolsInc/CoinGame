@@ -1,6 +1,8 @@
+using App.Services.AutoPayment;
+
 using Autofac.Extensions.DependencyInjection;
 
-namespace CG.WebApi; 
+namespace CG.WebApi;
 
 public class Program {
     public static void Main(string[] args) {

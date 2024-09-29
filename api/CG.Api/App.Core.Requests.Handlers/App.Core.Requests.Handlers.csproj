@@ -8,6 +8,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\App.Interfaces.Handlers\App.Interfaces.Handlers.csproj" />
+        <ProjectReference Include="..\App.Services.AutoPayment\App.Services.AutoPayment.csproj" />
         <ProjectReference Include="..\App.Services.WalletService\App.Services.WalletService.csproj" />
         <ProjectReference Include="..\Base\App.Caching\App.Caching.csproj" />
         <ProjectReference Include="..\Base\App.Common\App.Common.csproj" />

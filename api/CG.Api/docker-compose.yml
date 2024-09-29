@@ -1,0 +1,6 @@
+﻿services:
+  autopaymentservicehost:
+    image: autopaymentservicehost
+    build:
+      context: .
+      dockerfile: AutoPaymentServiceHost/Dockerfile
