@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 using Microsoft.EntityFrameworkCore.Query;
 
-namespace TNET.Tests.Helpers.AsyncQueryable {
+namespace TS.Tests.Helpers.AsyncQueryable {
 	public class TestAsyncEnumerable<T> : IAsyncEnumerable<T>, IOrderedQueryable<T>, IAsyncQueryProvider {
 		private IEnumerable<T> _enumerable;
 

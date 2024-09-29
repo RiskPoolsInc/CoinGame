@@ -7,7 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\App.Interfaces.ExternalServices\App.Interfaces.ExternalServices.csproj" />
         <ProjectReference Include="..\App.Interfaces.Handlers\App.Interfaces.Handlers.csproj" />
         <ProjectReference Include="..\App.Services.WalletService\App.Services.WalletService.csproj" />
         <ProjectReference Include="..\Base\App.Caching\App.Caching.csproj" />

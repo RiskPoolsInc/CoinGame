@@ -28,8 +28,4 @@
         <ProjectReference Include="..\App.Data.Criterias\App.Data.Criterias.csproj" />
         <ProjectReference Include="..\App.Interfaces.Repositories\App.Interfaces.Repositories.csproj" />
     </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="External\" />
-    </ItemGroup>
 </Project>

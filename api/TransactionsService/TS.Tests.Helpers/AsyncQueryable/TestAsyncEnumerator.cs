@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace TNET.Tests.Helpers.AsyncQueryable {
+namespace TS.Tests.Helpers.AsyncQueryable {
 	public class TestAsyncEnumerator<T> : IAsyncEnumerator<T> {
 		private readonly IEnumerator<T> _enumerator;
 

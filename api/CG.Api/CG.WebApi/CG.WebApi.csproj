@@ -44,7 +44,6 @@
         <ProjectReference Include="..\App.Core.Commands.Handlers\App.Core.Commands.Handlers.csproj" />
         <ProjectReference Include="..\App.Core.Requests.Handlers\App.Core.Requests.Handlers.csproj" />
         <ProjectReference Include="..\App.Data.Sql\App.Data.Sql.csproj" />
-        <ProjectReference Include="..\App.Infrastructure.VirtualWalletService\App.Infrastructure.VirtualWalletService.csproj" />
         <ProjectReference Include="..\App.Repositories\App.Repositories.csproj" />
         <ProjectReference Include="..\ExternalApiServices\ExternalApiServices.csproj" />
     </ItemGroup>

@@ -14,7 +14,6 @@
 
     <ItemGroup>
         <ProjectReference Include="..\App.Core.Messages\App.Core.Messages.csproj" />
-        <ProjectReference Include="..\App.Interfaces.ExternalServices\App.Interfaces.ExternalServices.csproj" />
         <ProjectReference Include="..\App.Interfaces.Handlers\App.Interfaces.Handlers.csproj" />
         <ProjectReference Include="..\App.Services.Base\App.Services.Base.csproj" />
         <ProjectReference Include="..\App.Services.BlockChainExplorer\App.Services.BlockChainExplorer.csproj" />

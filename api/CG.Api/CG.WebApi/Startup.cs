@@ -17,7 +17,6 @@ using App.Data.Sql.Core.Modules;
 using App.Data.Sql.MigrateAfterBuild;
 using App.Data.Sql.Modules;
 using App.Data.Storage.Modules;
-using App.Infrastructure.VirtualWalletService.Modules;
 using App.Repositories.Modules;
 using App.Security.Modules;
 using App.Services.Base.Captcha;

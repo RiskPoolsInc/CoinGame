@@ -2,7 +2,7 @@ using App.Common.Helpers;
 using App.Core.Requests.Wallets;
 using App.Core.ViewModels.Wallets;
 using App.Data.Entities.Wallets;
-using App.Interfaces.Handlers.Requests;
+using App.Interfaces.Handlers.RequestHandlers;
 using App.Interfaces.Repositories.Wallets;
 using App.Services.WalletService;
 

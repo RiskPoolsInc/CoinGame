@@ -133,7 +133,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TS.Domain", "NatsService\TS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TS.MessagesService", "TS.MessagesService\TS.MessagesService.csproj", "{85E734D2-2CD3-4C72-9310-A37230C007A3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TNET.Tests.Helpers", "TNET.Tests.Helpers\TNET.Tests.Helpers.csproj", "{D7AD7DBF-E93C-4324-8982-CB42FC073E03}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TS.Tests.Helpers", "TS.Tests.Helpers\TS.Tests.Helpers.csproj", "{D7AD7DBF-E93C-4324-8982-CB42FC073E03}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TS.Tests.Validators", "tests\TS.Tests.Validators\TS.Tests.Validators.csproj", "{F2D5B779-2B92-4478-A5BF-9C355AD63ECD}"
 EndProject

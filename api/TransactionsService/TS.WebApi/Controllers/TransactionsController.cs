@@ -40,7 +40,7 @@ namespace TS.WebApi.Controllers {
         /// <response code="200">The result of check transaction in completeds</response>
         /// <response code="403">Access Denied</response>
         /// <response code="500">Unexpected server error</response>
-        [HttpPost("completed")]
+        [HttpPost("check")]
         public async Task<IActionResult> CheckCompletingAsync([FromBody] CheckTransactionStateCommand request,
                                                               CancellationToken                       cancellationToken) {
             return Ok(await _dispatcher.Send(request, cancellationToken));

@@ -7,7 +7,7 @@ using App.Core.ViewModels.External;
 using App.Core.ViewModels.Wallets;
 using App.Data.Entities.Wallets;
 using App.Interfaces.Core;
-using App.Interfaces.Handlers.Requests;
+using App.Interfaces.Handlers.RequestHandlers;
 using App.Interfaces.Repositories.Wallets;
 using App.Interfaces.Security;
 using App.Services.WalletService;
@@ -18,7 +18,7 @@ using Moq;
 
 using Shouldly;
 
-using TNET.Tests.Helpers;
+using TS.Tests.Helpers;
 
 namespace CG.Tests.Commands.Handlers.Cases;
 

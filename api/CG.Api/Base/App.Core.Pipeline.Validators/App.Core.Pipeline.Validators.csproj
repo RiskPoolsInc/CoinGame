@@ -14,7 +14,6 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\App.Core.Commands\App.Core.Commands.csproj"/>
-        <ProjectReference Include="..\..\App.Interfaces.ExternalServices\App.Interfaces.ExternalServices.csproj" />
         <ProjectReference Include="..\..\App.Interfaces.Repositories\App.Interfaces.Repositories.csproj"/>
         <ProjectReference Include="..\..\App.Services.WalletService\App.Services.WalletService.csproj" />
         <ProjectReference Include="..\App.Common\App.Common.csproj"/>

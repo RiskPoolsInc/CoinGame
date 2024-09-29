@@ -29,7 +29,7 @@
       <ProjectReference Include="..\App.Core.Commands\App.Core.Commands.csproj" />
       <ProjectReference Include="..\App.Repositories\App.Repositories.csproj" />
       <ProjectReference Include="..\Base\App.Data.Mapping\App.Data.Mapping.csproj" />
-      <ProjectReference Include="..\TNET.Tests.Helpers\TNET.Tests.Helpers.csproj" />
+      <ProjectReference Include="..\TS.Tests.Helpers\TS.Tests.Helpers.csproj" />
     </ItemGroup>
 
 </Project>

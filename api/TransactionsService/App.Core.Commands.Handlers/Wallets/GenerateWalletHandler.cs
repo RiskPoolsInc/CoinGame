@@ -1,12 +1,12 @@
 using App.Core.Commands.Wallets;
-using App.Core.Enums;
 using App.Core.ViewModels.Wallets;
 using App.Interfaces.Core;
+using App.Interfaces.Handlers.CommandHandlers;
 using App.Services.WalletService;
 
 namespace App.Core.Commands.Handlers.Wallets;
 
-public class GenerateWalletHandler : IRequestHandler<GenerateWalletCommand, WalletView> {
+public class GenerateWalletHandler : IGenerateWalletHandler {
     private readonly IWalletService _walletService;
     private readonly IDispatcher _dispatcher;
     private readonly IMapper _mapper;

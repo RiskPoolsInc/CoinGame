@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using TNET.Tests.Helpers.AsyncQueryable;
 
-namespace TNET.Tests.Helpers {
+using TS.Tests.Helpers.AsyncQueryable;
+
+namespace TS.Tests.Helpers {
     public static class MoqExtensions {
         public static IQueryable<TEntity> AsAsyncQueryable<TEntity>(this IEnumerable<TEntity> data) where TEntity : class {
             var query = data.AsQueryable();

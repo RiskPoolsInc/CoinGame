@@ -24,7 +24,7 @@ public class WalletsController : BaseController {
     }
 
     /// <summary>
-    /// Generate new wallet
+    /// Generate wallet
     /// </summary>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>Returns generated wallet</returns>
@@ -47,6 +47,19 @@ public class WalletsController : BaseController {
     [HttpPost("import")]
     public async Task<IActionResult> ImportWalletAsync([FromBody] ImportWalletCommand request, CancellationToken cancellationToken) {
         return Ok(await _dispatcher.Send(_mapper.Map<CreateImportedWalletCommand>(request), cancellationToken));
+    }
+
+    /// <summary>
+    /// Get wallet balance
+    /// </summary>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>Returns created wallet</returns>
+    /// <response code="200">The wallet balance</response>
+    /// <response code="403">Access Denied</response>
+    /// <response code="500">Unexpected server error</response>
+    [HttpGet("balance")]
+    public async Task<IActionResult> GetWalletBalanceByAddressAsync([FromQuery] string address, CancellationToken cancellationToken) {
+        return Ok(await _dispatcher.Send(new GetBalanceByAddressRequest(address), cancellationToken));
     }
 
     /// <summary>

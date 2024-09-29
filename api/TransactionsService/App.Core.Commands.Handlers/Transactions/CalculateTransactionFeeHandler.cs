@@ -1,7 +1,7 @@
 using App.Core.Commands.Transactions;
 using App.Core.Requests.Wallets;
 using App.Core.ViewModels.External;
-using App.Interfaces.Handlers.Requests;
+using App.Interfaces.Handlers.RequestHandlers;
 using App.Services.WalletService;
 using App.Services.WalletService.Models;
 
