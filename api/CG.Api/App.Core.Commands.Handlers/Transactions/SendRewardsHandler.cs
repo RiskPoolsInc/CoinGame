@@ -28,13 +28,15 @@ public class SendRewardsHandler : ISendRewardsHandler {
     }
 
     public async Task<TransactionRewardView[]> Handle(SendRewardsCommand request, CancellationToken cancellationToken) {
-        var completedWinGamesWithoutTransactions = await _gameRepository.Where(new CompletedWinGamesWithoutTransactionsFilter())
-                                                                        .ToListAsync(cancellationToken);
+        var notPayedWinGames = await _gameRepository.Where(new NotPayedWinGamesFilter())
+                                                    .Include(a => a.TransactionUserRewards)
+                                                    .Include(a => a.Wallet)
+                                                    .ToListAsync(cancellationToken);
 
-        if (!completedWinGamesWithoutTransactions.Any())
+        if (!notPayedWinGames.Any())
             return new TransactionRewardView[0];
 
-        var rewardsReceivers = completedWinGamesWithoutTransactions.Select(a => new GameRewardReceiverModel {
+        var rewardsReceivers = notPayedWinGames.Select(a => new GameRewardReceiverModel {
             Address = a.Wallet.Hash,
             Sum = a.RewardSum,
             GameId = a.Id

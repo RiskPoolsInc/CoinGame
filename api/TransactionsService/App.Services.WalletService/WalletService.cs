@@ -7,11 +7,8 @@ using System.Web;
 
 using App.Core.ViewModels.External;
 using App.Services.Telegram.Options;
+using App.Services.WalletService.Helpers;
 using App.Services.WalletService.Models;
-
-using Newtonsoft.Json;
-
-using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace App.Services.WalletService;
 
@@ -39,7 +36,7 @@ public class WalletService : IWalletService {
 
     public async Task<GeneratedWalletView> GenerateWallet(CancellationToken cancellationToken = default) {
         var path = GetPath(WalletServiceEnpointTypes.GenerateWallet);
-        var result = await Put<GeneratedWalletView>(path, null, cancellationToken);
+        var result = await Put<GeneratedWalletView>(path);
         return result;
     }
 
@@ -160,84 +157,37 @@ public class WalletService : IWalletService {
     #region Private Methods
 
     private object PrepareTransactionRequestBody(string signerPrivateKey, TransactionReceiverModel[] toAddresses) {
-        var receivers = toAddresses.Select(a => (a.Address, a.Sum)).ToArray();
-        return PrepareTransactionRequestBody(signerPrivateKey, receivers);
-    }
+        var receiversObjectList = new List<object>();
 
-    private object PrepareTransactionRequestBody(string signerPrivateKey, (string address, decimal sum)[] receivers) {
-        var receiversArray = new object[receivers.Length];
-
-        for (var i = 0; i < receiversArray.Length; i++) {
-            receiversArray[i] = new {
-                address = receivers[i].address,
-                sum = receivers[i].sum
-            };
+        foreach (var receiverModel in toAddresses) {
+            receiversObjectList.Add(new {
+                address = receiverModel.Address,
+                sum = receiverModel.Sum
+            });
         }
 
         var request = new {
             signerPrivateKey = signerPrivateKey,
-            receivers = receiversArray
+            receivers = receiversObjectList.ToArray()
         };
         return request;
     }
 
-    private async Task<T> Post<T>(string endpointPath, object requestValue, CancellationToken cancellationToken = default) where T : class {
-        using var client = new HttpClient(new HttpClientHandler());
-        AddHeaders(client);
-        var json = JsonSerializer.Serialize(requestValue);
-        var result = await SendPostJson(client, endpointPath, requestValue, cancellationToken);
-
-        if (result.IsSuccessStatusCode)
-            return DeserializeContent<T>(result.Content);
-
-        throw new HttpRequestException(result.Content);
-    }
-
-    private T DeserializeContent<T>(string responceContent) where T : class {
-        if (string.IsNullOrWhiteSpace(responceContent))
-            return null as T;
-
-        return JsonConvert.DeserializeObject<T>(responceContent);
-    }
-
-    private async Task<T> Put<T>(string            endpointPath, Dictionary<string, string>? queryProperties = null,
-                                 CancellationToken cancellationToken = default) where T : class {
-        using var client = new HttpClient(new HttpClientHandler());
-        AddHeaders(client);
-
-        var response = await SendPutRequest<T>(client, endpointPath, queryProperties, null,
-            cancellationToken);
-        return response;
-    }
-
-    private async void AddHeaders(HttpClient client) {
+    private HttpClient NewHttpClient() {
+        var client = new HttpClient(new HttpClientHandler());
         client.DefaultRequestHeaders.Add(_walletServiceOptions.HeaderPrivateKeyOptionName, _walletServiceOptions.PrivateKey);
         client.DefaultRequestHeaders.Add("origin", _walletServiceOptions.Origin);
+        return client;
     }
 
-    private async Task<T> Get<T>(string            endpointPath, Dictionary<string, string>? queryProperties = null,
-                                 CancellationToken cancellationToken = default) where T : class {
-        using var client = new HttpClient(new HttpClientHandler());
-        AddHeaders(client);
-        var response = await SendGetRequest<T>(client, endpointPath, queryProperties, cancellationToken);
-        return response;
-    }
-
-    private async Task<T> SendPutRequest<T>(HttpClient                  client,
-                                            string                      endPoint,
-                                            Dictionary<string, string>? queryProperties   = null,
-                                            HttpContent?                httpContent       = null,
-                                            CancellationToken           cancellationToken = default) where T : class {
-        using (client) {
-            var uri = AddQueryProperties(endPoint, queryProperties);
-            var response = await client.PutAsync(uri, httpContent, cancellationToken);
-            var content = await response.Content.ReadAsStringAsync(cancellationToken);
-
-            if (response.IsSuccessStatusCode)
-                return DeserializeContent<T>(content);
-
-            throw new HttpRequestException(content);
-        }
+    private async Task<T> Put<T>(string                      endPoint,
+                                 Dictionary<string, string>? queryProperties   = null,
+                                 HttpContent?                httpContent       = null,
+                                 CancellationToken           cancellationToken = default) where T : class {
+        using var client = NewHttpClient();
+        var uri = AddQueryProperties(endPoint, queryProperties);
+        var response = await client.PutAsync(uri, httpContent, cancellationToken);
+        return await response.DecerializeResponce<T>();
     }
 
     private Uri AddQueryProperties(string url, Dictionary<string, string>? queryProperties = null) {
@@ -256,32 +206,20 @@ public class WalletService : IWalletService {
         return new Uri(url);
     }
 
-    private async Task<T> SendGetRequest<T>(HttpClient                  client,
-                                            string                      endPoint,
-                                            Dictionary<string, string>? queryProperties   = null,
-                                            CancellationToken           cancellationToken = default) where T : class {
-        using (client) {
-            var uri = AddQueryProperties(endPoint, queryProperties);
-
-            var response = await client.GetAsync(uri, cancellationToken);
-            var content = await response.Content.ReadAsStringAsync(cancellationToken);
-
-            if (response.IsSuccessStatusCode)
-                return DeserializeContent<T>(content);
-
-            throw new HttpRequestException(content);
-        }
+    private async Task<T> Get<T>(string            endPoint, Dictionary<string, string>? queryProperties = null,
+                                 CancellationToken cancellationToken = default) where T : class {
+        using var client = NewHttpClient();
+        var uri = AddQueryProperties(endPoint, queryProperties);
+        var response = await client.GetAsync(uri, cancellationToken);
+        return await response.DecerializeResponce<T>();
     }
 
-    private async Task<(string Content, HttpStatusCode Code, bool IsSuccessStatusCode)> SendPostJson(HttpClient client,
-        string endPoint,
-        object entity,
-        CancellationToken cancellationToken = default) {
+    private async Task<T> Post<T>(string            endPoint, object entity,
+                                  CancellationToken cancellationToken = default) where T : class {
+        using var client = NewHttpClient();
         var url = new Uri(endPoint);
         var response = await client.PostAsJsonAsync(url, entity, cancellationToken);
-        var resultCode = response.StatusCode;
-        var content = await response.Content.ReadAsStringAsync(cancellationToken);
-        return (content, resultCode, response.IsSuccessStatusCode);
+        return await response.DecerializeResponce<T>();
     }
 
     private bool IsSuccessStatusCode(int status) {

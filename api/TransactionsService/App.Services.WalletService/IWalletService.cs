@@ -9,10 +9,7 @@ public interface IWalletService {
     public Task<TransactionIsCompletedView> TransactionIsCompleted(string hash, CancellationToken cancellationToken = default);
     public Task<object> TransactionMaxRate(string fromAddress, string privateKey, TransactionReceiverModel[] receivers);
     public Task<TransactionFeeView> TransactionFee(string address, string privateKey, TransactionReceiverModel[] receivers);
-
-    public Task<GenerateTransactionView> GenerateTransaction(string                     address, string privateKey,
-                                                             TransactionReceiverModel[] toAddresses);
-
-    public string EncryptPrivateKey(string privateKey,    Guid key);
+    public Task<GenerateTransactionView> GenerateTransaction(string address, string privateKey, TransactionReceiverModel[] toAddresses);
+    public string EncryptPrivateKey(string privateKey, Guid key);
     public string DecryptPrivateKey(string encryptedText, Guid key);
 }

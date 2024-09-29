@@ -6,8 +6,8 @@ using App.Data.Entities.Games;
 
 namespace App.Data.Criterias.Statistics;
 
-public class CompletedWinGamesWithoutTransactionsFilter : ACriteria<Game> {
+public class NotPayedWinGamesFilter : ACriteria<Game> {
     public override Expression<Func<Game, bool>> Build() {
-        return a => a.StateId == (int)GameStateTypes.Completed && !a.TransactionUserRewards.Any(s => s.GameId == a.Id);
+        return a => a.StateId == (int)GameStateTypes.Completed && a.TransactionUserRewards.Any(s => s.GameId == a.Id);
     }
 }
