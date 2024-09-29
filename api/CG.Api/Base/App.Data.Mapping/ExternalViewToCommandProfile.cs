@@ -9,7 +9,8 @@ public class ExternalViewToCommandProfile : Profile {
     public ExternalViewToCommandProfile() {
         CreateMap<GeneratedWalletView, Wallet>()
            .ForMember(a => a.Hash, opt => opt.MapFrom(s => s.Address))
-           .ForMember(a => a.PrivateKey, opt => opt.MapFrom(s => s.PrivateKey))
+           .ForMember(a => a.Id, opt => opt.MapFrom(s => s.Id))
+           .ForMember(a => a.ImportedWalletId, opt => opt.MapFrom(s => s.Id))
            .ForAllOtherMembers(s => s.Ignore());
     }
 }

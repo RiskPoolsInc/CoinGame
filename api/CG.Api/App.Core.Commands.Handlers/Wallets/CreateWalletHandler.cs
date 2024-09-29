@@ -1,12 +1,10 @@
 ﻿using App.Common.Helpers;
 using App.Core.Commands.Wallets;
 using App.Core.Enums;
-using App.Core.ViewModels.External;
 using App.Core.ViewModels.Wallets;
 using App.Data.Entities.Wallets;
 using App.Interfaces.Core;
 using App.Interfaces.Repositories.Wallets;
-using App.Services.WalletService;
 
 namespace App.Core.Commands.Handlers.Wallets;
 
@@ -23,13 +21,14 @@ public class CreateWalletHandler : IRequestHandler<CreateWalletCommand, WalletVi
     }
 
     public async Task<WalletView> Handle(CreateWalletCommand request, CancellationToken cancellationToken) {
-        var generateWalletCommand = new GenerateWalletCommand();
-        var generatedWallet = await _dispatcher.Send(generateWalletCommand);
-
+        var generatedWallet = await _dispatcher.Send(new GenerateWalletCommand());
         var wallet = _mapper.Map<Wallet>(generatedWallet);
+
+        if (_walletRepository.Any(a => a.Id == generatedWallet.Id))
+            wallet.Id = Guid.NewGuid();
+
         wallet.TypeId = (int)WalletTypes.Game;
         _walletRepository.Add(wallet);
-        wallet.PrivateKey = WalletService.EncryptPrivateKey(generatedWallet.PrivateKey, wallet.Id.ToString("N"));
         await _walletRepository.SaveAsync(cancellationToken);
 
         var model = await _walletRepository.Get(wallet.Id).SingleAsync<Wallet, WalletView>(cancellationToken);

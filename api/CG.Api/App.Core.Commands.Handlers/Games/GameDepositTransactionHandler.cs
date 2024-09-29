@@ -16,7 +16,7 @@ public class GameDepositTransactionHandler : IRequestHandler<GameDepositTransact
     private readonly IWalletRepository _walletRepository;
     private readonly ITransactionGameDepositRepository _gameDepositRepository;
 
-    public GameDepositTransactionHandler(IWalletService                     walletService, IWalletRepository walletRepository,
+    public GameDepositTransactionHandler(IWalletService                    walletService, IWalletRepository walletRepository,
                                          ITransactionGameDepositRepository gameDepositRepository) {
         _walletService = walletService;
         _walletRepository = walletRepository;
@@ -25,7 +25,7 @@ public class GameDepositTransactionHandler : IRequestHandler<GameDepositTransact
 
     public async Task<TransactionGameDepositView> Handle(GameDepositTransactionCommand request, CancellationToken cancellationToken) {
         var wallet = await _walletRepository.Get(request.WalletId).SingleAsync(cancellationToken);
-        var generatedTransaction = await _walletService.GenerateTransactionGameDeposit(wallet.Hash, wallet.PrivateKey, request.Sum);
+        var generatedTransaction = await _walletService.GenerateTransactionGameDeposit(wallet.ImportedWalletId, request.Sum);
 
         var transaction = new TransactionGameDeposit {
             GameId = request.GameId,

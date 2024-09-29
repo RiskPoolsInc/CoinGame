@@ -5,15 +5,15 @@ namespace App.Services.WalletService;
 
 public interface IWalletService {
     Task<GeneratedWalletView> GenerateWallet();
-    Task<BalanceView> GetBalance(string                                 address);
-    Task<TransactionFeeView> TransactionFee(string           from, string            privateKey, decimal sum);
-    Task<object> TransactionMaxRate(string           from, string            privateKey, decimal sum);
+    Task<BalanceView> GetBalance(Guid importedWalletId);
+    Task<TransactionFeeView> TransactionFee(Guid importedWalletId, decimal sum);
+    Task<object> TransactionMaxRate(Guid importedWalletId, decimal sum);
     Task<TransactionIsCompletedView> CheckTransactionIsCompleted(string hash, CancellationToken cancellationToken = default);
-    Task<GenerateTransactionView> GenerateTransactionService(decimal    roundSum);
-    Task<GenerateTransactionView> GenerateTransactionGameDeposit(string from,     string  privateKey, decimal sum);
-    Task<GenerateTransactionView> GenerateTransactionRefund(string      from,     string  privateKey);
-    Task<GenerateTransactionView> GenerateTransactionReward(string      toWallet, decimal sum);
+    Task<GenerateTransactionView> GenerateTransactionService(decimal roundSum);
+    Task<GenerateTransactionView> GenerateTransactionGameDeposit(Guid importedWalletId, decimal sum);
+    Task<GenerateTransactionView> GenerateTransactionRefund(Guid importedWalletId);
+    Task<GenerateTransactionView> GenerateTransactionReward(string toWallet, decimal sum);
     Task<TransactionGameRewardView[]> GenerateTransactionRewards(GameRewardReceiverModel[] receivers);
     bool NeedServiceTransaction();
-    string ProfitWalletAddress { get; }
+    string ProfitWalletId { get; }
 }

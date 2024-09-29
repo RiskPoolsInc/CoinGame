@@ -28,11 +28,11 @@ public class CreateGameValidator : AbstractValidator<CreateGameCommand> {
            .MustAsync(async (cmd, ct) => {
                 var wallet = await walletRepository.Get(cmd.WalletId).SingleAsync(ct);
 
-                var balanceView = await walletService.GetBalance($"Ux{wallet.Hash}");
+                var balanceView = await walletService.GetBalance(wallet.ImportedWalletId);
 
-                if (balanceView.Balance < cmd.Rate) {
-                    var maxRate = await walletService.TransactionMaxRate(wallet.Hash, wallet.PrivateKey, balanceView.Balance);
-                }
+                // if (balanceView.Balance < cmd.Rate) {
+                //     var maxRate = await walletService.TransactionMaxRate(wallet.Hash, wallet.PrivateKey, balanceView.Balance);
+                // }
 
                 return true;
                 return balanceView.Balance > cmd.Rate + 704; //TODO

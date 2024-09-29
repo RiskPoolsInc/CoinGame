@@ -13,7 +13,7 @@ public class GetWalletProfitBalanceHandler : IRequestHandler<GetWalletProfitBala
     }
 
     public async Task<BalanceView> Handle(GetWalletProfitBalanceRequest request, CancellationToken cancellationToken) {
-        var balanceView = await _walletService.GetBalance(_walletService.ProfitWalletAddress);
+        var balanceView = await _walletService.GetBalance(Guid.Parse(_walletService.ProfitWalletId));
         return balanceView;
     }
 }

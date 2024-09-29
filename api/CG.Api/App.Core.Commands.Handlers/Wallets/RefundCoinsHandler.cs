@@ -36,7 +36,7 @@ public class RefundCoinsHandler : IRequestHandler<RefundCoinsCommand, Transactio
         if (await _walletRepository.AnyAsync(a => a.Id == request.WalletId && a.RefundId != null, cancellationToken))
             throw new Exception("Refund was requested");
 
-        var generatedTransactionRefund = await _walletService.GenerateTransactionRefund(wallet.Hash, wallet.PrivateKey);
+        var generatedTransactionRefund = await _walletService.GenerateTransactionRefund(wallet.ImportedWalletId);
 
         var transaction = new TransactionUserRefund() {
             WalletHashFrom = wallet.Hash,

@@ -10,9 +10,10 @@ public class Wallet : ArchivableEntity {
 
     public int TypeId { get; set; }              // [Game, Service, Commission]
     public virtual WalletType Type { get; set; } // [Game, Service, Commission]
-    public string PrivateKey { get; set; }
+    public string? PrivateKey { get; set; }
     public bool IsBlocked { get; set; }
     public Guid? RefundId { get; set; }
+    public Guid ImportedWalletId { get; set; }
     public virtual TransactionUserRefund Refund { get; set; }
 
     public virtual ICollection<Game> Games { get; set; }
