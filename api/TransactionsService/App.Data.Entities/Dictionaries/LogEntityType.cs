@@ -2,6 +2,6 @@ using App.Data.Entities.Core;
 
 namespace App.Data.Entities.Dictionaries;
 
-public class LogType: DictionaryEntity {
+public class LogEntityType: DictionaryEntity {
      
 }

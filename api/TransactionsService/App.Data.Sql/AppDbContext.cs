@@ -1,5 +1,6 @@
 ﻿using App.Data.Entities.Dictionaries;
 using App.Data.Entities.ServiceProfiles;
+using App.Data.Entities.TransactionLogs;
 using App.Data.Entities.TransactionReceivers;
 using App.Data.Entities.Transactions;
 using App.Data.Entities.Wallets;
@@ -26,6 +27,7 @@ public class AppDbContext : BaseDbContext, IAppDbContext {
     public DbSet<BaseTransaction> Transactions { get; set; }
     public DbSet<ServiceProfile> ServiceProfiles { get; set; }
     public DbSet<TransactionReceiver> TransactionReceivers { get; set; }
+    public DbSet<LogEntity> LogEntities { get; set; }
 
     #endregion
 
@@ -35,6 +37,7 @@ public class AppDbContext : BaseDbContext, IAppDbContext {
     public DbSet<TransactionStateType> TransactionStateTypes { get; set; }
     public DbSet<WalletType> WalletTypes { get; set; }
     public DbSet<TransactionReceiverType> TransactionReceiverTypes { get; set; }
+    public DbSet<LogEntityType> LogEntityTypes { get; set; }
 
     #endregion
 }

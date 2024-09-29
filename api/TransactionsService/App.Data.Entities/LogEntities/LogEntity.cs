@@ -8,7 +8,7 @@ namespace App.Data.Entities.TransactionLogs;
 
 public class LogEntity : BaseEntity {
     public int TypeId { get; set; }
-    public virtual LogType Type { get; set; }
+    public virtual LogEntityType Type { get; set; }
     public string WalletServiceRequestBody { get; set; }
     public string? WalletServiceResponceBody { get; set; }
     public string? Error { get; set; }
