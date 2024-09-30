@@ -12,15 +12,14 @@ public class AutoPaymentsHostedService : BackgroundService {
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken) {
-        await _autoPaymentService.WorkAsync(stoppingToken);
-        // while (!stoppingToken.IsCancellationRequested) {
-        //     try {
-        //         await _autoPaymentService.WorkAsync(stoppingToken);
-        //     }
-        //     catch (Exception e) {
-        //         _logger.LogError(e.ToString());
-        //         await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);
-        //     }
-        // }
+        while (!stoppingToken.IsCancellationRequested) {
+            try {
+                await _autoPaymentService.WorkAsync(stoppingToken);
+            }
+            catch (Exception e) {
+                _logger.LogError(e.ToString());
+                await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);
+            }
+        }
     }
 }
