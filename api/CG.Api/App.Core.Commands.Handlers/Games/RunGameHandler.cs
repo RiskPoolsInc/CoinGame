@@ -107,15 +107,15 @@ public class RunGameHandler : IRequestHandler<RunGameCommand, GameView> {
         return await _dispatcher.Send(new GameServiceTransactionComand(currentGame.WalletId, currentGameId));
     }
 
-    private async Task<TransactionRewardView> GameIsWin(int gameCounter, Guid currentGameId) {
+    private async Task GameIsWin(int gameCounter, Guid currentGameId) {
         var currentGame = await _gameRepository.FindAsync(currentGameId, default);
         currentGame.StateId = (int)GameStateTypes.Completed;
         currentGame.ResultId = (int)GameResultTypes.Win;
         currentGame.RewardSum = currentGame.RoundSum * gameCounter;
         await _gameRepository.SaveAsync(default);
 
-        var transactionService = new CreateTransactionRewardCommand(currentGameId);
-        return await _dispatcher.Send(transactionService);
+        // var transactionService = new CreateTransactionRewardCommand(currentGameId);
+        // return await _dispatcher.Send(transactionService);
     }
 
     private async Task RandomDelay(int from, int to) {
