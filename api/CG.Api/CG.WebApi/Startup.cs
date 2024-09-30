@@ -222,6 +222,8 @@ public class Startup
                 options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
         ConfigureCompression(services);
         services.AddHttpConfig();
+        services.AddHostedService<AutoPaymentsHostedService>();
+
         // ConfigureAuthentication(services, configurationFactory.Create<OAuthConfig>());
     }
 
@@ -251,7 +253,6 @@ public class Startup
                 options.TokenValidationParameters = tokenValidationParameters;
             });
         services.AddHttpConfig();
-        services.AddHostedService<AutoPaymentsHostedService>();
     }
 
 
