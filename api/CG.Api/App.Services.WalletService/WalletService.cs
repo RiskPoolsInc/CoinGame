@@ -172,7 +172,7 @@ public class WalletService : IWalletService {
 
             var userGamesRewards = gameRewardReceiverModel.Select(a => new TransactionGameRewardView {
                 Hash = null,
-                Sum = a.Sum * (100m - commissionPercent),
+                Sum = a.Sum * (1m - commissionPercent),
                 WalletFrom = walletFromAddress,
                 ReceiverAddress = receiverAddress,
                 GameId = a.GameId,
@@ -182,7 +182,7 @@ public class WalletService : IWalletService {
                 Address = receiverAddress,
                 Sum = userGamesRewards.Sum(a => a.Sum),
             };
-            commission += sumReward - rewardsReceiver.Sum;
+            commission += (sumReward - rewardsReceiver.Sum);
         }
 
         var commissionReceiver = new ReceiverCoinsModel {

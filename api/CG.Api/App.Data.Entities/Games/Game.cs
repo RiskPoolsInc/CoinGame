@@ -22,4 +22,6 @@ public class Game : AuditableEntity {
 
     public virtual ICollection<GameRound> GameRounds { get; set; }
     public virtual ICollection<TransactionUserReward> TransactionUserRewards { get; set; }
+    public virtual ICollection<TransactionGameDeposit> TransactionGameDeposits { get; set; }
+    public virtual ICollection<TransactionUserRefund> TransactionUserRefunds { get; set; }
 }

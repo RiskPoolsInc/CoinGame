@@ -17,6 +17,5 @@ public class WalletConfiguration : EntityTypeConfiguration<Wallet> {
                .WithMany()
                .HasForeignKey(a => a.RefundId)
                .OnDelete(DeleteBehavior.Restrict);
-        
     }
 }
