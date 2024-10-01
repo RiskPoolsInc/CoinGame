@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Google.Cloud.RecaptchaEnterprise.V1" Version="2.3.0" />
+        <PackageReference Include="MediatR" Version="10.0.1" />
+        <PackageReference Include="SixLabors.ImageSharp" Version="3.0.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\App.Interfaces.Handlers\App.Interfaces.Handlers.csproj" />
+        <ProjectReference Include="..\App.Services.BlockChainExplorer\App.Services.BlockChainExplorer.csproj" />
+        <ProjectReference Include="..\App.Services.ExternalSystemRequests\App.Services.ExternalSystemRequests.csproj" />
+        <ProjectReference Include="..\App.Services.Telegram\App.Services.Telegram.csproj" />
+        <ProjectReference Include="..\App.Services.UbikiriApiService\App.Services.UbikiriApiService.csproj" />
+        <ProjectReference Include="..\App.Services.WalletService\App.Services.WalletService.csproj" />
+        <ProjectReference Include="..\Base\App.Core.Configurations\App.Core.Configurations.csproj" />
+        <ProjectReference Include="..\Base\App.Interfaces.Core\App.Interfaces.Core.csproj" />
+        <ProjectReference Include="..\Base\App.Interfaces.Data.Sql\App.Interfaces.Data.Sql.csproj" />
+        <ProjectReference Include="..\Base\App.Interfaces.Security\App.Interfaces.Security.csproj" />
+        <ProjectReference Include="..\App.Core.Commands\App.Core.Commands.csproj" />
+        <ProjectReference Include="..\App.Core.Requests.Handlers\App.Core.Requests.Handlers.csproj" />
+        <ProjectReference Include="..\App.Data.Criterias\App.Data.Criterias.csproj" />
+        <ProjectReference Include="..\App.Interfaces.Repositories\App.Interfaces.Repositories.csproj" />
+    </ItemGroup>
+</Project>

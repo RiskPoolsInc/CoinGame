@@ -1,0 +1,25 @@
+name: transactionservice
+services:
+  transactionservice.api:
+    container_name: transactionservice
+    build:
+      context: ../
+      dockerfile: TS.WebApi/Dockerfile
+    ports:
+      - 7001:7001
+    #    restart: always
+    environment:
+      ASPNETCORE_URLS: http://+:7001
+      ConnectionStrings__AppDbContext: "Host=host.docker.internal;Port=6001;Database=TransactionService_Dev;Username=postgres;Password=Qwerty123;"
+    depends_on:
+      - transactionservice_db
+  transactionservice_db:
+    container_name: transactionservice_db
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: Qwerty123
+      POSTGRES_USER: postgres
+      POSTGRES_DB: TransactionService_Dev
+#    restart: always
+    ports:
+      - "6001:5432"
