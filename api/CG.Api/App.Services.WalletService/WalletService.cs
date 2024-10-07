@@ -194,7 +194,9 @@ public class WalletService : IWalletService {
                 ReceiverAddress = receiverAddress,
                 GameId = a.GameId,
             });
-
+            
+            gamesRewards.AddRange(userGamesRewards);
+            
             var rewardsReceiver = new ReceiverCoinsModel {
                 Address = receiverAddress,
                 Sum = userGamesRewards.Sum(a => a.Sum),
