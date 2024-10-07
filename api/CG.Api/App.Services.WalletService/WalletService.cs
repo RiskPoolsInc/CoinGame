@@ -199,6 +199,7 @@ public class WalletService : IWalletService {
                 Address = receiverAddress,
                 Sum = userGamesRewards.Sum(a => a.Sum),
             };
+            rewardsReceivers.Add(rewardsReceiver);
             commission += (sumReward - rewardsReceiver.Sum);
         }
 
