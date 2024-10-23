@@ -11,7 +11,6 @@ public class TransactionReceiverConfiguration : EntityTypeConfiguration<Transact
         builder.HasOne(a => a.Type)
                .WithMany()
                .HasForeignKey(a => a.TypeId)
-               .OnDelete(DeleteBehavior.Restrict)
-            ;
+               .OnDelete(DeleteBehavior.Restrict);
     }
 }

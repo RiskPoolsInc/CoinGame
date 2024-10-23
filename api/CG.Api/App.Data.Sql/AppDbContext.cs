@@ -1,4 +1,5 @@
 ﻿using App.Data.Entities;
+using App.Data.Entities.AutoPaymentServiceLogs;
 using App.Data.Entities.Dictionaries;
 using App.Data.Entities.GameRounds;
 using App.Data.Entities.Games;
@@ -35,6 +36,7 @@ public class AppDbContext : BaseDbContext, IAppDbContext {
     public DbSet<TransactionReceiver> TransactionReceivers { get; set; }
     public DbSet<Game> Games { get; set; }
     public DbSet<GameRound> GameRounds { get; set; }
+    public DbSet<AutoPaymentServiceLog> AutoPaymentServiceLogs { get; set; }
 
     #endregion
 
@@ -53,6 +55,7 @@ public class AppDbContext : BaseDbContext, IAppDbContext {
     public DbSet<WalletType> WalletTypes { get; set; }
     public DbSet<TransactionReceiverType> TransactionReceiverTypes { get; set; }
     public DbSet<GameStateType> GameStateTypes { get; set; }
+    public DbSet<AutoPaymentServiceLogType> AutoPaymentServiceLogTypes { get; set; }
 
     #endregion
 }

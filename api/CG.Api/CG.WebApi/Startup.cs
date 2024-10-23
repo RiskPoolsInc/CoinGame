@@ -20,6 +20,7 @@ using App.Data.Storage.Modules;
 using App.Infrastructure.VirtualWalletService.Modules;
 using App.Repositories.Modules;
 using App.Security.Modules;
+using App.Services.AutoPayment.Modules;
 using App.Services.Base.Captcha;
 using App.Services.BlockChainExplorer.Modules;
 using App.Services.Telegram.Modules;
@@ -33,6 +34,7 @@ using App.Web.Core.Options;
 using Autofac;
 
 using CG.WebApi.Configuration.Modules;
+using CG.WebApi.Services;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
@@ -108,7 +110,8 @@ public class Startup
         builder.RegisterModule<AppSettingsModule>();
         builder.RegisterModule<BlockChainExplorerModule>();
         builder.RegisterModule<WalletServiceModule>();
-        
+        builder.RegisterModule<AutoPaymentServiceModule>();
+
         builder.RegisterModule<MigrateAfterBuildModule<RunMigrateAfterBuild, string[]>>();
     }
 
@@ -219,6 +222,8 @@ public class Startup
                 options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
         ConfigureCompression(services);
         services.AddHttpConfig();
+        services.AddHostedService<AutoPaymentsHostedService>();
+
         // ConfigureAuthentication(services, configurationFactory.Create<OAuthConfig>());
     }
 

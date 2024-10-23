@@ -1,6 +1,7 @@
 using App.Data.Entities.Core;
 using App.Data.Entities.Dictionaries;
 using App.Data.Entities.GameRounds;
+using App.Data.Entities.Transactions;
 using App.Data.Entities.Wallets;
 
 namespace App.Data.Entities.Games;
@@ -20,4 +21,8 @@ public class Game : AuditableEntity {
     public decimal RewardSum { get; set; }
 
     public virtual ICollection<GameRound> GameRounds { get; set; }
+    
+    public virtual ICollection<TransactionUserReward> TransactionUserRewards { get; set; }
+    public virtual ICollection<TransactionGameDeposit> TransactionGameDeposits { get; set; }
+    public virtual ICollection<TransactionUserRefund> TransactionUserRefunds { get; set; }
 }

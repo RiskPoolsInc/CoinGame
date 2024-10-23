@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Base\App.Common\App.Common.csproj" />
+        <ProjectReference Include="..\Base\App.Core.ViewModels\App.Core.ViewModels.csproj" />
+        <ProjectReference Include="..\Base\App.Interfaces.Security\App.Interfaces.Security.csproj" />
+        <ProjectReference Include="..\Base\App.Security\App.Security.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="MediatR" Version="10.0.1" />
+        <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
+    </ItemGroup>
+
+</Project>

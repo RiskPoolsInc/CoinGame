@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <LangVersion>default</LangVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Autofac" Version="6.4.0"/>
+        <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.9"/>
+        <PackageReference Include="MimeTypeMap.List" Version="2.1.0"/>
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.1"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\App.Core.Configurations\App.Core.Configurations.csproj"/>
+        <ProjectReference Include="..\App.Data.Storage.Core\App.Data.Storage.Core.csproj"/>
+        <ProjectReference Include="..\App.Interfaces.Data.Storage\App.Interfaces.Data.Storage.csproj"/>
+    </ItemGroup>
+
+</Project>

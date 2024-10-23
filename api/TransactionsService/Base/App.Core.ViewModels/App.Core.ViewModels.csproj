@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\App.Core.Enums\App.Core.Enums.csproj" />
+        <ProjectReference Include="..\App.Interfaces.Core.Requests\App.Interfaces.Core.Requests.csproj" />
+        <ProjectReference Include="..\App.Core.Enums\App.Core.Enums.csproj" />
+    </ItemGroup>
+
+</Project>

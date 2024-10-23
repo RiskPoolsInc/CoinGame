@@ -19,18 +19,18 @@ public class CreateTransactionRewardHandler : IRequestHandler<CreateTransactionR
     private readonly IWalletRepository _walletRepository;
     private readonly IGameRepository _gameRepository;
     private readonly IGameRoundRepository _gameRoundRepository;
-    private readonly ITransactionRewardRepository _transactionRewardRepository;
+    private readonly ITransactionUserRewardRepository _transactionUserRewardRepository;
 
     public CreateTransactionRewardHandler(IWalletService               walletService,
                                           IWalletRepository            walletRepository,
                                           IGameRepository              gameRepository,
                                           IGameRoundRepository         gameRoundRepository,
-                                          ITransactionRewardRepository transactionRewardRepository) {
+                                          ITransactionUserRewardRepository transactionUserRewardRepository) {
         _walletService = walletService;
         _walletRepository = walletRepository;
         _gameRepository = gameRepository;
         _gameRoundRepository = gameRoundRepository;
-        _transactionRewardRepository = transactionRewardRepository;
+        _transactionUserRewardRepository = transactionUserRewardRepository;
     }
 
     public async Task<TransactionRewardView> Handle(CreateTransactionRewardCommand request, CancellationToken cancellationToken) {
@@ -50,9 +50,9 @@ public class CreateTransactionRewardHandler : IRequestHandler<CreateTransactionR
             ExistInBlockChain = false,
         };
 
-        _transactionRewardRepository.Add(transaction);
-        await _transactionRewardRepository.SaveAsync(default);
+        _transactionUserRewardRepository.Add(transaction);
+        await _transactionUserRewardRepository.SaveAsync(default);
 
-        return await _transactionRewardRepository.Get(transaction.Id).SingleAsync<TransactionUserReward, TransactionRewardView>(default);
+        return await _transactionUserRewardRepository.Get(transaction.Id).SingleAsync<TransactionUserReward, TransactionRewardView>(default);
     }
 }

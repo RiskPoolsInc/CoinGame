@@ -54,6 +54,25 @@ namespace App.Data.Sql.Migrations
                     b.ToTable("AuditLogs");
                 });
 
+            modelBuilder.Entity("App.Data.Entities.AutoPaymentServiceLogs.AutoPaymentServiceLog", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int>("TypeId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TypeId");
+
+                    b.ToTable("AutoPaymentServiceLogs");
+                });
+
             modelBuilder.Entity("App.Data.Entities.Dictionaries.AuditEventType", b =>
                 {
                     b.Property<int>("Id")
@@ -72,6 +91,26 @@ namespace App.Data.Sql.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("AuditEventTypes");
+                });
+
+            modelBuilder.Entity("App.Data.Entities.Dictionaries.AutoPaymentServiceLogType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AutoPaymentServiceLogTypes");
                 });
 
             modelBuilder.Entity("App.Data.Entities.Dictionaries.FollowType", b =>
@@ -528,8 +567,6 @@ namespace App.Data.Sql.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("GameId");
-
                     b.HasIndex("StateId");
 
                     b.HasIndex("TypeId");
@@ -634,21 +671,38 @@ namespace App.Data.Sql.Migrations
             modelBuilder.Entity("App.Data.Entities.Transactions.TransactionGameDeposit", b =>
                 {
                     b.HasBaseType("App.Data.Entities.Transactions.Transaction");
+
+                    b.HasIndex("GameId");
+
+                    b.HasDiscriminator().HasValue(1);
                 });
 
             modelBuilder.Entity("App.Data.Entities.Transactions.TransactionService", b =>
                 {
                     b.HasBaseType("App.Data.Entities.Transactions.Transaction");
+
+                    b.HasIndex("GameId")
+                        .HasName("IX_Transactions_GameId1");
+
+                    b.HasDiscriminator().HasValue(4);
                 });
 
             modelBuilder.Entity("App.Data.Entities.Transactions.TransactionUserRefund", b =>
                 {
                     b.HasBaseType("App.Data.Entities.Transactions.Transaction");
+
+                    b.HasIndex("GameId")
+                        .HasName("IX_Transactions_GameId2");
+
+                    b.HasDiscriminator().HasValue(3);
                 });
 
             modelBuilder.Entity("App.Data.Entities.Transactions.TransactionUserReward", b =>
                 {
                     b.HasBaseType("App.Data.Entities.Transactions.Transaction");
+
+                    b.HasIndex("GameId")
+                        .HasName("IX_Transactions_GameId3");
 
                     b.HasDiscriminator().HasValue(2);
                 });
@@ -669,6 +723,15 @@ namespace App.Data.Sql.Migrations
                     b.HasOne("App.Data.Entities.UserProfiles.UserProfile", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("App.Data.Entities.AutoPaymentServiceLogs.AutoPaymentServiceLog", b =>
+                {
+                    b.HasOne("App.Data.Entities.Dictionaries.AutoPaymentServiceLogType", "Type")
+                        .WithMany()
+                        .HasForeignKey("TypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("App.Data.Entities.GameRounds.GameRound", b =>
@@ -759,10 +822,6 @@ namespace App.Data.Sql.Migrations
 
             modelBuilder.Entity("App.Data.Entities.Transactions.Transaction", b =>
                 {
-                    b.HasOne("App.Data.Entities.Games.Game", "Game")
-                        .WithMany()
-                        .HasForeignKey("GameId");
-
                     b.HasOne("App.Data.Entities.Dictionaries.TransactionStateType", "State")
                         .WithMany()
                         .HasForeignKey("StateId")
@@ -811,6 +870,40 @@ namespace App.Data.Sql.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("App.Data.Entities.Transactions.TransactionGameDeposit", b =>
+                {
+                    b.HasOne("App.Data.Entities.Games.Game", "Game")
+                        .WithMany("TransactionGameDeposits")
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("App.Data.Entities.Transactions.TransactionService", b =>
+                {
+                    b.HasOne("App.Data.Entities.Games.Game", "Game")
+                        .WithMany()
+                        .HasForeignKey("GameId")
+                        .HasConstraintName("FK_Transactions_Games_GameId1");
+                });
+
+            modelBuilder.Entity("App.Data.Entities.Transactions.TransactionUserRefund", b =>
+                {
+                    b.HasOne("App.Data.Entities.Games.Game", "Game")
+                        .WithMany("TransactionUserRefunds")
+                        .HasForeignKey("GameId")
+                        .HasConstraintName("FK_Transactions_Games_GameId2")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("App.Data.Entities.Transactions.TransactionUserReward", b =>
+                {
+                    b.HasOne("App.Data.Entities.Games.Game", "Game")
+                        .WithMany("TransactionUserRewards")
+                        .HasForeignKey("GameId")
+                        .HasConstraintName("FK_Transactions_Games_GameId3")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 #pragma warning restore 612, 618
         }

@@ -1,4 +1,5 @@
 using App.Core.ViewModels.External;
+using App.Services.WalletService.Models;
 
 namespace App.Services.WalletService;
 
@@ -11,6 +12,8 @@ public interface IWalletService {
     Task<GenerateTransactionView> GenerateTransactionGameDeposit(string from,     string  privateKey, decimal sum);
     Task<GenerateTransactionView> GenerateTransactionRefund(string      from,     string  privateKey);
     Task<GenerateTransactionView> GenerateTransactionReward(string      toWallet, decimal sum);
+    Task<TransactionGameRewardView[]> GenerateTransactionRewards(GameRewardReceiverModel[] receivers);
+
     bool NeedServiceTransaction();
     string ProfitWalletAddress { get; }
 }

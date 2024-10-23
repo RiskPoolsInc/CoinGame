@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <LangVersion>default</LangVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\App.Interfaces.Repositories\App.Interfaces.Repositories.csproj" />
+        <ProjectReference Include="..\App.Core.Configurations\App.Core.Configurations.csproj" />
+        <ProjectReference Include="..\App.Core.Enums\App.Core.Enums.csproj" />
+        <ProjectReference Include="..\App.Interfaces.Security\App.Interfaces.Security.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Autofac" Version="6.4.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="2.2.0" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    </ItemGroup>
+
+</Project>
