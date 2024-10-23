@@ -4,6 +4,7 @@ import { VueQueryPlugin } from "vue-query";
 import { Notify, Quasar } from "quasar";
 import Vue3Sanitize from "vue-3-sanitize";
 import VueApexCharts from "vue3-apexcharts";
+import gtm from "@/shared/lib/plugins/gtm";
 
 // Import icon libraries
 import "@quasar/extras/material-icons/material-icons.css";
@@ -20,6 +21,7 @@ export const app = createApp(App)
   .use(pinia)
   .use(VueQueryPlugin)
   .use(router)
+  .use(gtm)
   .use(VueApexCharts)
   .use(Vue3Sanitize, {
       allowedTags: ['p', 'span', 'div', 'br']
