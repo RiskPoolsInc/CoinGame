@@ -6,7 +6,7 @@ const analytics = Analytics({
     app: 'RiskPools',
     plugins: [
         googleTagManager({
-            containerId: process.env.GOOGLE_TAG_MANAGER_ID as string,
+            containerId: process.env.VUE_APP_GOOGLE_TAG_MANAGER_ID as string,
         }),
     ],
 });
