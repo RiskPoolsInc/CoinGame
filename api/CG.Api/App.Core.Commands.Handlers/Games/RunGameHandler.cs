@@ -1,6 +1,6 @@
 using System.Security.Cryptography;
+using System.Security.Policy;
 using System.Text;
-
 using App.Common.Helpers;
 using App.Core.Commands.GameRounds;
 using App.Core.Commands.Games;
@@ -14,12 +14,12 @@ using App.Interfaces.Repositories.Games;
 using App.Interfaces.Repositories.Transactions;
 using App.Interfaces.Repositories.Wallets;
 using App.Services.WalletService;
-
 using Microsoft.EntityFrameworkCore;
 
 namespace App.Core.Commands.Handlers.Games;
 
-public class RunGameHandler : IRequestHandler<RunGameCommand, GameView> {
+public class RunGameHandler : IRequestHandler<RunGameCommand, GameView>
+{
     private readonly IWalletRepository _walletRepository;
     private readonly IGameRepository _gameRepository;
     private readonly IGameRoundRepository _gameRoundRepository;
@@ -27,12 +27,13 @@ public class RunGameHandler : IRequestHandler<RunGameCommand, GameView> {
     private readonly IWalletService _walletService;
     private readonly IDispatcher _dispatcher;
 
-    public RunGameHandler(IWalletRepository                 walletRepository,
-                          IGameRepository                   gameRepository,
-                          IGameRoundRepository              gameRoundRepository,
-                          ITransactionGameDepositRepository gameDepositRepository,
-                          IWalletService                    walletService,
-                          IDispatcher                       dispatcher) {
+    public RunGameHandler(IWalletRepository walletRepository,
+        IGameRepository gameRepository,
+        IGameRoundRepository gameRoundRepository,
+        ITransactionGameDepositRepository gameDepositRepository,
+        IWalletService walletService,
+        IDispatcher dispatcher)
+    {
         _walletRepository = walletRepository;
         _gameRepository = gameRepository;
         _gameRoundRepository = gameRoundRepository;
@@ -41,10 +42,12 @@ public class RunGameHandler : IRequestHandler<RunGameCommand, GameView> {
         _dispatcher = dispatcher;
     }
 
-    public async Task<GameView> Handle(RunGameCommand request, CancellationToken cancellationToken) {
-        var currentGameId = await _gameRepository.Where(a => a.WalletId == request.WalletId && a.StateId == (int)GameStateTypes.Created)
-                                                 .Select(a => a.Id)
-                                                 .SingleAsync(cancellationToken);
+    public async Task<GameView> Handle(RunGameCommand request, CancellationToken cancellationToken)
+    {
+        var currentGameId = await _gameRepository
+            .Where(a => a.WalletId == request.WalletId && a.StateId == (int)GameStateTypes.Created)
+            .Select(a => a.Id)
+            .SingleAsync(cancellationToken);
 
         var currentGame = await _gameRepository.FindAsync(currentGameId, cancellationToken);
 
@@ -54,7 +57,8 @@ public class RunGameHandler : IRequestHandler<RunGameCommand, GameView> {
         if (currentGame.StateId == (int)GameStateTypes.InProgress)
             throw new Exception("Game in Progress");
 
-        var depositTransaction = await _dispatcher.Send(new CheckGameDepositTransactionCommand(currentGameId), cancellationToken);
+        var depositTransaction =
+            await _dispatcher.Send(new CheckGameDepositTransactionCommand(currentGameId), cancellationToken);
 
         if (depositTransaction.State.Id != (int)TransactionStateTypes.Completed)
             throw new Exception("Transaction to start game in progress");
@@ -67,12 +71,14 @@ public class RunGameHandler : IRequestHandler<RunGameCommand, GameView> {
         return await _gameRepository.Get(currentGameId).SingleAsync<Game, GameView>(cancellationToken);
     }
 
-    private async Task RunGame(Game currentGame) {
+    private async Task RunGame(Game currentGame)
+    {
         var currentGameId = currentGame.Id;
         var betMultiplier = 1;
         var gameIsLose = false;
 
-        for (var i = 0; i < currentGame.RoundQuantity; i++) {
+        for (var i = 0; i < currentGame.RoundQuantity; i++)
+        {
             var roundNumber = i + 1;
             await RandomDelay(500, 1000);
             var randomNumber = await GenerateNextRandomNumber();
@@ -85,63 +91,71 @@ public class RunGameHandler : IRequestHandler<RunGameCommand, GameView> {
             else
                 betMultiplier--;
 
-            await _dispatcher.Send(new CreateGameRoundCommand(currentGameId, randomNumber, randomNumberHash, roundResult,
+            await _dispatcher.Send(new CreateGameRoundCommand(currentGameId, randomNumber, randomNumberHash,
+                roundResult,
                 betMultiplier * currentGame.RoundSum, roundNumber));
 
-            if (betMultiplier <= 0) {
-                gameIsLose = true;
-                await GameIsLose(currentGameId);
+            if (betMultiplier <= 0)
+            {
+                await SetGameIsLose(currentGameId);
                 return;
             }
         }
 
-        await GameIsWin(betMultiplier, currentGameId);
+        await SetGameIsWin(betMultiplier, currentGameId);
     }
 
-    private async Task<TransactionServiceView> GameIsLose(Guid currentGameId) {
-        var currentGame = await _gameRepository.FindAsync(currentGameId, default);
-        currentGame.StateId = (int)GameStateTypes.Completed;
-        currentGame.ResultId = (int)GameResultTypes.Lose;
+    private async Task SetGameIsLose(Guid currentGameId)
+    {
+        var currentGame = await CompleteGameWithResult(currentGameId, GameResultTypes.Lose);
+        _gameRepository.Update(currentGame);
         await _gameRepository.SaveAsync(default);
-
-        return await _dispatcher.Send(new GameServiceTransactionComand(currentGame.WalletId, currentGameId));
     }
 
-    private async Task GameIsWin(int gameCounter, Guid currentGameId) {
-        var currentGame = await _gameRepository.FindAsync(currentGameId, default);
-        currentGame.StateId = (int)GameStateTypes.Completed;
-        currentGame.ResultId = (int)GameResultTypes.Win;
+    private async Task SetGameIsWin(int gameCounter, Guid currentGameId)
+    {
+        var currentGame = await CompleteGameWithResult(currentGameId, GameResultTypes.Win);
         currentGame.RewardSum = currentGame.RoundSum * gameCounter;
+        _gameRepository.Update(currentGame);
         await _gameRepository.SaveAsync(default);
-
-        // var transactionService = new CreateTransactionRewardCommand(currentGameId);
-        // return await _dispatcher.Send(transactionService);
     }
 
-    private async Task RandomDelay(int from, int to) {
+    private async Task<Game> CompleteGameWithResult(Guid gameId, GameResultTypes gameResult)
+    {
+        var game = await _gameRepository.FindAsync(gameId, default);
+        game.StateId = (int)GameStateTypes.Completed;
+        game.ResultId = (int)gameResult;
+        return game;
+    }
+
+    private async Task RandomDelay(int from, int to)
+    {
         var random = new Random();
         var next = random.Next(from, to);
         await Task.Delay(next);
     }
 
-    private async Task<int> GenerateNextRandomNumber() {
+    private async Task<int> GenerateNextRandomNumber()
+    {
         var firstRandomNumber = GenerateRandomNumber;
         await RandomDelay(1800, 2300);
         var secondRandomNumber = GenerateRandomNumber;
         await RandomDelay(1800, 2300);
 
-        var orderedRandomNumbers = new[] {
+        var orderedRandomNumbers = new[]
+            {
                 firstRandomNumber,
                 secondRandomNumber
             }.OrderBy(a => a)
-             .ToArray();
+            .ToArray();
         await RandomDelay(50, 100);
 
         var generatedRandomNumber = RandomNumberGenerator.GetInt32(orderedRandomNumbers[0], orderedRandomNumbers[1]);
         return generatedRandomNumber;
     }
 
-    private string CalculateHash(int number) {
+    private string CalculateHash(int number)
+    {
         using var hashInst = SHA256.Create();
         var hash = Convert.ToHexString(hashInst.ComputeHash(Encoding.UTF8.GetBytes(number.ToString())));
         return hash.ToLower();

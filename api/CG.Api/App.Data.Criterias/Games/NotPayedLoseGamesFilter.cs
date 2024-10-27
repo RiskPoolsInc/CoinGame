@@ -5,9 +5,10 @@ using App.Data.Entities.Games;
 
 namespace App.Data.Criterias.Games;
 
-public class NotPayedWinGamesFilter : ACriteria<Game> {
+public class NotPayedLoseGamesFilter : ACriteria<Game> {
     public override Expression<Func<Game, bool>> Build() {
         return a => a.StateId == (int)GameStateTypes.Completed &&
-            !a.TransactionUserRewards.Any(s => s.GameId == a.Id) && a.ResultId == (int) GameResultTypes.Win;
+            !a.TransactionServices.Any(s => s.GameId == a.Id) 
+            && a.ResultId == (int) GameResultTypes.Lose;
     }
 }

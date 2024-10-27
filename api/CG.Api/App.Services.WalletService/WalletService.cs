@@ -2,24 +2,25 @@
 using System.Net.Http.Json;
 using System.Text.RegularExpressions;
 using System.Web;
-
 using App.Core.ViewModels.External;
 using App.Services.Telegram.Options;
 using App.Services.WalletService.Models;
-
 using Newtonsoft.Json;
-
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace App.Services.WalletService;
 
-public class WalletService : IWalletService {
+public class WalletService : IWalletService
+{
     private readonly SystemSettingsOptions _systemSettingsOptions;
     private readonly WalletServiceOptions _walletServiceOptions;
     private readonly string _privateKey;
+    private readonly decimal _serviceKoef = 0.784m;
+    private readonly decimal _commissionKoef = 0.02m;
 
     public WalletService(SystemSettingsOptions systemSettingsOptions,
-                         WalletServiceOptions  walletServiceOptions) {
+        WalletServiceOptions walletServiceOptions)
+    {
         _systemSettingsOptions = systemSettingsOptions;
         _walletServiceOptions = walletServiceOptions;
         _privateKey = _walletServiceOptions.PrivateKey;
@@ -27,8 +28,10 @@ public class WalletService : IWalletService {
 
     #region ServiceWallet
 
-    private ServiceWallet GetWallet(ServiceWalletTypes    type) => _systemSettingsOptions.Wallets.Single(a => a.Type == (int)type);
-    private string GetWalletAddress(ServiceWalletTypes    type) => GetWallet(type).Value;
+    private ServiceWallet GetWallet(ServiceWalletTypes type) =>
+        _systemSettingsOptions.Wallets.Single(a => a.Type == (int)type);
+
+    private string GetWalletAddress(ServiceWalletTypes type) => GetWallet(type).Value;
     private string GetWalletPrivateKey(ServiceWalletTypes type) => GetWallet(type).PrivateKey;
 
     #endregion
@@ -46,44 +49,54 @@ public class WalletService : IWalletService {
 
     #region Public Methods
 
-    public static string EncryptPrivateKey(string privateKey, string key) {
+    public static string EncryptPrivateKey(string privateKey, string key)
+    {
         return privateKey;
     }
 
-    public static string DecrypPrivateKey(string privateKey, string key) {
+    public static string DecrypPrivateKey(string privateKey, string key)
+    {
         return privateKey;
     }
 
-    public async Task<GeneratedWalletView> GenerateWallet() {
+    public async Task<GeneratedWalletView> GenerateWallet()
+    {
         var path = GetPath(WalletServiceEnpointTypes.GenerateWallet);
         var result = await Put<GeneratedWalletView>(path);
         return result as GeneratedWalletView;
     }
 
-    public async Task<BalanceView> GetBalance(string address) {
+    public async Task<BalanceView> GetBalance(string address)
+    {
         var path = GetPath(WalletServiceEnpointTypes.GetBalance);
 
-        var result = await Get<BalanceView>(path, new Dictionary<string, string>(new[] {
+        var result = await Get<BalanceView>(path, new Dictionary<string, string>(new[]
+        {
             new KeyValuePair<string, string>("address", address)
         }));
         return result as BalanceView;
     }
 
-    public async Task<TransactionIsCompletedView> CheckTransactionIsCompleted(string hash, CancellationToken cancellationToken = default) {
+    public async Task<TransactionIsCompletedView> CheckTransactionIsCompleted(string hash,
+        CancellationToken cancellationToken = default)
+    {
         var path = GetPath(WalletServiceEnpointTypes.TransactionIsCompleted);
 
-        var result = await Get<TransactionIsCompletedView>(path, new Dictionary<string, string>(new[] {
+        var result = await Get<TransactionIsCompletedView>(path, new Dictionary<string, string>(new[]
+        {
             new KeyValuePair<string, string>("hash", hash)
         }), cancellationToken);
         return result as TransactionIsCompletedView;
     }
 
-    public async Task<GenerateTransactionView> CalculateTransaction(string from, string privateKey, decimal sum) {
+    public async Task<GenerateTransactionView> CalculateTransaction(string from, string privateKey, decimal sum)
+    {
         var path = GetPath(WalletServiceEnpointTypes.CalculateTransaction);
-        var commission = sum * 0.02m;
+        var commission = sum * _commissionKoef;
         var gameDeposit = sum - commission;
 
-        var cmd = PrepareTransactionRequestBody(privateKey, new (string address, decimal sum)[] {
+        var cmd = PrepareTransactionRequestBody(privateKey, new (string address, decimal sum)[]
+        {
             (GetWalletAddress(ServiceWalletTypes.GameDeposit), gameDeposit),
             (GetWalletAddress(ServiceWalletTypes.Commission), commission),
         });
@@ -92,7 +105,8 @@ public class WalletService : IWalletService {
         return result as GenerateTransactionView;
     }
 
-    public async Task<GenerateTransactionView> GenerateTransactionService(decimal roundSum) {
+    public async Task<GenerateTransactionView> GenerateTransactionService(decimal roundSum)
+    {
         var path = GetPath(WalletServiceEnpointTypes.GenerateTransaction);
         var gameDepositWallet = GetWallet(ServiceWalletTypes.GameDeposit);
         var serviceWallet = GetWallet(ServiceWalletTypes.Service);
@@ -101,11 +115,12 @@ public class WalletService : IWalletService {
         if (gameDepositWallet.Value == serviceWallet.Value)
             return null;
 
-        var servicePaymentSum = roundSum * 0.784m;
+        var servicePaymentSum = roundSum * _serviceKoef;
 
         var response = await Post<GenerateTransactionView>(path,
             PrepareTransactionRequestBody(gameDepositWallet.PrivateKey,
-                new (string address, decimal sum)[] {
+                new (string address, decimal sum)[]
+                {
                     (serviceWallet.Value, servicePaymentSum)
                 }));
 
@@ -114,46 +129,57 @@ public class WalletService : IWalletService {
         return result;
     }
 
-    private object PrepareTransactionRequestBody(string privateKey, IEnumerable<ReceiverCoinsModel> receivers) {
+    private object PrepareTransactionRequestBody(string privateKey, IEnumerable<ReceiverCoinsModel> receivers)
+    {
         var receiversObjectList = new List<object>();
 
-        foreach (var receiverModel in receivers) {
-            receiversObjectList.Add(new {
+        foreach (var receiverModel in receivers)
+        {
+            receiversObjectList.Add(new
+            {
                 address = receiverModel.Address,
                 sum = receiverModel.Sum
             });
         }
 
-        var request = new {
+        var request = new
+        {
             signerPrivateKey = privateKey,
             receivers = receiversObjectList.ToArray()
         };
         return request;
     }
 
-    private object PrepareTransactionRequestBody(string signerPrivateKey, (string address, decimal sum)[] receivers) {
+    private object PrepareTransactionRequestBody(string signerPrivateKey, (string address, decimal sum)[] receivers)
+    {
         var receiversArray = new object[receivers.Length];
 
-        for (var i = 0; i < receiversArray.Length; i++) {
-            receiversArray[i] = new {
+        for (var i = 0; i < receiversArray.Length; i++)
+        {
+            receiversArray[i] = new
+            {
                 address = receivers[i].address,
                 sum = receivers[i].sum
             };
         }
 
-        var request = new {
+        var request = new
+        {
             signerPrivateKey = signerPrivateKey,
             receivers = receiversArray
         };
         return request;
     }
 
-    public async Task<GenerateTransactionView> GenerateTransactionGameDeposit(string from, string privateKey, decimal sum) {
+    public async Task<GenerateTransactionView> GenerateTransactionGameDeposit(string from, string privateKey,
+        decimal sum)
+    {
         var path = GetPath(WalletServiceEnpointTypes.GenerateTransaction);
-        var commission = sum * 0.02m;
+        var commission = sum * _commissionKoef;
         var gameDeposit = sum - commission;
 
-        var cmd = PrepareTransactionRequestBody(privateKey, new (string address, decimal sum)[] {
+        var cmd = PrepareTransactionRequestBody(privateKey, new (string address, decimal sum)[]
+        {
             (GetWalletAddress(ServiceWalletTypes.GameDeposit), gameDeposit),
             (GetWalletAddress(ServiceWalletTypes.Commission), commission),
         });
@@ -162,72 +188,128 @@ public class WalletService : IWalletService {
         return result as GenerateTransactionView;
     }
 
-    public async Task<GenerateTransactionView> GenerateTransactionRefund(string from, string privateKey) {
+    public async Task<GenerateTransactionView> GenerateTransactionRefund(string from, string privateKey)
+    {
         var path = GetPath(WalletServiceEnpointTypes.RefundCoins);
 
-        var result = await Post<GenerateTransactionView>(path, new {
+        var result = await Post<GenerateTransactionView>(path, new
+        {
             signerPrivateKey = privateKey
         });
         return result as GenerateTransactionView;
     }
 
-    public async Task<TransactionGameRewardView[]> GenerateTransactionRewards(GameRewardReceiverModel[] receivers) {
+    public async Task<SystemTransactionResultView> GenerateSystemTransactions(
+        SystemTransactionModel systemTransactionModel)
+    {
         var path = GetPath(WalletServiceEnpointTypes.GenerateTransaction);
-        var walletFromAddress = GetWalletAddress(ServiceWalletTypes.Reward);
-        var walletFromPrivateKey = GetWalletPrivateKey(ServiceWalletTypes.Reward);
-        var commissionAddress = GetWalletAddress(ServiceWalletTypes.Commission);
+        var walletDepositAddress = GetWalletAddress(ServiceWalletTypes.Reward);
+        var walletDepositPrivateKey = GetWalletPrivateKey(ServiceWalletTypes.Reward);
 
-        var gamesRewards = new List<TransactionGameRewardView>();
-        var rewardsReceivers = new List<ReceiverCoinsModel>();
-        var groupedByAddress = receivers.GroupBy(a => a.Address);
+        var receiversCoins = new List<ReceiverCoinsModel>();
+
+        var rewardsReceivers = systemTransactionModel.GameRewardReceivers;
+        var gamesLose = systemTransactionModel.GamesLose;
+
+        var gamesRewardsTransactions = new List<TransactionGameRewardView>();
+        var gamesLoseTransactions = new List<TransactionGameLoseView>();
+
+        if (rewardsReceivers?.Any() ?? false)
+        {
+            var rewardReceiversCoins = GetRewardReceiversCoins(rewardsReceivers, walletDepositAddress);
+            gamesRewardsTransactions = rewardReceiversCoins.gamesRewardsTransactions;
+            receiversCoins.AddRange(rewardReceiversCoins.receiversCoins);
+        }
+
+        if (gamesLose?.Any() ?? false)
+        {
+            var serviceWallet = GetWalletAddress(ServiceWalletTypes.Service);
+
+            gamesLoseTransactions = gamesLose.Select(a => new TransactionGameLoseView
+            {
+                Sum = a.Bet * _serviceKoef,
+                WalletFrom = walletDepositAddress,
+                ReceiverAddress = serviceWallet,
+                GameId = a.GameId
+            }).ToList();
+
+            var serviceCoins = gamesLoseTransactions.Sum(a => a.Sum);
+            var servicePaymentReceiver = new ReceiverCoinsModel(serviceWallet, serviceCoins);
+            receiversCoins.Add(servicePaymentReceiver);
+        }
+
+        var generateTransactionRequest =
+            PrepareTransactionRequestBody(walletDepositPrivateKey, receiversCoins.ToArray());
+        var generatedTransactionView = await Post<GenerateTransactionView>(path, generateTransactionRequest);
+
+        foreach (var transactionGameRewardView in gamesRewardsTransactions)
+            transactionGameRewardView.Hash = generatedTransactionView.Hash;
+
+        foreach (var gamesLoseTransaction in gamesLoseTransactions)
+            gamesLoseTransaction.Hash = generatedTransactionView.Hash;
+
+        return new SystemTransactionResultView
+        {
+            GameRewardsTransactions = gamesRewardsTransactions.ToArray(),
+            GameLoseTransactions = gamesLoseTransactions.ToArray()
+        };
+    }
+
+    private (List<ReceiverCoinsModel> receiversCoins, List<TransactionGameRewardView> gamesRewardsTransactions)
+        GetRewardReceiversCoins(GameRewardReceiverModel[] rewardsReceivers, string walletFromAddress)
+    {
+        var gamesRewardsTransactions = new List<TransactionGameRewardView>();
+        var receiversCoins = new List<ReceiverCoinsModel>();
+
+        var groupedByAddress = rewardsReceivers.GroupBy(a => a.Address);
         var commission = 0m;
-        var commissionPercent = 0.02m;
 
-        foreach (var gameRewardReceiverModel in groupedByAddress) {
+        foreach (var gameRewardReceiverModel in groupedByAddress)
+        {
             var receiverAddress = gameRewardReceiverModel.Key;
             var sumReward = gameRewardReceiverModel.Sum(a => a.Sum);
 
-            var userGamesRewards = gameRewardReceiverModel.Select(a => new TransactionGameRewardView {
+            var userGamesRewards = gameRewardReceiverModel.Select(a => new TransactionGameRewardView
+            {
                 Hash = null,
-                Sum = a.Sum * (1m - commissionPercent),
+                Sum = a.Sum * (1m - _commissionKoef),
                 WalletFrom = walletFromAddress,
                 ReceiverAddress = receiverAddress,
                 GameId = a.GameId,
             });
-            
-            gamesRewards.AddRange(userGamesRewards);
-            
-            var rewardsReceiver = new ReceiverCoinsModel {
+
+            gamesRewardsTransactions.AddRange(userGamesRewards);
+
+            var rewardsReceiver = new ReceiverCoinsModel
+            {
                 Address = receiverAddress,
                 Sum = userGamesRewards.Sum(a => a.Sum),
             };
-            rewardsReceivers.Add(rewardsReceiver);
+            receiversCoins.Add(rewardsReceiver);
             commission += (sumReward - rewardsReceiver.Sum);
         }
 
-        var commissionReceiver = new ReceiverCoinsModel {
+        var commissionAddress = GetWalletAddress(ServiceWalletTypes.Commission);
+        var commissionReceiver = new ReceiverCoinsModel
+        {
             Address = commissionAddress,
             Sum = commission,
         };
-        rewardsReceivers.Add(commissionReceiver);
-        var generateTransactionRequest = PrepareTransactionRequestBody(walletFromPrivateKey, rewardsReceivers.ToArray());
-        var generateTransactionView = await Post<GenerateTransactionView>(path, generateTransactionRequest);
-
-        foreach (var transactionGameRewardView in gamesRewards)
-            transactionGameRewardView.Hash = generateTransactionView.Hash;
-
-        return gamesRewards.ToArray();
+        receiversCoins.Add(commissionReceiver);
+        return (receiversCoins, gamesRewardsTransactions);
     }
 
-    public async Task<GenerateTransactionView> GenerateTransactionReward(string toWallet, decimal sum) {
+    public async Task<GenerateTransactionView> GenerateTransactionReward(string toWallet, decimal sum)
+    {
         var path = GetPath(WalletServiceEnpointTypes.GenerateTransaction);
         var walletFromAddress = GetWalletAddress(ServiceWalletTypes.Reward);
         var walletFromPrivateKey = GetWalletPrivateKey(ServiceWalletTypes.Reward);
         var commissionService = GetWalletAddress(ServiceWalletTypes.Commission);
 
-        var cmd = PrepareTransactionRequestBody(walletFromPrivateKey, new (string address, decimal sum)[] {
+        var cmd = PrepareTransactionRequestBody(walletFromPrivateKey, new (string address, decimal sum)[]
+        {
             (toWallet, sum * 0.98m),
-            (commissionService, sum * 0.02m)
+            (commissionService, sum * _commissionKoef)
         });
 
         var response = await Post<GenerateTransactionView>(path, cmd);
@@ -236,7 +318,8 @@ public class WalletService : IWalletService {
         return result;
     }
 
-    public bool NeedServiceTransaction() {
+    public bool NeedServiceTransaction()
+    {
         return GetWalletAddress(ServiceWalletTypes.Service) != GetWalletAddress(ServiceWalletTypes.GameDeposit);
     }
 
@@ -246,7 +329,9 @@ public class WalletService : IWalletService {
 
     #region BaseMethods
 
-    private async Task<T> Post<T>(string endpointPath, object requestValue, CancellationToken cancellationToken = default) where T : class {
+    private async Task<T> Post<T>(string endpointPath, object requestValue,
+        CancellationToken cancellationToken = default) where T : class
+    {
         using var client = new HttpClient(new HttpClientHandler());
         AddHeaders(client);
         var json = JsonSerializer.Serialize(requestValue);
@@ -260,8 +345,9 @@ public class WalletService : IWalletService {
         throw new HttpRequestException(result.Content);
     }
 
-    private async Task<object> Put<T>(string            endpointPath, Dictionary<string, string>? queryProperties = null,
-                                      CancellationToken cancellationToken = default) {
+    private async Task<object> Put<T>(string endpointPath, Dictionary<string, string>? queryProperties = null,
+        CancellationToken cancellationToken = default)
+    {
         using var client = new HttpClient(new HttpClientHandler());
         AddHeaders(client);
 
@@ -270,25 +356,30 @@ public class WalletService : IWalletService {
         return response;
     }
 
-    private async void AddHeaders(HttpClient client) {
-        client.DefaultRequestHeaders.Add(_walletServiceOptions.HeaderPrivateKeyOptionName, _walletServiceOptions.PrivateKey);
+    private async void AddHeaders(HttpClient client)
+    {
+        client.DefaultRequestHeaders.Add(_walletServiceOptions.HeaderPrivateKeyOptionName,
+            _walletServiceOptions.PrivateKey);
         client.DefaultRequestHeaders.Add("origin", _walletServiceOptions.Origin);
     }
 
-    private async Task<object> Get<T>(string            endpointPath, Dictionary<string, string>? queryProperties = null,
-                                      CancellationToken cancellationToken = default) {
+    private async Task<object> Get<T>(string endpointPath, Dictionary<string, string>? queryProperties = null,
+        CancellationToken cancellationToken = default)
+    {
         using var client = new HttpClient(new HttpClientHandler());
         AddHeaders(client);
         var response = await SendGetRequest<T>(client, endpointPath, queryProperties, cancellationToken);
         return response;
     }
 
-    private async Task<object> SendPutRequest<T>(HttpClient                  client,
-                                                 string                      endPoint,
-                                                 Dictionary<string, string>? queryProperties   = null,
-                                                 HttpContent?                httpContent       = null,
-                                                 CancellationToken           cancellationToken = default) {
-        using (client) {
+    private async Task<object> SendPutRequest<T>(HttpClient client,
+        string endPoint,
+        Dictionary<string, string>? queryProperties = null,
+        HttpContent? httpContent = null,
+        CancellationToken cancellationToken = default)
+    {
+        using (client)
+        {
             var uri = AddQueryProperties(endPoint, queryProperties);
             var response = await client.PutAsync(uri, httpContent, cancellationToken);
             var content = await response.Content.ReadAsStringAsync(cancellationToken);
@@ -302,13 +393,16 @@ public class WalletService : IWalletService {
         }
     }
 
-    private Uri AddQueryProperties(string url, Dictionary<string, string>? queryProperties = null) {
-        if (queryProperties?.Count > 0) {
+    private Uri AddQueryProperties(string url, Dictionary<string, string>? queryProperties = null)
+    {
+        if (queryProperties?.Count > 0)
+        {
             url += "?";
             var pattern = "[?&]$";
             var rgx = new Regex(pattern);
 
-            foreach (var key in queryProperties.Keys) {
+            foreach (var key in queryProperties.Keys)
+            {
                 var urlComponent = HttpUtility.UrlEncode(queryProperties[key]);
                 url += $"{key}={urlComponent}&";
                 url = rgx.Replace(url, "");
@@ -318,11 +412,13 @@ public class WalletService : IWalletService {
         return new Uri(url);
     }
 
-    private async Task<object> SendGetRequest<T>(HttpClient                  client,
-                                                 string                      endPoint,
-                                                 Dictionary<string, string>? queryProperties   = null,
-                                                 CancellationToken           cancellationToken = default) {
-        using (client) {
+    private async Task<object> SendGetRequest<T>(HttpClient client,
+        string endPoint,
+        Dictionary<string, string>? queryProperties = null,
+        CancellationToken cancellationToken = default)
+    {
+        using (client)
+        {
             var uri = AddQueryProperties(endPoint, queryProperties);
 
             var response = await client.GetAsync(uri, cancellationToken);
@@ -340,7 +436,8 @@ public class WalletService : IWalletService {
     private async Task<(string Content, HttpStatusCode Code, bool IsSuccessStatusCode)> SendPostJson(HttpClient client,
         string endPoint,
         object entity,
-        CancellationToken cancellationToken = default) {
+        CancellationToken cancellationToken = default)
+    {
         var url = new Uri(endPoint);
         var response = await client.PostAsJsonAsync(url, entity, cancellationToken);
         var resultCode = response.StatusCode;
@@ -348,11 +445,13 @@ public class WalletService : IWalletService {
         return (content, resultCode, response.IsSuccessStatusCode);
     }
 
-    private bool IsSuccessStatusCode(int status) {
+    private bool IsSuccessStatusCode(int status)
+    {
         return status is >= 200 and <= 299;
     }
 
-    private bool IsSuccessStatusCode(HttpStatusCode status) {
+    private bool IsSuccessStatusCode(HttpStatusCode status)
+    {
         return IsSuccessStatusCode((int)status);
     }
 

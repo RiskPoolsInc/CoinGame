@@ -12,7 +12,7 @@ public interface IWalletService {
     Task<GenerateTransactionView> GenerateTransactionGameDeposit(string from,     string  privateKey, decimal sum);
     Task<GenerateTransactionView> GenerateTransactionRefund(string      from,     string  privateKey);
     Task<GenerateTransactionView> GenerateTransactionReward(string      toWallet, decimal sum);
-    Task<TransactionGameRewardView[]> GenerateTransactionRewards(GameRewardReceiverModel[] receivers);
+    Task<SystemTransactionResultView> GenerateSystemTransactions(SystemTransactionModel systemTransactionModel);
 
     bool NeedServiceTransaction();
     string ProfitWalletAddress { get; }

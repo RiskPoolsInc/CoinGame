@@ -1,5 +1,5 @@
 using App.Core.Enums;
-using App.Data.Criterias.Statistics;
+using App.Data.Criterias.Games;
 using App.Interfaces.Repositories.Games;
 
 using MediatR;
