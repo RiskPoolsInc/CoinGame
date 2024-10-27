@@ -1,5 +1,4 @@
 using System.Security.Cryptography;
-using System.Security.Policy;
 using System.Text;
 using App.Common.Helpers;
 using App.Core.Commands.GameRounds;
@@ -7,7 +6,6 @@ using App.Core.Commands.Games;
 using App.Core.Commands.Transactions;
 using App.Core.Enums;
 using App.Core.ViewModels.Games;
-using App.Core.ViewModels.Transactions;
 using App.Data.Entities.Games;
 using App.Interfaces.Core;
 using App.Interfaces.Repositories.Games;
@@ -51,14 +49,10 @@ public class RunGameHandler : IRequestHandler<RunGameCommand, GameView>
 
         var currentGame = await _gameRepository.FindAsync(currentGameId, cancellationToken);
 
-        if (currentGame.StateId == (int)GameStateTypes.Completed)
-            throw new Exception("Game was completed");
+        if (currentGame.StateId != (int)GameStateTypes.Created)
+            throw new Exception($"Game can't run. Game state is {(GameStateTypes)currentGame.StateId:G}");
 
-        if (currentGame.StateId == (int)GameStateTypes.InProgress)
-            throw new Exception("Game in Progress");
-
-        var depositTransaction =
-            await _dispatcher.Send(new CheckGameDepositTransactionCommand(currentGameId), cancellationToken);
+        var depositTransaction = await _dispatcher.Send(new CheckGameDepositTransactionCommand(currentGameId), cancellationToken);
 
         if (depositTransaction.State.Id != (int)TransactionStateTypes.Completed)
             throw new Exception("Transaction to start game in progress");
@@ -75,7 +69,6 @@ public class RunGameHandler : IRequestHandler<RunGameCommand, GameView>
     {
         var currentGameId = currentGame.Id;
         var betMultiplier = 1;
-        var gameIsLose = false;
 
         for (var i = 0; i < currentGame.RoundQuantity; i++)
         {

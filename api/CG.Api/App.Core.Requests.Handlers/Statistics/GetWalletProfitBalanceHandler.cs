@@ -1,9 +1,9 @@
+using App.Core.Requests.Statistics;
 using App.Core.ViewModels.External;
 using App.Services.WalletService;
-
 using MediatR;
 
-namespace App.Core.Requests.Statistics;
+namespace App.Core.Requests.Handlers.Statistics;
 
 public class GetWalletProfitBalanceHandler : IRequestHandler<GetWalletProfitBalanceRequest, BalanceView> {
     private readonly IWalletService _walletService;

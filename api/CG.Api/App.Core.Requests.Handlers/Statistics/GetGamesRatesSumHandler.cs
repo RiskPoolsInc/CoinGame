@@ -1,11 +1,10 @@
+using App.Core.Requests.Statistics;
 using App.Data.Criterias.Games;
 using App.Interfaces.Repositories.Games;
-
 using MediatR;
-
 using Microsoft.EntityFrameworkCore;
 
-namespace App.Core.Requests.Statistics;
+namespace App.Core.Requests.Handlers.Statistics;
 
 public class GetGamesRatesSumHandler : IRequestHandler<GetGamesRatesSumRequest, decimal> {
     private readonly IGameRepository _gameRepository;

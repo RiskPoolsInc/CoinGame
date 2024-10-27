@@ -29,7 +29,8 @@ public class RefundCoinsHandler : IRequestHandler<RefundCoinsCommand, Transactio
     public async Task<TransactionUserRefundView> Handle(RefundCoinsCommand request, CancellationToken cancellationToken) {
         var wallet = await _walletRepository.FindAsync(request.WalletId, cancellationToken);
 
-        if (await _gameRepository.AnyAsync(a => a.WalletId == request.WalletId && a.StateId != (int)GameStateTypes.Completed,
+        if (await _gameRepository.AnyAsync(a => a.WalletId == request.WalletId && 
+                                                (a.StateId != (int)GameStateTypes.Completed && a.StateId != (int)GameStateTypes.Payed),
                 cancellationToken))
             throw new Exception("Any game not completed");
 

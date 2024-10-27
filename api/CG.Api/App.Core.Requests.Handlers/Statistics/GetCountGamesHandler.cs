@@ -1,9 +1,9 @@
+using App.Core.Requests.Statistics;
 using App.Data.Criterias.Games;
 using App.Interfaces.Repositories.Games;
-
 using MediatR;
 
-namespace App.Core.Requests.Statistics;
+namespace App.Core.Requests.Handlers.Statistics;
 
 public class GetCountGamesHandler : IRequestHandler<GetCountGamesRequest, int> {
     private readonly IGameRepository _gameRepository;
