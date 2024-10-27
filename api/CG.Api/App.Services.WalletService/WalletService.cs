@@ -5,6 +5,7 @@ using System.Web;
 using App.Core.ViewModels.External;
 using App.Services.Telegram.Options;
 using App.Services.WalletService.Models;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
@@ -14,15 +15,17 @@ public class WalletService : IWalletService
 {
     private readonly SystemSettingsOptions _systemSettingsOptions;
     private readonly WalletServiceOptions _walletServiceOptions;
+    private readonly ILogger<WalletService> _logger;
     private readonly string _privateKey;
     private readonly decimal _serviceKoef = 0.784m;
     private readonly decimal _commissionKoef = 0.02m;
 
     public WalletService(SystemSettingsOptions systemSettingsOptions,
-        WalletServiceOptions walletServiceOptions)
+        WalletServiceOptions walletServiceOptions, ILogger<WalletService> logger)
     {
         _systemSettingsOptions = systemSettingsOptions;
         _walletServiceOptions = walletServiceOptions;
+        _logger = logger;
         _privateKey = _walletServiceOptions.PrivateKey;
     }
 
@@ -341,6 +344,7 @@ public class WalletService : IWalletService
         using var client = new HttpClient(new HttpClientHandler());
         AddHeaders(client);
         var json = JsonSerializer.Serialize(requestValue);
+        _logger.LogInformation("Request: {body}", json);
         var result = await SendPostJson(client, endpointPath, requestValue, cancellationToken);
 
         if (result.IsSuccessStatusCode)
