@@ -243,10 +243,16 @@ public class WalletService : IWalletService
         var generatedTransactionView = await Post<GenerateTransactionView>(path, generateTransactionRequest);
 
         foreach (var transactionGameRewardView in gamesRewardsTransactions)
+        {
             transactionGameRewardView.Hash = generatedTransactionView.Hash;
+            transactionGameRewardView.Fee = generatedTransactionView.Fee;
+        }
 
         foreach (var gamesLoseTransaction in gamesLoseTransactions)
+        {
             gamesLoseTransaction.Hash = generatedTransactionView.Hash;
+            gamesLoseTransaction.Fee = generatedTransactionView.Fee;
+        }
 
         return new SystemTransactionResultView
         {

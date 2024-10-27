@@ -9,6 +9,7 @@ using App.Interfaces.Repositories.Transactions;
 using App.Services.WalletService;
 using App.Services.WalletService.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace App.Core.Commands.Handlers.Transactions;
 
@@ -18,14 +19,17 @@ public class GenerateSystemTransactionsHandler : IGenerateSystemTransactionsHand
     private readonly IWalletService _walletService;
     private readonly ITransactionUserRewardRepository _userRewardRepository;
     private readonly ITransactionServiceRepository _serviceRepository;
+    private readonly ILogger<GenerateSystemTransactionsHandler> _logger;
 
     public GenerateSystemTransactionsHandler(IGameRepository gameRepository, IWalletService walletService,
-        ITransactionUserRewardRepository userRewardRepository, ITransactionServiceRepository serviceRepository)
+        ITransactionUserRewardRepository userRewardRepository, ITransactionServiceRepository serviceRepository,
+        ILogger<GenerateSystemTransactionsHandler> logger)
     {
         _gameRepository = gameRepository;
         _walletService = walletService;
         _userRewardRepository = userRewardRepository;
         _serviceRepository = serviceRepository;
+        _logger = logger;
     }
 
     public async Task<bool> Handle(GenerateSystemTransactionsCommand request, CancellationToken cancellationToken)
@@ -34,10 +38,14 @@ public class GenerateSystemTransactionsHandler : IGenerateSystemTransactionsHand
             .Include(a => a.TransactionUserRewards)
             .Include(a => a.Wallet)
             .ToListAsync(cancellationToken);
-
+        
+        _logger.LogInformation("Found not payed {count} win games.", gamesWinEntities.Count);
+        
         var gamesLoseEntities = await _gameRepository.Where(new NotPayedLoseGamesFilter())
             .Include(a => a.TransactionServices)
             .ToListAsync(cancellationToken);
+
+        _logger.LogInformation("Found not payed {count} lose games.", gamesLoseEntities.Count);
 
         if (!gamesWinEntities.Any() && !gamesLoseEntities.Any())
             return true;
@@ -80,7 +88,8 @@ public class GenerateSystemTransactionsHandler : IGenerateSystemTransactionsHand
                 TransactionHash = a.Hash,
                 Sum = a.Sum,
                 StateId = (int)TransactionStateTypes.Created,
-                ExistInBlockChain = false
+                ExistInBlockChain = false,
+                Fee = a.Fee
             })
             .ToArray();
 
@@ -98,7 +107,8 @@ public class GenerateSystemTransactionsHandler : IGenerateSystemTransactionsHand
                 TransactionHash = a.Hash,
                 Sum = a.Sum,
                 StateId = (int)TransactionStateTypes.Created,
-                ExistInBlockChain = false
+                ExistInBlockChain = false,
+                Fee = a.Fee
             })
             .ToArray();
 
