@@ -3,5 +3,6 @@ namespace App.Core.Enums;
 public enum GameStateTypes {
     Created = 1,
     InProgress = 2,
-    Completed = 3
+    Completed = 3,
+    Payed = 4
 }

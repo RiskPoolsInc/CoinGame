@@ -2,6 +2,7 @@ using App.Core.Commands.Transactions;
 using App.Core.Enums;
 using App.Core.ViewModels.External;
 using App.Data.Criterias.Games;
+using App.Data.Entities.Games;
 using App.Data.Entities.Transactions;
 using App.Interfaces.Handlers;
 using App.Interfaces.Repositories.Games;
@@ -38,10 +39,12 @@ public class GenerateSystemTransactionsHandler : IGenerateSystemTransactionsHand
             .Include(a => a.TransactionUserRewards)
             .Include(a => a.Wallet)
             .ToListAsync(cancellationToken);
-        
+
         _logger.LogInformation("Found not payed {count} win games.", gamesWinEntities.Count);
-        
-        var gamesLoseEntities = await _gameRepository.Where(new NotPayedLoseGamesFilter())
+
+        var gamesLoseEntities = await _gameRepository
+            .Where(a => a.CreatedOn > new DateTime(2024, 10, 27))
+            .Where(new NotPayedLoseGamesFilter())
             .Include(a => a.TransactionServices)
             .ToListAsync(cancellationToken);
 
@@ -95,6 +98,13 @@ public class GenerateSystemTransactionsHandler : IGenerateSystemTransactionsHand
 
         await _serviceRepository.AddRangeAsync(serviceTransactionEntities, default);
         await _serviceRepository.SaveAsync(default);
+        var gamesId = serviceTransactionEntities.Select(a => a.GameId.Value).Distinct().ToArray();
+
+        await _gameRepository.UpdateWhereAsync(a => gamesId.Contains(a.Id), s => new Game()
+        {
+            StateId = (int)GameStateTypes.Payed
+        }, default);
+        await _serviceRepository.SaveAsync(default);
     }
 
 
@@ -113,6 +123,14 @@ public class GenerateSystemTransactionsHandler : IGenerateSystemTransactionsHand
             .ToArray();
 
         await _userRewardRepository.AddRangeAsync(transactionUserRewardEntities, default);
+
+        await _userRewardRepository.SaveAsync(default);
+        var gamesId = transactionUserRewardEntities.Select(a => a.GameId.Value).Distinct().ToArray();
+
+        await _gameRepository.UpdateWhereAsync(a => gamesId.Contains(a.Id), s => new Game()
+        {
+            StateId = (int)GameStateTypes.Payed
+        }, default);
         await _userRewardRepository.SaveAsync(default);
     }
 }
