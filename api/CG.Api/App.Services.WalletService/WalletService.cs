@@ -230,7 +230,7 @@ public class WalletService : IWalletService
 
             gamesLoseTransactions = gamesLose.Select(a => new TransactionGameLoseView
             {
-                Sum = a.Bet * _serviceKoef,
+                Sum = Math.Truncate(a.Bet * _serviceKoef),
                 WalletFrom = walletDepositAddress,
                 ReceiverAddress = serviceWallet,
                 GameId = a.GameId
@@ -281,7 +281,7 @@ public class WalletService : IWalletService
             var userGamesRewards = gameRewardReceiverModel.Select(a => new TransactionGameRewardView
             {
                 Hash = null,
-                Sum = a.Sum * (1m - _commissionKoef),
+                Sum = Math.Truncate(a.Sum * (1m - _commissionKoef)),
                 WalletFrom = walletFromAddress,
                 ReceiverAddress = receiverAddress,
                 GameId = a.GameId,

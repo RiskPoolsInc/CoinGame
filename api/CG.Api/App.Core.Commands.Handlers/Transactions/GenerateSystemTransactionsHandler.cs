@@ -43,7 +43,6 @@ public class GenerateSystemTransactionsHandler : IGenerateSystemTransactionsHand
         _logger.LogInformation("Found not payed {count} win games.", gamesWinEntities.Count);
 
         var gamesLoseEntities = await _gameRepository
-            .Where(a => a.CreatedOn > new DateTime(2024, 10, 27))
             .Where(new NotPayedLoseGamesFilter())
             .Include(a => a.TransactionServices)
             .ToListAsync(cancellationToken);
