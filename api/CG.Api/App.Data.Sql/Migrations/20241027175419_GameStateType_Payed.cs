@@ -8,7 +8,7 @@ namespace App.Data.Sql.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.InsertDictionaryItem("GameStateTypes", 4, "Payed", "Payed");
-            migrationBuilder.Sql(@"UPDATE ""Games"" SET ""StateId"" = 4 WHERE ""CreatedOn"" < ""10/27/2024""");
+            migrationBuilder.Sql(@"UPDATE ""Games"" SET ""StateId"" = 4 WHERE ""CreatedOn"" < '10/27/2024'");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
