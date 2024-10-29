@@ -93,6 +93,7 @@ const scrollToElementWithOffset = (elementId: string, offset: number) => {
               color="white"
               text-color="dark"
               size="lg"
+              class-name="header__how"
               @click="scrollTo('how')"
             />
           </div>
@@ -103,6 +104,7 @@ const scrollToElementWithOffset = (elementId: string, offset: number) => {
               color="white"
               text-color="dark"
               size="lg"
+              class-name="header__technology"
               @click="scrollTo('technology')"
             />
           </div>
@@ -111,6 +113,7 @@ const scrollToElementWithOffset = (elementId: string, offset: number) => {
             <VButton
               label="3x_Do_more"
               color="white"
+              class-name="header__do-more"
               text-color="dark"
               size="lg"
               @click="scrollTo('do-more')"
@@ -121,6 +124,7 @@ const scrollToElementWithOffset = (elementId: string, offset: number) => {
             <VButton
               label="4x_Get_in_touch"
               color="white"
+              class-name="header__get-in-touch"
               text-color="dark"
               size="lg"
               @click="scrollTo('get-in-touch')"
