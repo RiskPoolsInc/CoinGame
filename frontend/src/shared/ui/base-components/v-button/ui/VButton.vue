@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineEmits, defineProps, withDefaults } from "vue";
+import { defineProps, withDefaults} from "vue";
 
 interface IVButtonProps {
   color?: string;
@@ -29,18 +29,9 @@ withDefaults(defineProps<IVButtonProps>(), {
   padding: undefined,
   target: undefined,
 });
-
-const emit = defineEmits<{
-  click: [void];
-}>();
-
-const handleClick = () => {
-  emit("click");
-};
 </script>
 
 <template>
-  <div>
     <q-btn
       :outline="outline"
       :color="color"
@@ -57,11 +48,9 @@ const handleClick = () => {
       :style="customStyle"
       :disable="disabled"
       :class="className"
-      @click="handleClick"
     >
       <slot></slot>
     </q-btn>
-  </div>
 </template>
 
 <style scoped></style>

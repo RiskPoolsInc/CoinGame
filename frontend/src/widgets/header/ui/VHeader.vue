@@ -16,17 +16,6 @@ const toogleMenu = () => {
   emit("update:isSidebarOpen", !props.isSidebarOpen);
 };
 
-const scrollTo = (id: string) => {
-  if (router.currentRoute.value.path !== "/") {
-    router.replace({ name: "home", hash: "#" + id });
-    // return;
-  }
-
-  setTimeout(() => {
-    scrollToElementWithOffset(id, 115);
-  }, 100);
-};
-
 const openMainPageOrScrollToTop = () => {
   if (router.currentRoute.value.path !== "/") {
     router.replace({ name: "home" });
@@ -41,35 +30,6 @@ const openMainPageOrScrollToTop = () => {
       behavior: "smooth",
     });
   }, 100);
-};
-
-const scrollToElementWithOffset = (elementId: string, offset: number) => {
-  let element = document.getElementById(elementId);
-
-  if (element) {
-    let elementPosition = element.getBoundingClientRect().top;
-    let start = window.pageYOffset;
-    let startTime: any = null;
-
-    const scrollAnimation = (currentTime: any) => {
-      if (startTime === null) startTime = currentTime;
-
-      let progress: any = currentTime - startTime;
-      let easeInOutCubic = (progress: any) =>
-        progress < 0.5
-          ? 4 * progress ** 3
-          : 1 - Math.pow(-2 * progress + 2, 3) / 2;
-
-      let scrollTo = elementPosition - offset;
-      window.scrollTo(0, start + scrollTo * easeInOutCubic(progress / 500));
-
-      if (progress < 500) {
-        requestAnimationFrame(scrollAnimation);
-      }
-    };
-
-    requestAnimationFrame(scrollAnimation);
-  }
 };
 </script>
 
@@ -95,6 +55,7 @@ const scrollToElementWithOffset = (elementId: string, offset: number) => {
               size="lg"
               class-name="header__how"
               href="/#how"
+              tabindex="0"
             />
           </div>
 
@@ -104,6 +65,7 @@ const scrollToElementWithOffset = (elementId: string, offset: number) => {
               color="white"
               text-color="dark"
               size="lg"
+              tabindex="0"
               class-name="header__technology"
               href="/#technology"
             />
@@ -116,6 +78,7 @@ const scrollToElementWithOffset = (elementId: string, offset: number) => {
               class-name="header__do-more"
               text-color="dark"
               size="lg"
+              tabindex="0"
               href="/#do-more"
             />
           </div>
@@ -127,6 +90,7 @@ const scrollToElementWithOffset = (elementId: string, offset: number) => {
               class-name="header__get-in-touch"
               text-color="dark"
               size="lg"
+              tabindex="0"
               href="/#get-in-touch"
             />
           </div>

@@ -13,70 +13,28 @@ const emit = defineEmits<{
 const toogleMenu = () => {
   emit("update:isSidebarOpen", !props.isSidebarOpen);
 };
-
-const scrollTo = (id: string) => {
-  if (router.currentRoute.value.path !== "/") {
-    router.replace({ name: "home", hash: "#" + id });
-    // return;
-  }
-
-  setTimeout(() => {
-    scrollToElementWithOffset(id, 115);
-  }, 100);
-
-  toogleMenu();
-};
-
-const scrollToElementWithOffset = (elementId: string, offset: number) => {
-  let element = document.getElementById(elementId);
-
-  if (element) {
-    let elementPosition = element.getBoundingClientRect().top;
-    let start = window.pageYOffset;
-    let startTime: any = null;
-
-    const scrollAnimation = (currentTime: any) => {
-      if (startTime === null) startTime = currentTime;
-
-      let progress: any = currentTime - startTime;
-      let easeInOutCubic = (progress: any) =>
-        progress < 0.5
-          ? 4 * progress ** 3
-          : 1 - Math.pow(-2 * progress + 2, 3) / 2;
-
-      let scrollTo = elementPosition - offset;
-      window.scrollTo(0, start + scrollTo * easeInOutCubic(progress / 500));
-
-      if (progress < 500) {
-        requestAnimationFrame(scrollAnimation);
-      }
-    };
-
-    requestAnimationFrame(scrollAnimation);
-  }
-};
 </script>
 
 <template>
   <div class="sidebar-menu">
     <ul class="sidebar-menu__list">
       <li class="sidebar-menu__item">
-        <div class="sidebar-menu__link" @click="scrollTo('how')">1x_How</div>
+        <a class="sidebar-menu__link" href="/#how" @click="toogleMenu">1x_How</a>
       </li>
       <li class="sidebar-menu__item">
-        <div class="sidebar-menu__link" @click="scrollTo('technology')">
+        <a class="sidebar-menu__link" href="/#technology" @click="toogleMenu">
           2x_Technology
-        </div>
+        </a>
       </li>
       <li class="sidebar-menu__item">
-        <div class="sidebar-menu__link" @click="scrollTo('do-more')">
+        <a class="sidebar-menu__link" href="/#do-more"  @click="toogleMenu">
           3x_Do_more
-        </div>
+        </a>
       </li>
       <li class="sidebar-menu__item">
-        <div class="sidebar-menu__link" @click="scrollTo('get-in-touch')">
+        <a class="sidebar-menu__link" href="/#get-in-touch"  @click="toogleMenu">
           4x_Get_in_touch
-        </div>
+        </a>
       </li>
     </ul>
   </div>
