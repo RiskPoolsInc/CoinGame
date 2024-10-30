@@ -72,7 +72,7 @@ const handleCopyWallet = () => {
           <VButton
             label="COPY WALLET"
             class="col-md-8 col-xs-8 col-sm-4"
-            class-name="full-width"
+            class-name="full-width generate-token-form__copy"
             :disabled="!gameStore.gameState.wallet"
             color="white"
             text-color="dark"
