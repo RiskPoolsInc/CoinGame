@@ -9,6 +9,7 @@ html {
   font-size: var(--basic-font-size);
   font-weight: 400;
   line-height: 1.2;
+  scroll-behavior: smooth;
   /* width */
   ::-webkit-scrollbar {
     width: 9px;
