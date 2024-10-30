@@ -16,6 +16,7 @@ interface IVButtonProps {
   outline?: boolean;
   padding?: string;
   target?: string;
+  href?: string
 }
 
 withDefaults(defineProps<IVButtonProps>(), {
@@ -45,6 +46,7 @@ const handleClick = () => {
       :color="color"
       :padding="padding"
       :to="to"
+      :href="href"
       :icon="icon"
       :target="target"
       :flat="flat"

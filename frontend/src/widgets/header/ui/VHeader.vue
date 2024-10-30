@@ -94,7 +94,7 @@ const scrollToElementWithOffset = (elementId: string, offset: number) => {
               text-color="dark"
               size="lg"
               class-name="header__how"
-              @click="scrollTo('how')"
+              href="/#how"
             />
           </div>
 
@@ -105,7 +105,7 @@ const scrollToElementWithOffset = (elementId: string, offset: number) => {
               text-color="dark"
               size="lg"
               class-name="header__technology"
-              @click="scrollTo('technology')"
+              href="/#technology"
             />
           </div>
 
@@ -116,7 +116,7 @@ const scrollToElementWithOffset = (elementId: string, offset: number) => {
               class-name="header__do-more"
               text-color="dark"
               size="lg"
-              @click="scrollTo('do-more')"
+              href="/#do-more"
             />
           </div>
 
@@ -127,7 +127,7 @@ const scrollToElementWithOffset = (elementId: string, offset: number) => {
               class-name="header__get-in-touch"
               text-color="dark"
               size="lg"
-              @click="scrollTo('get-in-touch')"
+              href="/#get-in-touch"
             />
           </div>
         </div>
