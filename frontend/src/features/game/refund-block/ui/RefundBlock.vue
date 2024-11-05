@@ -68,8 +68,6 @@ const refundFunds = async () => {
           text-color="dark"
           size="lg"
           className="full-width"
-          @click="refundFunds"
-          :disabled="gameState.inProgress || !gameState.balance || isRefundProcess"
         />
 
         <VButton

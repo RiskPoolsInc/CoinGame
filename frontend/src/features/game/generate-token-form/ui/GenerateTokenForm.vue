@@ -40,8 +40,6 @@ const handleCopyWallet = () => {
             class-name="full-width"
             text-color="dark"
             size="lg"
-            @click="gameStore.generateWallet"
-            :disabled="gameStore.hasWallet"
           />
         </div>
 
